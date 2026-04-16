@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_partner_form_token_wallet" model="ir.ui.view">
+        <field name="name">res.partner.form.token.wallet</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Token Wallet">
+                    <group>
+                        <group>
+                            <field name="token_total_count" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Token Lines">
+                        <field name="token_wallet_line_ids" readonly="1">
+                            <list create="0" delete="0" edit="0">
+                                <field name="product_tmpl_id"/>
+                                <field name="product_id"/>
+                                <field name="token_count"/>
+                            </list>
+                        </field>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

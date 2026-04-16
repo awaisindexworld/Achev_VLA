@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="survey_question_char_box_vla_audio" inherit_id="survey.question_char_box">
+        <xpath expr="//div[contains(@class, 'o_survey_comment_container')]" position="replace">
+            <t t-if="question.vla_is_audio_response">
+                <div class="o_survey_comment_container p-0 vla-audio-answer"
+                     t-att-data-question-id="question.id"
+                     t-att-data-vla-max-duration="question.vla_audio_max_duration or 60"
+                     data-vla-audio-question="1">
+
+                    <input type="hidden"
+                           t-att-name="question.id"
+                           t-att-value="str(answer_lines[0].attachment_id.id) if answer_lines and answer_lines[0].attachment_id else ''"
+                           t-att-data-question-type="question.question_type"
+                           t-att-data-vla-hidden="question.id"/>
+
+                    <div class="vla-audio-box border rounded-3 p-3 bg-light-subtle">
+                        <div class="fw-semibold mb-2">Audio Response</div>
+                        <div class="small text-muted mb-3">
+                            Record your answer, listen to it, reset if needed, then submit the survey page.
+                        </div>
+
+                        <t t-if="not survey_form_readonly">
+                            <div class="d-flex flex-wrap gap-2 mb-3">
+                                <button type="button" class="btn btn-primary" t-att-data-vla-start="question.id">Start
+                                    Recording
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary"
+                                        t-att-data-vla-stop="question.id" disabled="disabled">Stop
+                                </button>
+                                <button type="button" class="btn btn-outline-danger" t-att-data-vla-reset="question.id"
+                                        t-att-disabled="False if answer_lines and answer_lines[0].attachment_id else 'disabled'">
+                                    Reset
+                                </button>
+                            </div>
+                        </t>
+
+                        <div class="small text-muted mb-2" t-att-data-vla-status="question.id">
+                            <t t-if="answer_lines and answer_lines[0].attachment_id">Saved audio ready.</t>
+                            <t t-else="">Ready to record.</t>
+                        </div>
+                        <div class="small text-muted mb-3">Timer:
+                            <span t-att-data-vla-timer="question.id">00:00</span>
+                        </div>
+
+                        <audio controls="controls"
+                               preload="none"
+                               t-attf-class="w-100 #{'' if answer_lines and answer_lines[0].attachment_id else 'd-none'}"
+                               t-att-data-vla-preview="question.id">
+                            <t t-if="answer_lines and answer_lines[0].attachment_id">
+                                <source t-att-src="answer_lines[0].answer_audio_url"
+                                        t-att-type="answer_lines[0].mimetype or 'audio/webm'"/>
+                            </t>
+                        </audio>
+
+                        <div class="alert d-none mt-3" t-att-data-vla-message="question.id"></div>
+                    </div>
+                </div>
+            </t>
+            <t t-else="">
+                <div class="o_survey_comment_container p-0">
+                    <input t-att-type="'email' if question.validation_email else 'text'"
+                           class="form-control o_survey_question_text_box bg-transparent rounded-0 p-0"
+                           t-att-name="question.id" t-att-placeholder="question.question_placeholder"
+                           t-att-value="answer_lines[0].value_char_box if answer_lines else None"
+                           t-att-data-question-type="question.question_type"
+                           t-att-data-validation-length-min="question.validation_length_min if question.validation_required else False"
+                           t-att-data-validation-length-max="question.validation_length_max if question.validation_required else False"/>
+                </div>
+            </t>
+        </xpath>
+    </template>
+</odoo>

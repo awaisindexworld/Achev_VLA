@@ -1,0 +1,37 @@
+.o_survey_listening_gate {
+    .o_survey_listening_video_wrap {
+        position: relative;
+        display: inline-block;
+        max-width: 650px;
+        width: 100%;
+    }
+
+    .o_survey_listening_video_player {
+        width: 100%;
+        display: block;
+    }
+
+    .o_survey_start_watching_btn.disabled,
+    .o_survey_start_watching_btn:disabled {
+        pointer-events: none;
+        opacity: 0.65;
+    }
+
+    &.o_survey_video_completed .o_survey_listening_video_wrap::after {
+        content: 'Locked';
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 600;
+        font-size: 1.1rem;
+        background: rgba(0, 0, 0, 0.45);
+        border-radius: 10px;
+    }
+}
+
+.o_survey_hidden_until_video_done {
+    display: none !important;
+}

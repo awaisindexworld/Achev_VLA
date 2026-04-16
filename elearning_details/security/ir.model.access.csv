@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_elearning_detail_user,access.elearning.detail.user,model_elearning_detail,website_slides.group_website_slides_officer,1,1,1,1
+access_elearning_detail_line_user,access.elearning.detail.line.user,model_elearning_detail_line,website_slides.group_website_slides_officer,1,1,1,1

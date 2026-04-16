@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_survey_question_form_vla_audio" model="ir.ui.view">
+        <field name="name">survey.question.form.vla.audio</field>
+        <field name="model">survey.question</field>
+        <field name="inherit_id" ref="survey.survey_question_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="VLA Audio" invisible="is_page or question_type != 'char_box'">
+                    <group>
+                        <field name="vla_is_audio_response"/>
+                        <field name="vla_audio_max_duration" invisible="not vla_is_audio_response"/>
+                        <field name="vla_audio_answers_count" readonly="1" invisible="not vla_is_audio_response"/>
+                    </group>
+                    <div class="text-muted">
+                        Enable this when the participant should answer this Single Line Text Box / Audio question by recording audio instead of typing text.
+                    </div>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_survey_question_form_listening_video" model="ir.ui.view">
+            <field name="name">survey.question.form.listening.video</field>
+            <field name="model">survey.question</field>
+            <field name="inherit_id" ref="survey.survey_question_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='survey_description']/field[@name='description']" position="after">
+                    <group string="Listening Test Video" invisible="is_page">
+                        <field name="listening_video_type" widget="radio"/>
+                        <field name="listening_video_url"
+                               placeholder="https://example.com/video.mp4"
+                               invisible="listening_video_type != 'url'"/>
+                        <field name="listening_video_file"
+                               filename="listening_video_filename"
+                               invisible="listening_video_type != 'upload'"/>
+                        <field name="listening_video_filename" invisible="1"/>
+                        <div class="text-muted">
+                            The video appears before the answers, starts automatically, and the answers are shown only after the video finishes.
+                        </div>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
