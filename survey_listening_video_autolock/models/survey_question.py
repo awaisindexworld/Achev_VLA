@@ -19,9 +19,9 @@ class SurveyQuestion(models.Model):
         selection=[
             ("none", "No Video"),
             ("url", "External Video URL"),
-            ("upload", "Upload Video File"),
+            ("upload", "Upload Audio/Video File"),
         ],
-        string="Listening Video",
+        string="Audio/Video",
         default="none",
         help="Show a video before the answer options on this question.",
     )
@@ -30,10 +30,10 @@ class SurveyQuestion(models.Model):
         help="Direct video file URL only, for example .mp4, .webm, or .ogg.",
     )
     listening_video_file = fields.Binary(
-        string="Uploaded Video",
+        string="Uploaded Media",
         attachment=True,
     )
-    listening_video_filename = fields.Char(string="Video Filename")
+    listening_video_filename = fields.Char(string="Media Filename")
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -100,9 +100,9 @@ class SurveyQuestion(models.Model):
             f"{VIDEO_BLOCK_START}"
             f'<div class="o_survey_listening_gate mb-3" data-question-id="{self.id}" data-state="ready">'
             '<div class="o_survey_listening_intro alert alert-info py-2 px-3 mb-3">'
-            'Click <strong>Start Watching</strong> once. After the video finishes, it will lock and the answer options will appear.'
+            'Click <strong>Start</strong> once. After the media finishes, it will lock and the answer options will appear.'
             '</div>'
-            '<button type="button" class="btn btn-primary o_survey_start_watching_btn mb-3">Start Watching</button>'
+            '<button type="button" class="btn btn-primary o_survey_start_watching_btn mb-3">Start</button>'
             f"{source_html}"
             '<div class="o_survey_video_locked_note alert alert-secondary mt-3 d-none">'
             'Video finished and locked. You can answer the question now.'

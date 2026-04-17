@@ -17,7 +17,7 @@
                                invisible="listening_video_type != 'upload'"/>
                         <field name="listening_video_filename" invisible="1"/>
                         <div class="text-muted">
-                            The video appears before the answers, starts automatically, and the answers are shown only after the video finishes.
+                            The audio/video appears before the answers, starts automatically, and the answers are shown only after it finishes.
                         </div>
                     </group>
                 </xpath>
