@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="survey_user_input_view_search_vla_b2b" model="ir.ui.view">
+        <field name="name">survey.user.input.search.vla.b2b</field>
+        <field name="model">survey.user_input</field>
+        <field name="inherit_id" ref="survey.survey_user_input_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="channel_id"/>
+                <field name="job_position_id"/>
+                <field name="assessment_skill_type"/>
+                <field name="assessment_final_status"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="survey_user_input_view_tree_vla_b2b" model="ir.ui.view">
+        <field name="name">survey.user.input.tree.vla.b2b</field>
+        <field name="model">survey.user_input</field>
+        <field name="inherit_id" ref="survey.survey_user_input_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='survey_id']" position="after">
+                <field name="channel_id" optional="show"/>
+                <field name="job_position_id" optional="show"/>
+                <field name="assessment_skill_type" optional="show"/>
+                <field name="scoring_total" optional="show"/>
+                <field name="assessment_final_status" widget="badge" optional="show"
+                       decoration-success="assessment_final_status == 'pass'"
+                       decoration-danger="assessment_final_status == 'fail'"
+                       decoration-warning="assessment_final_status == 'pending'"
+                       decoration-info="assessment_final_status == 'error'"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

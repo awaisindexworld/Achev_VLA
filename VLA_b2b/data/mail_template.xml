@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="mail_template_partner_registration_success" model="mail.template">
+        <field name="name">Partner Registration Success</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="subject">Registration Successful</field>
+        <field name="email_from">{{ (user.email_formatted or user.company_id.email_formatted or 'noreply@example.com')
+            }}
+        </field>
+        <field name="email_to">{{ object.email }}</field>
+        <field name="body_html" type="html">
+            <div style="margin:0; padding:0; font-family:Arial, sans-serif; font-size:14px; color:#000000;">
+                <p style="margin:0 0 12px 0; color:#000000;">
+                    Helloooooo<t t-out="object.name or 'Client'"/>,
+                </p>
+
+                <p style="margin:0 0 12px 0; color:#000000;">
+                    You have registered successfully.
+                </p>
+
+                <p style="margin:0 0 12px 0; color:#000000;">
+                    We’re happy to have you with us. Your registration has been completed,
+                    and your profile is now available in our system.
+                </p>
+
+                <p style="margin:0 0 12px 0; color:#000000;">
+                    If you have any questions or need any assistance, feel free to contact us.
+                </p>
+
+                <p style="margin:0; color:#000000;">
+                    Best regards,
+                    <br/>
+                    <t t-out="user.company_id.name or 'Our Team'"/>
+                </p>
+            </div>
+        </field>
+        <field name="auto_delete" eval="True"/>
+    </record>
+
+</odoo>

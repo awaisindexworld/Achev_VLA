@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="survey_survey_view_form_vla_b2b" model="ir.ui.view">
+        <field name="name">survey.survey.form.vla.b2b</field>
+        <field name="model">survey.survey</field>
+        <field name="inherit_id" ref="survey.survey_survey_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='restrict_user_ids']" position="after">
+                <field name="assessment_skill_type"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

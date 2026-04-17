@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="slide_channel_invite_view_form_vla_b2b" model="ir.ui.view">
+        <field name="name">slide.channel.invite.view.form.vla.b2b</field>
+        <field name="model">slide.channel.invite</field>
+        <field name="inherit_id" ref="website_slides.slide_channel_invite_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_ids']" position="attributes">
+                <attribute name="domain">[('current_job_position_id','!=',False)]</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

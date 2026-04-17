@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    <record id="slide_channel_partner_view_search_vla_b2b" model="ir.ui.view">-->
+    <!--        <field name="name">slide.channel.partner.search.vla.b2b</field>-->
+    <!--        <field name="model">slide.channel.partner</field>-->
+    <!--        <field name="arch" type="xml">-->
+    <!--            <search string="Responses">-->
+    <!--                <field name="partner_id"/>-->
+    <!--                <field name="channel_id"/>-->
+    <!--                <field name="job_position_id"/>-->
+    <!--                <field name="assessment_final_status"/>-->
+    <!--                <filter name="group_by_partner" string="Partner" domain="[]" context="{'group_by': 'partner_id'}"/>-->
+    <!--                <filter name="group_by_job_position_id" string="Job Position" domain="[]" context="{'group_by': 'job_position_id'}"/>-->
+    <!--                <filter name="group_by_assessment_final_status" string="Assessment Status" domain="[]" context="{'group_by': 'assessment_final_status'}"/>-->
+    <!--            </search>-->
+    <!--        </field>-->
+    <!--    </record>-->
+    <record id="slide_channel_partner_view_search_vla_b2b" model="ir.ui.view">
+        <field name="name">slide.channel.partner.search.vla.b2b</field>
+        <field name="model">slide.channel.partner</field>
+        <field name="inherit_id" ref="website_slides.slide_channel_partner_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <field name="job_position_id"/>
+                <field name="assessment_final_status"/>
+                <filter name="group_by_job_position_id" string="Job Position" domain="[]"
+                        context="{'group_by': 'job_position_id'}"/>
+                <filter name="group_by_assessment_final_status" string="Assessment Status" domain="[]"
+                        context="{'group_by': 'assessment_final_status'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="slide_channel_partner_view_tree_vla_b2b" model="ir.ui.view">
+        <field name="name">slide.channel.partner.tree.vla.b2b</field>
+        <field name="model">slide.channel.partner</field>
+        <field name="inherit_id" eval="False"/>
+        <field name="arch" type="xml">
+            <list create="false" delete="false">
+                <field name="channel_id"/>
+                <field name="partner_id"/>
+                <field name="job_position_id"/>
+                <field name="reading_score"/>
+                <field name="writing_score"/>
+                <field name="speaking_score"/>
+                <field name="listening_score"/>
+                <field name="assessment_final_status" widget="badge"
+                       decoration-success="assessment_final_status == 'pass'"
+                       decoration-danger="assessment_final_status == 'fail'"
+                       decoration-warning="assessment_final_status == 'pending'"
+                       decoration-info="assessment_final_status == 'error'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="slide_channel_partner_view_form_vla_b2b" model="ir.ui.view">
+        <field name="name">slide.channel.partner.form.vla.b2b</field>
+        <field name="model">slide.channel.partner</field>
+        <field name="inherit_id" eval="False"/>
+        <field name="arch" type="xml">
+            <form string="Response">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="channel_id" readonly="1"/>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="job_position_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="assessment_final_status" readonly="1"/>
+                            <field name="assessment_evaluated_at" readonly="1"/>
+                            <field name="assessment_failure_reason" readonly="1"
+                                   invisible="not assessment_failure_reason"/>
+                        </group>
+                    </group>
+                    <group string="Survey Results" col="4">
+                        <group string="Reading">
+                            <field name="reading_score" readonly="1"/>
+                            <field name="reading_user_input_id" readonly="1"/>
+                        </group>
+                        <group string="Writing">
+                            <field name="writing_score" readonly="1"/>
+                            <field name="writing_user_input_id" readonly="1"/>
+                        </group>
+                        <group string="Speaking">
+                            <field name="speaking_score" readonly="1"/>
+                            <field name="speaking_user_input_id" readonly="1"/>
+                        </group>
+                        <group string="Listening">
+                            <field name="listening_score" readonly="1"/>
+                            <field name="listening_user_input_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Reading">
+                            <field name="reading_answer_line_ids" nolabel="1" readonly="1">
+                                <list create="false" delete="false">
+                                    <field name="question_id"/>
+                                    <field name="answer_type" optional="show"/>
+                                    <field name="value_char_box" optional="show"/>
+                                    <field name="value_numerical_box" optional="show"/>
+                                    <field name="value_date" optional="show"/>
+                                    <field name="value_datetime" optional="show"/>
+                                    <field name="answer_is_correct" optional="show"/>
+                                    <field name="answer_score"/>
+                                    <field name="skipped"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Writing">
+                            <field name="writing_answer_line_ids" nolabel="1" readonly="1">
+                                <list create="false" delete="false">
+                                    <field name="question_id"/>
+                                    <field name="answer_type" optional="show"/>
+                                    <field name="value_char_box" optional="show"/>
+                                    <field name="value_numerical_box" optional="show"/>
+                                    <field name="value_date" optional="show"/>
+                                    <field name="value_datetime" optional="show"/>
+                                    <field name="answer_is_correct" optional="show"/>
+                                    <field name="answer_score"/>
+                                    <field name="skipped"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Speaking">
+                            <field name="speaking_answer_line_ids" nolabel="1" readonly="1">
+                                <list create="false" delete="false">
+                                    <field name="question_id"/>
+                                    <field name="answer_type" optional="show"/>
+                                    <field name="value_char_box" optional="show"/>
+                                    <field name="value_numerical_box" optional="show"/>
+                                    <field name="value_date" optional="show"/>
+                                    <field name="value_datetime" optional="show"/>
+                                    <field name="answer_is_correct" optional="show"/>
+                                    <field name="answer_score"/>
+                                    <field name="skipped"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Listening">
+                            <field name="listening_answer_line_ids" nolabel="1" readonly="1">
+                                <list create="false" delete="false">
+                                    <field name="question_id"/>
+                                    <field name="answer_type" optional="show"/>
+                                    <field name="value_char_box" optional="show"/>
+                                    <field name="value_numerical_box" optional="show"/>
+                                    <field name="value_date" optional="show"/>
+                                    <field name="value_datetime" optional="show"/>
+                                    <field name="answer_is_correct" optional="show"/>
+                                    <field name="answer_score"/>
+                                    <field name="skipped"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="All Tests">
+                            <field name="survey_user_input_ids" nolabel="1" readonly="1"
+                                   context="{'form_view_ref': 'survey.survey_user_input_view_form'}">
+                                <list create="false" delete="false">
+                                    <field name="survey_id"/>
+                                    <field name="assessment_skill_type"/>
+                                    <field name="state"/>
+                                    <field name="scoring_total"/>
+                                    <field name="assessment_final_status" widget="badge"
+                                           decoration-success="assessment_final_status == 'pass'"
+                                           decoration-danger="assessment_final_status == 'fail'"
+                                           decoration-warning="assessment_final_status == 'pending'"
+                                           decoration-info="assessment_final_status == 'error'"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

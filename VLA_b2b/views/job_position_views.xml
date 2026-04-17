@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_vla_job_position_tree" model="ir.ui.view">
+        <field name="name">vla.job.position.tree</field>
+        <field name="model">vla.job.position</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="state"/>
+                <field name="reading_min_score"/>
+                <field name="writing_min_score"/>
+                <field name="speaking_min_score"/>
+                <field name="listening_min_score"/>
+<!--                <field name="active" optional="hide"/>-->
+            </list>
+        </field>
+    </record>
+
+    <record id="view_vla_job_position_search" model="ir.ui.view">
+        <field name="name">vla.job.position.search</field>
+        <field name="model">vla.job.position</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="state"/>
+                <filter name="filter_draft" string="Draft" domain="[('state','=','draft')]"/>
+                <filter name="filter_posted" string="Posted" domain="[('state','=','posted')]"/>
+                <filter name="filter_closed" string="Closed" domain="[('state','=','closed')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_state" string="State" domain="[]" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="view_vla_job_position_form" model="ir.ui.view">
+        <field name="name">vla.job.position.form</field>
+        <field name="model">vla.job.position</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_set_posted" string="Post" type="object" class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_set_closed" string="Close" type="object" class="btn-secondary" invisible="state == 'closed'"/>
+                    <button name="action_set_draft" string="Reopen" type="object" class="btn-secondary" invisible="state != 'closed'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,posted,closed"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <group string="Minimum Score Thresholds">
+                        <group>
+                            <field name="reading_min_score"/>
+                            <field name="speaking_min_score"/>
+                        </group>
+                        <group>
+                            <field name="writing_min_score"/>
+                            <field name="listening_min_score"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_vla_job_positions" model="ir.actions.act_window">
+        <field name="name">Job Positions</field>
+        <field name="res_model">vla.job.position</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_vla_job_position_search"/>
+    </record>
+
+    <menuitem id="menu_vla_root" name="VLA" parent="website_slides.website_slides_menu_root" sequence="90"/>
+    <menuitem id="menu_vla_job_positions" name="Job Positions" parent="menu_vla_root" action="action_vla_job_positions" sequence="10"/>
+</odoo>

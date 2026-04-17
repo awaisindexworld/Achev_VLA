@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_slide_channel_form_vla_b2b" model="ir.ui.view">
+        <field name="name">slide.channel.form.vla.b2b</field>
+        <field name="model">slide.channel</field>
+        <field name="inherit_id" ref="website_slides.view_slide_channel_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='slide_ids']/list/field[@name='name']" position="after">
+                <field name="assessment_skill_type" optional="show"/>
+            </xpath>
+            <xpath expr="//button[@name='action_redirect_to_completed_members']" position="after">
+                <button name="action_vla_responses" type="object" class="oe_stat_button" icon="fa-list-alt" groups="website_slides.group_website_slides_officer">
+                    <field string="Responses" name="vla_response_count" widget="statinfo"/>
+                </button>
+            </xpath>
+        </field>
+    </record>
+</odoo>

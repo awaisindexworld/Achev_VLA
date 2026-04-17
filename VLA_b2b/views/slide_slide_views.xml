@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_slide_slide_form_vla_b2b" model="ir.ui.view">
+        <field name="name">slide.slide.form.vla.b2b</field>
+        <field name="model">slide.slide</field>
+        <field name="inherit_id" ref="website_slides.view_slide_slide_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='slide_category']" position="after">
+<!--                <field name="survey_id" domain="[('assessment_skill_type', '!=', False)]"/>-->
+                <field name="assessment_skill_type" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

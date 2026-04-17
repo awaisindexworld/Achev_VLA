@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_partner_view_form_vla_b2b" model="ir.ui.view">
+        <field name="name">res.partner.form.vla.b2b</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='function']" position="replace">
+                <field name="current_job_position_id" invisible="is_company"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_partner_simplified_form_inherit_vla" model="ir.ui.view">
+        <field name="name">res.partner.simplified.form.inherit.vla</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_simple_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='function']" position="replace">
+                <field name="current_job_position_id" invisible="is_company"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_partner_view_form_inherit_registration_mail" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.registration.mail</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_send_registration_email"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-envelope"
+                        invisible="not email or is_company">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_text">Send</span>
+                        <span class="o_stat_text">Welcome Email</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
