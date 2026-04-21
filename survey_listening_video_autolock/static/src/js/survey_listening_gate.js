@@ -4,113 +4,59 @@
     const GATE_SELECTOR = '.o_survey_listening_gate';
     const HIDDEN_CLASS = 'o_survey_hidden_until_video_done';
 
-    function getQuestionContainer(gate) {
-        return (
-            gate.closest('.o_survey_question_container') ||
-            gate.closest('.o_survey_form_content') ||
-            gate.closest('form') ||
-            document.body
-        );
+    function getQuestionWrapper(gate) {
+        return gate.closest('.js_question-wrapper');
     }
 
-    function shouldKeepVisible(el, gate) {
-        if (!el || !gate) {
-            return false;
+    function getVideo(gate) {
+        return gate.querySelector('.o_survey_listening_video_player');
+    }
+
+    function getStartButton(gate) {
+        return gate.querySelector('.o_survey_start_watching_btn');
+    }
+
+    function getAnswerTargets(questionWrapper, gate) {
+        if (!questionWrapper) {
+            return [];
         }
 
-        return (
-            el === gate ||
-            gate.contains(el) ||
-            el.classList.contains('o_survey_question_container') ||
-            el.classList.contains('o_survey_form_content') ||
-            el.tagName === 'FORM'
-        );
-    }
-
-    function isAncestorOfGate(el, gate) {
-        return el && gate && el !== gate && el.contains(gate);
-    }
-
-    function collectTargets(container, gate) {
-        const targets = [];
         const selectors = [
-            '.o_survey_question_answers',
-            '.o_survey_question_answer',
-            '.o_survey_question_simple_choice',
+            '.o_survey_answer_wrapper',
             '.o_survey_question_multiple_choice',
-            '.o_survey_answers_list',
-            '.o_survey_choice',
-            '.o_survey_answer',
-            '.answer',
-            '.o_survey_answer_wrapper[data-question-type="simple_choice_radio"]',
-            '.o_survey_answer_wrapper.o_survey_form_choice[data-question-type="simple_choice_radio"]',
-            '.o_survey_choice_btn',
-            '.o_survey_form_choice_item',
-            '.o_survey_comment_container',
             '.o_survey_question_matrix',
+            '.o_survey_comment_container',
             '.o_survey_question_text_box',
             '.o_survey_question_char_box',
             '.o_survey_question_numerical_box',
             '.o_survey_question_date',
-            '.o_survey_question_datetime',
-            '.o_survey_form_buttons',
-            '.o_survey_navigation',
-            '.o_survey_next',
-            '.o_survey_submit',
-            '.form-check',
-            '.form-check-input',
-            '.form-check-label',
-            '.form-control',
-            'textarea',
-            'select',
-            'input:not([type="hidden"])',
-            'button',
-            '.btn'
+            '.o_survey_question_datetime'
         ];
 
+        const targets = [];
+
         selectors.forEach(function (selector) {
-            container.querySelectorAll(selector).forEach(function (el) {
-                if (shouldKeepVisible(el, gate)) {
+            questionWrapper.querySelectorAll(selector).forEach(function (el) {
+                if (el === gate || gate.contains(el)) {
                     return;
                 }
-
-                if (isAncestorOfGate(el, gate)) {
-                    return;
-                }
-
-                if (el.closest(GATE_SELECTOR) && el.closest(GATE_SELECTOR) !== gate) {
-                    return;
-                }
-
                 if (!targets.includes(el)) {
                     targets.push(el);
                 }
             });
         });
 
-        Array.from(container.children).forEach(function (child) {
-            if (shouldKeepVisible(child, gate)) {
-                return;
-            }
-
-            if (isAncestorOfGate(child, gate)) {
-                return;
-            }
-
-            if (!targets.includes(child)) {
-                targets.push(child);
-            }
-        });
-
         return targets;
+    }
+
+    function getContinueButtons() {
+        return Array.from(document.querySelectorAll('.o_survey_navigation_submit')).filter(function (btn) {
+            return btn.value === 'next' || btn.value === 'finish';
+        });
     }
 
     function hideElement(el) {
         if (!el || el.classList.contains(HIDDEN_CLASS)) {
-            return;
-        }
-
-        if (el.closest(GATE_SELECTOR)) {
             return;
         }
 
@@ -131,12 +77,26 @@
         el.style.display = el.dataset.oSurveyVideoDisplay || '';
     }
 
-    function hideTargets(targets) {
-        targets.forEach(hideElement);
+    function disableContinue(btn) {
+        if (!btn) {
+            return;
+        }
+        btn.disabled = true;
+        btn.classList.add('disabled');
+        btn.setAttribute('aria-disabled', 'true');
+        btn.style.pointerEvents = 'none';
+        btn.style.opacity = '0.5';
     }
 
-    function showTargets(targets) {
-        targets.forEach(showElement);
+    function enableContinue(btn) {
+        if (!btn) {
+            return;
+        }
+        btn.disabled = false;
+        btn.classList.remove('disabled');
+        btn.removeAttribute('aria-disabled');
+        btn.style.pointerEvents = '';
+        btn.style.opacity = '';
     }
 
     function lockVideo(gate, video) {
@@ -159,12 +119,27 @@
             return;
         }
 
-        const container = gate._questionContainer || getQuestionContainer(gate);
-        gate._questionContainer = container;
+        const questionWrapper = gate._questionWrapper || getQuestionWrapper(gate);
+        gate._questionWrapper = questionWrapper;
 
-        const currentTargets = collectTargets(container, gate);
-        gate._toggleTargets = currentTargets;
-        hideTargets(gate._toggleTargets);
+        gate._answerTargets = getAnswerTargets(questionWrapper, gate);
+        gate._continueButtons = getContinueButtons();
+
+        gate._answerTargets.forEach(hideElement);
+        gate._continueButtons.forEach(disableContinue);
+    }
+
+    function completeGate(gate, video) {
+        gate.dataset.state = 'completed';
+        lockVideo(gate, video);
+
+        (gate._answerTargets || []).forEach(showElement);
+        (gate._continueButtons || []).forEach(enableContinue);
+
+        if (gate._refreshInterval) {
+            clearInterval(gate._refreshInterval);
+            gate._refreshInterval = null;
+        }
     }
 
     function initGate(gate) {
@@ -175,16 +150,17 @@
         gate.dataset.videoGateInit = '1';
         gate.dataset.state = 'ready';
 
-        const container = getQuestionContainer(gate);
-        const video = gate.querySelector('.o_survey_listening_video_player');
-        const startButton = gate.querySelector('.o_survey_start_watching_btn');
+        const questionWrapper = getQuestionWrapper(gate);
+        const video = getVideo(gate);
+        const startButton = getStartButton(gate);
 
-        if (!container || !video || !startButton) {
+        if (!questionWrapper || !video || !startButton) {
             return;
         }
 
-        gate._questionContainer = container;
-        gate._toggleTargets = [];
+        gate._questionWrapper = questionWrapper;
+        gate._answerTargets = [];
+        gate._continueButtons = [];
 
         video.controls = false;
         video.removeAttribute('controls');
@@ -251,8 +227,6 @@
             if (video.currentTime > maxAllowedTime) {
                 maxAllowedTime = video.currentTime;
             }
-
-            refreshGate(gate);
         });
 
         video.addEventListener('seeking', function () {
@@ -273,20 +247,14 @@
 
         video.addEventListener('ended', function () {
             completed = true;
-            lockVideo(gate, video);
-            showTargets(gate._toggleTargets || []);
-
-            if (gate._refreshInterval) {
-                clearInterval(gate._refreshInterval);
-                gate._refreshInterval = null;
-            }
+            completeGate(gate, video);
         });
 
         gate._refreshInterval = window.setInterval(function () {
             if (gate.dataset.state !== 'completed') {
                 refreshGate(gate);
             }
-        }, 250);
+        }, 300);
     }
 
     function initAll() {
@@ -308,7 +276,7 @@
         initAll();
     });
 
-    observer.observe(document.documentElement, {
+    observer.observe(document.body, {
         childList: true,
         subtree: true
     });
