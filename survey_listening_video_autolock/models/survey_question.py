@@ -27,7 +27,7 @@ class SurveyQuestion(models.Model):
     )
     listening_video_url = fields.Char(
         string="Video URL",
-        help="Direct video file URL only, for example .mp4, .webm, or .ogg.",
+        help="Direct video file URL only, for example .mp4, .webm, .ogg, or audio files like .mp3.",
     )
     listening_video_file = fields.Binary(
         string="Uploaded Media",
@@ -74,23 +74,28 @@ class SurveyQuestion(models.Model):
             return ""
 
         source_html = ""
+        is_audio = False
 
         if self.listening_video_type == "url" and self.listening_video_url:
             raw_url = (self.listening_video_url or "").strip()
             if raw_url:
                 escaped_url = self._escape_attr(raw_url)
-                mimetype = self._guess_video_mimetype(raw_url)
-                source_html = self._wrap_video_player(
-                    f'<source src="{escaped_url}" type="{mimetype}" />'
+                mimetype = self._guess_media_mimetype(raw_url)
+                is_audio = self._is_audio_only(raw_url)
+                source_html = self._wrap_media_player(
+                    f'<source src="{escaped_url}" type="{mimetype}" />',
+                    is_audio=is_audio,
                 )
 
         elif self.listening_video_type == "upload" and self.listening_video_file:
             source_url = f"/survey/video/{self.id}"
             filename = self.listening_video_filename or f"question_{self.id}.mp4"
-            mimetype = self._guess_video_mimetype(filename)
+            mimetype = self._guess_media_mimetype(filename)
+            is_audio = self._is_audio_only(filename)
             escaped_source_url = self._escape_attr(source_url)
-            source_html = self._wrap_video_player(
-                f'<source src="{escaped_source_url}" type="{mimetype}" />'
+            source_html = self._wrap_media_player(
+                f'<source src="{escaped_source_url}" type="{mimetype}" />',
+                is_audio=is_audio,
             )
 
         if not source_html:
@@ -105,13 +110,24 @@ class SurveyQuestion(models.Model):
             '<button type="button" class="btn btn-primary o_survey_start_watching_btn mb-3">Start</button>'
             f"{source_html}"
             '<div class="o_survey_video_locked_note alert alert-secondary mt-3 d-none">'
-            'Video finished and locked. You can answer the question now.'
+            'Media finished and locked. You can answer the question now.'
             '</div>'
             '</div>'
             f"{VIDEO_BLOCK_END}"
         )
 
-    def _wrap_video_player(self, source_tag):
+    def _wrap_media_player(self, source_tag, is_audio=False):
+        if is_audio:
+            return (
+                '<div class="o_survey_listening_video_wrap o_survey_listening_audio_wrap">'
+                '<audio class="o_survey_listening_video_player o_survey_listening_audio_player" preload="auto" '
+                'style="width: 100%; max-width: 650px;">'
+                f"{source_tag}"
+                'Your browser does not support the audio tag.'
+                '</audio>'
+                '</div>'
+            )
+
         return (
             '<div class="o_survey_listening_video_wrap">'
             '<video class="o_survey_listening_video_player" preload="auto" playsinline="playsinline" '
@@ -123,13 +139,24 @@ class SurveyQuestion(models.Model):
         )
 
     @staticmethod
-    def _guess_video_mimetype(value):
+    def _guess_media_mimetype(value):
         value = (value or "").lower()
-        if ".webm" in value:
+        if value.endswith(".mp3"):
+            return "audio/mpeg"
+        if value.endswith(".wav"):
+            return "audio/wav"
+        if value.endswith(".ogg"):
+            return "audio/ogg"
+        if value.endswith(".webm"):
             return "video/webm"
-        if ".ogg" in value or ".ogv" in value:
+        if value.endswith(".ogv"):
             return "video/ogg"
         return "video/mp4"
+
+    @staticmethod
+    def _is_audio_only(value):
+        value = (value or "").lower()
+        return value.endswith(".mp3") or value.endswith(".wav") or value.endswith(".ogg")
 
     @staticmethod
     def _escape_attr(value):
