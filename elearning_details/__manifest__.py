@@ -12,6 +12,7 @@ The can do statement is stored in one field and edited as left/right columns.
     'license': 'LGPL-3',
     'depends': ['website_slides'],
     'data': [
+        'security/elearning_detail_security.xml',
         'security/ir.model.access.csv',
         'views/elearning_detail_views.xml',
     ],

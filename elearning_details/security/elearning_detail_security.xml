@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Module category (optional but recommended) -->
+    <record id="module_category_elearning_detail" model="ir.module.category">
+        <field name="name">eLearning Detail</field>
+        <field name="sequence">25</field>
+    </record>
+
+    <!-- Custom group -->
+    <record id="group_elearning_detail_user" model="res.groups">
+        <field name="name">eLearning Detail User</field>
+        <field name="category_id" ref="elearning_details.module_category_elearning_detail"/>
+    </record>
+</odoo>
