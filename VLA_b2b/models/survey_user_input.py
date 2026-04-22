@@ -17,6 +17,16 @@ class SurveyUserInput(models.Model):
     evaluated_at = fields.Datetime(readonly=True)
     failure_reason = fields.Text(readonly=True)
 
+    #####
+    company_id = fields.Many2one(
+        'res.company',
+        related='channel_id.company_id',
+        store=True,
+        readonly=True,
+        index=True,
+    )
+    #####
+
     def _vla_guess_channel(self):
         self.ensure_one()
         if self.channel_id or not self.survey_id:

@@ -9,13 +9,29 @@ class SlideChannelInvite(models.TransientModel):
         'res.partner', compute='_compute_eligible_partner_ids', string='Eligible Partners'
     )
 
+    #####
+    # @api.depends('channel_id')
+    # def _compute_eligible_partner_ids(self):
+    #     eligible = self.env['res.partner'].search([('current_job_position_id', '!=', False)])
+    #     for wizard in self:
+    #         wizard.eligible_partner_ids = eligible
+    #         if wizard.partner_ids:
+    #             wizard.partner_ids = wizard.partner_ids.filtered(lambda p: p.current_job_position_id)
     @api.depends('channel_id')
     def _compute_eligible_partner_ids(self):
-        eligible = self.env['res.partner'].search([('current_job_position_id', '!=', False)])
         for wizard in self:
+            domain = [('current_job_position_id', '!=', False)]
+            if wizard.channel_id.company_id:
+                domain.append(('current_job_position_id.company_id', '=', wizard.channel_id.company_id.id))
+            eligible = self.env['res.partner'].search(domain)
             wizard.eligible_partner_ids = eligible
             if wizard.partner_ids:
-                wizard.partner_ids = wizard.partner_ids.filtered(lambda p: p.current_job_position_id)
+                wizard.partner_ids = wizard.partner_ids.filtered(
+                    lambda p: p.current_job_position_id
+                              and p.current_job_position_id.company_id == wizard.channel_id.company_id
+                )
+
+    #####
 
     def action_invite(self):
         self.ensure_one()

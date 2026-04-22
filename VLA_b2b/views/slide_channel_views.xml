@@ -13,6 +13,11 @@
                     <field string="Responses" name="vla_response_count" widget="statinfo"/>
                 </button>
             </xpath>
+            <xpath expr="//field[@name='tag_ids']" position="after">
+                <div>
+                    <field name="company_id"/>
+                </div>
+            </xpath>
         </field>
     </record>
 </odoo>

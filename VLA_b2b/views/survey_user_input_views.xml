@@ -21,6 +21,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='survey_id']" position="after">
                 <field name="channel_id" optional="show"/>
+                <field name="company_id" optional="show"/>
                 <field name="job_position_id" optional="show"/>
                 <field name="assessment_skill_type" optional="show"/>
                 <field name="scoring_total" optional="show"/>

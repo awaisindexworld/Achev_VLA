@@ -7,11 +7,12 @@
             <list>
                 <field name="name"/>
                 <field name="state"/>
+                <field name="company_id" readonly="1"/>
                 <field name="reading_min_score"/>
                 <field name="writing_min_score"/>
                 <field name="speaking_min_score"/>
                 <field name="listening_min_score"/>
-<!--                <field name="active" optional="hide"/>-->
+                <!--                <field name="active" optional="hide"/>-->
             </list>
         </field>
     </record>
@@ -39,14 +40,18 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="action_set_posted" string="Post" type="object" class="btn-primary" invisible="state != 'draft'"/>
-                    <button name="action_set_closed" string="Close" type="object" class="btn-secondary" invisible="state == 'closed'"/>
-                    <button name="action_set_draft" string="Reopen" type="object" class="btn-secondary" invisible="state != 'closed'"/>
+                    <button name="action_set_posted" string="Post" type="object" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_set_closed" string="Close" type="object" class="btn-secondary"
+                            invisible="state == 'closed'"/>
+                    <button name="action_set_draft" string="Reopen" type="object" class="btn-secondary"
+                            invisible="state != 'closed'"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,posted,closed"/>
                 </header>
                 <sheet>
                     <group>
                         <field name="name"/>
+                        <field name="company_id" readonly="1"/>
                     </group>
                     <group string="Minimum Score Thresholds">
                         <group>
@@ -71,5 +76,6 @@
     </record>
 
     <menuitem id="menu_vla_root" name="VLA" parent="website_slides.website_slides_menu_root" sequence="90"/>
-    <menuitem id="menu_vla_job_positions" name="Job Positions" parent="menu_vla_root" action="action_vla_job_positions" sequence="10"/>
+    <menuitem id="menu_vla_job_positions" name="Job Positions" parent="menu_vla_root" action="action_vla_job_positions"
+              sequence="10"/>
 </odoo>

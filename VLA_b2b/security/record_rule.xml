@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    &lt;!&ndash; Response &ndash;&gt;-->
+    <!--    <record id="slide_channel_partner_company_rule_vla_b2b" model="ir.rule">-->
+    <!--        <field name="name">Slide Channel Partner selected company only</field>-->
+    <!--        <field name="model_id" ref="website_slides.model_slide_channel_partner"/>-->
+    <!--        <field name="domain_force">[('company_id', '=', company_id)]</field>-->
+    <!--        <field name="global" eval="True"/>-->
+    <!--    </record>-->
+
+    <!--    attendee + response-->
+    <record id="slide_channel_partner_company_rule_vla_b2b" model="ir.rule">
+        <field name="name">Slide Channel Partner selected company only</field>
+        <field name="model_id" ref="website_slides.model_slide_channel_partner"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+        <field name="global" eval="True"/>
+    </record>
+
+    <record id="survey_user_input_company_rule_vla_b2b" model="ir.rule">
+        <field name="name">Survey User Input selected company only</field>
+        <field name="model_id" ref="survey.model_survey_user_input"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+        <field name="global" eval="True"/>
+    </record>
+
+    <!-- Contacts -->
+    <record id="res_partner_company_visibility_rule_vla_b2b" model="ir.rule">
+        <field name="name">Contacts: selected company or shared</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', '=', company_id)]</field>
+        <field name="global" eval="True"/>
+    </record>
+
+    <!-- Job position -->
+    <record id="job_position_company_rule_vla_b2b" model="ir.rule">
+        <field name="name">Job Position: selected company only</field>
+        <field name="model_id" ref="VLA_b2b.model_vla_job_position"/>
+        <field name="domain_force">[('company_id', '=', company_id)]</field>
+        <field name="global" eval="True"/>
+    </record>
+</odoo>

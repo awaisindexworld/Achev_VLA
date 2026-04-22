@@ -1,0 +1,4 @@
+.o_survey_breadcrumb_container,
+.o_survey_breadcrumb_container .breadcrumb {
+    display: none !important;
+}

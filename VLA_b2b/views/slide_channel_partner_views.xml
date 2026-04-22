@@ -39,6 +39,7 @@
             <list create="false" delete="false">
                 <field name="channel_id"/>
                 <field name="partner_id"/>
+                <field name="company_id" optional="show"/>
                 <field name="job_position_id"/>
                 <field name="reading_score"/>
                 <field name="writing_score"/>
@@ -64,6 +65,7 @@
                         <group>
                             <field name="channel_id" readonly="1"/>
                             <field name="partner_id" readonly="1"/>
+                            <field name="company_id" readonly="1"/>
                             <field name="job_position_id" readonly="1"/>
                         </group>
                         <group>

@@ -5,6 +5,16 @@ from odoo.osv import expression
 class SlideChannel(models.Model):
     _inherit = 'slide.channel'
 
+    #####
+    company_id = fields.Many2one(
+        'res.company',
+        string='Company',
+        required=True,
+        default=lambda self: self.env.company,
+        index=True,
+    )
+    #####
+
     vla_response_count = fields.Integer(compute='_compute_vla_response_count', string='Responses')
 
     @api.depends('channel_partner_ids')
@@ -107,6 +117,23 @@ class SlideChannel(models.Model):
 
 class SlideChannelPartner(models.Model):
     _inherit = 'slide.channel.partner'
+
+    #####
+    company_id = fields.Many2one(
+        'res.company',
+        related='channel_id.company_id',
+        store=True,
+        readonly=True,
+        index=True,
+    )
+    # job_position_id = fields.Many2one('vla.job.position', string='Job Position Snapshot', index=True)
+    job_position_id = fields.Many2one(
+        'vla.job.position',
+        string='Job Position Snapshot',
+        index=True,
+        check_company=True,
+    )
+    #####
 
     survey_user_input_ids = fields.One2many(
         'survey.user_input', compute='_compute_vla_user_inputs', string='Tests', readonly=True
