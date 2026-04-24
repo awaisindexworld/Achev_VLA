@@ -5,17 +5,13 @@ from odoo.exceptions import UserError
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-
-    # current_job_position_id = fields.Many2one(
-    #     'vla.job.position',
-    #     string='Current Job Position',
-    #     domain="[('state', '=', 'posted')]",
-    # )
     current_job_position_id = fields.Many2one(
         'vla.job.position',
         string='Current Job Position',
-        domain="[('state', '=', 'posted')]",
-        check_company=True,
+        domain="(company_id and [('company_id', '=', company_id)] or [('company_id', 'in', context.get('allowed_company_ids', []))]) + [('state', '=', 'posted')]",
+
+        # domain="(company_id and [('company_id', '=', company_id)] or []) + [('state', '=', 'posted')]",
+        # check_company=True,
     )
 
     @api.model_create_multi
@@ -24,6 +20,7 @@ class ResPartner(models.Model):
             if not vals.get('company_id'):
                 vals['company_id'] = self.env.company.id
         return super().create(vals_list)
+
     #####
 
     def action_send_registration_email(self):
