@@ -5,8 +5,12 @@
     const HIDDEN_CLASS = 'o_survey_hidden_until_video_done';
 
     function getQuestionWrapper(gate) {
-        return gate.closest('.js_question-wrapper');
-    }
+    return (
+        gate.closest('.js_question-wrapper') ||
+        gate.closest('.o_survey_form_content') ||
+        gate.closest('form')
+    );
+}
 
     function getVideo(gate) {
         return gate.querySelector('.o_survey_listening_video_player');
@@ -115,19 +119,22 @@
     }
 
     function refreshGate(gate) {
-        if (!gate || gate.dataset.state === 'completed') {
-            return;
-        }
-
-        const questionWrapper = gate._questionWrapper || getQuestionWrapper(gate);
-        gate._questionWrapper = questionWrapper;
-
-        gate._answerTargets = getAnswerTargets(questionWrapper, gate);
-        gate._continueButtons = getContinueButtons();
-
-        gate._answerTargets.forEach(hideElement);
-        gate._continueButtons.forEach(disableContinue);
+    if (!gate || gate.dataset.state === 'completed') {
+        return;
     }
+
+    const questionWrapper = gate._questionWrapper || getQuestionWrapper(gate);
+    gate._questionWrapper = questionWrapper;
+
+    gate._answerTargets = getAnswerTargets(questionWrapper, gate);
+    gate._continueButtons = getContinueButtons();
+
+    // Keep answers visible before/during the video
+    gate._answerTargets.forEach(showElement);
+
+    // Still block Next/Finish until the video ends
+    gate._continueButtons.forEach(disableContinue);
+}
 
     function completeGate(gate, video) {
         gate.dataset.state = 'completed';

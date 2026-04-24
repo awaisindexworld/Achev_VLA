@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="survey.survey_question_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='survey_description']/field[@name='description']" position="after">
-                    <group string="Listening Test Video" invisible="is_page">
+                    <group string="Listening Test Video" >
                         <field name="listening_video_type" widget="radio"/>
                         <field name="listening_video_url"
                                placeholder="https://example.com/video.mp4"

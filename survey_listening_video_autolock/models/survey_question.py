@@ -23,7 +23,6 @@ class SurveyQuestion(models.Model):
         ],
         string="Audio/Video",
         default="none",
-        help="Show a video before the answer options on this question.",
     )
     listening_video_url = fields.Char(
         string="Video URL",
@@ -70,7 +69,7 @@ class SurveyQuestion(models.Model):
     def _build_listening_video_html(self):
         self.ensure_one()
 
-        if self.is_page or self.listening_video_type == "none":
+        if self.listening_video_type == "none":
             return ""
 
         source_html = ""
@@ -104,14 +103,14 @@ class SurveyQuestion(models.Model):
         return (
             f"{VIDEO_BLOCK_START}"
             f'<div class="o_survey_listening_gate mb-3" data-question-id="{self.id}" data-state="ready">'
-            '<div class="o_survey_listening_intro alert alert-info py-2 px-3 mb-3">'
-            'Click <strong>Start</strong> once. After the media finishes, it will lock and the answer options will appear.'
-            '</div>'
+            # '<div class="o_survey_listening_intro alert alert-info py-2 px-3 mb-3">'
+            # 'Click <strong>Start</strong> once. After the media finishes, it will lock and the answer options will appear.'
+            # '</div>'
             '<button type="button" class="btn btn-primary o_survey_start_watching_btn mb-3">Start</button>'
             f"{source_html}"
-            '<div class="o_survey_video_locked_note alert alert-secondary mt-3 d-none">'
-            'Media finished and locked. You can answer the question now.'
-            '</div>'
+            # '<div class="o_survey_video_locked_note alert alert-secondary mt-3 d-none">'
+            # 'Media finished and locked. You can answer the question now.'
+            # '</div>'
             '</div>'
             f"{VIDEO_BLOCK_END}"
         )

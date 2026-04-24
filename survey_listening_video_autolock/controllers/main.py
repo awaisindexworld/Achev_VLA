@@ -14,14 +14,20 @@ class SurveyVideoController(http.Controller):
         if not question.exists():
             return request.not_found()
 
-        if question.is_page or question.listening_video_type != 'upload' or not question.listening_video_file:
+        if question.listening_video_type != 'upload' or not question.listening_video_file:
             return request.not_found()
 
         filename = (question.listening_video_filename or '').lower()
         mimetype = 'video/mp4'
-        if filename.endswith('.webm'):
+        if filename.endswith('.mp3'):
+            mimetype = 'audio/mpeg'
+        elif filename.endswith('.wav'):
+            mimetype = 'audio/wav'
+        elif filename.endswith('.ogg'):
+            mimetype = 'audio/ogg'
+        elif filename.endswith('.webm'):
             mimetype = 'video/webm'
-        elif filename.endswith('.ogg') or filename.endswith('.ogv'):
+        elif filename.endswith('.ogv'):
             mimetype = 'video/ogg'
 
         content = base64.b64decode(question.listening_video_file)
