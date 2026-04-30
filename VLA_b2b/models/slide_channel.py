@@ -147,6 +147,12 @@ class SlideChannelPartner(models.Model):
     writing_user_input_id = fields.Many2one('survey.user_input', compute='_compute_vla_user_inputs', string='Writing Response', readonly=True)
     speaking_user_input_id = fields.Many2one('survey.user_input', compute='_compute_vla_user_inputs', string='Speaking Response', readonly=True)
     listening_user_input_id = fields.Many2one('survey.user_input', compute='_compute_vla_user_inputs', string='Listening Response', readonly=True)
+
+    _CLB_SELECTION = [('0', '0'), ('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('6', '6'), ('7', '7'), ('8', '8')]
+    reading_clb = fields.Selection(_CLB_SELECTION, string='Reading CLB', default='0')
+    writing_clb = fields.Selection(_CLB_SELECTION, string='Writing CLB', default='0')
+    speaking_clb = fields.Selection(_CLB_SELECTION, string='Speaking CLB', default='0')
+    listening_clb = fields.Selection(_CLB_SELECTION, string='Listening CLB', default='0')
     assessment_final_status = fields.Selection([
         ('pending', 'Pending'),
         ('pass', 'Pass'),

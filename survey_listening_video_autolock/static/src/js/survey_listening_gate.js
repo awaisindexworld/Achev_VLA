@@ -2,7 +2,6 @@
     'use strict';
 
     const GATE_SELECTOR = '.o_survey_listening_gate';
-    const HIDDEN_CLASS = 'o_survey_hidden_until_video_done';
 
     function getVideo(gate) {
         return gate.querySelector('.o_survey_listening_video_player');
@@ -10,24 +9,6 @@
 
     function getStartButton(gate) {
         return gate.querySelector('.o_survey_start_watching_btn');
-    }
-
-    function isSurveyGate(gate) {
-        return !!gate.dataset.questionId && !gate.classList.contains('o_course_listening_gate');
-    }
-
-    function getContinueButtons() {
-        return Array.from(document.querySelectorAll('.o_survey_navigation_submit')).filter(function (btn) {
-            return btn.value === 'next' || btn.value === 'finish';
-        });
-    }
-
-    function hideElement(el) {
-        if (!el) {
-            return;
-        }
-        el.classList.add(HIDDEN_CLASS);
-        el.style.display = 'none';
     }
 
     function lockVideo(gate, video) {
@@ -42,28 +23,6 @@
         const note = gate.querySelector('.o_survey_video_locked_note');
         if (note) {
             note.classList.remove('d-none');
-        }
-    }
-
-    function refreshGate(gate) {
-        if (!gate) {
-            return;
-        }
-
-        if (isSurveyGate(gate)) {
-            gate._continueButtons = getContinueButtons();
-            gate._continueButtons.forEach(hideElement);
-        }
-    }
-
-    function completeGate(gate, video) {
-        gate.dataset.state = 'completed';
-        lockVideo(gate, video);
-        refreshGate(gate);
-
-        if (gate._refreshInterval) {
-            clearInterval(gate._refreshInterval);
-            gate._refreshInterval = null;
         }
     }
 
@@ -82,8 +41,6 @@
             return;
         }
 
-        gate._continueButtons = [];
-
         video.controls = false;
         video.removeAttribute('controls');
         video.preload = 'auto';
@@ -97,8 +54,6 @@
         let started = false;
         let completed = false;
         let maxAllowedTime = 0;
-
-        refreshGate(gate);
 
         function disableStartButton() {
             startButton.disabled = true;
@@ -120,7 +75,6 @@
             started = true;
             gate.dataset.state = 'playing';
             disableStartButton();
-            refreshGate(gate);
 
             const playPromise = video.play();
             if (playPromise && typeof playPromise.catch === 'function') {
@@ -137,7 +91,6 @@
                 started = true;
                 gate.dataset.state = 'playing';
                 disableStartButton();
-                refreshGate(gate);
             }
         });
 
@@ -169,73 +122,20 @@
 
         video.addEventListener('ended', function () {
             completed = true;
-            completeGate(gate, video);
+            lockVideo(gate, video);
         });
-
-        gate._refreshInterval = window.setInterval(function () {
-            refreshGate(gate);
-        }, 300);
     }
 
     function initAll() {
-        document.querySelectorAll(GATE_SELECTOR).forEach(function (gate) {
-            initGate(gate);
-            refreshGate(gate);
-        });
-    }
-
-    function hideContinueButtonEverywhere() {
-        if (!document.querySelector('.o_survey_listening_gate[data-question-id]')) {
-            return;
-        }
-
-        const selectors = [
-            '.o_survey_navigation_submit',
-            'button',
-            'input[type="submit"]',
-            'a.btn',
-            '.btn'
-        ];
-
-        document.querySelectorAll(selectors.join(',')).forEach(function (el) {
-            const text = (el.innerText || el.value || '').trim().toLowerCase();
-
-            if (
-                text === 'continue' ||
-                text === 'next' ||
-                text === 'finish' ||
-                text.includes('continue')
-            ) {
-                el.style.setProperty('display', 'none', 'important');
-                el.style.setProperty('visibility', 'hidden', 'important');
-                el.disabled = true;
-                el.setAttribute('aria-hidden', 'true');
-                el.setAttribute('tabindex', '-1');
-            }
-        });
-
-        document.querySelectorAll('*').forEach(function (el) {
-            const text = (el.innerText || '').trim().toLowerCase();
-
-            if (text === 'or press enter') {
-                el.style.setProperty('display', 'none', 'important');
-            }
-        });
+        document.querySelectorAll(GATE_SELECTOR).forEach(initGate);
     }
 
     function boot() {
         initAll();
-        hideContinueButtonEverywhere();
 
-        window.setInterval(function () {
-            initAll();
-            hideContinueButtonEverywhere();
-        }, 300);
+        window.setInterval(initAll, 300);
 
-        new MutationObserver(function () {
-            initAll();
-            hideContinueButtonEverywhere();
-        }).observe(document.body, {
+        new MutationObserver(initAll).observe(document.body, {
             childList: true,
             subtree: true
         });

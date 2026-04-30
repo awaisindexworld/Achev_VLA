@@ -4,6 +4,7 @@
             <t t-foreach="docs" t-as="o">
 
                 <t t-set="base_url" t-value="(web_base_url or '').rstrip('/')"/>
+                <t t-set="all_skills_detail" t-value="env['elearning.detail'].sudo().search([('skill_type', '=', 'all_skills')], limit=1)"/>
 
                 <!-- ========================= -->
                 <!-- PAGE 1 -->
@@ -39,7 +40,7 @@
                                 <tr>
                                     <td style="width:58%; padding:0 0 18px 0; font-size:15.5px; color:#111111; font-weight:400;">
                                         Client Name:
-                                        <span t-esc="o.name or ''"/>
+                                        <span t-esc="o.partner_id.name or ''"/>
                                     </td>
                                     <td style="width:42%; padding:0 0 18px 0; font-size:15.5px; color:#111111; font-weight:400; text-align:left;">
                                         Language: English (ESL)
@@ -85,14 +86,12 @@
                                 <td style="width:36%; vertical-align:middle; text-align:right; padding:0;">
                                     <div style="display:inline-block; width:198px; height:76px; box-sizing:border-box; border:1px solid #111111; border-radius:4px; background:#ffffff; padding:10px 10px 8px 10px;">
                                         <div style="font-size:33px; line-height:1.05; font-weight:700; color:#000000; text-align:center; margin:0 0 13px 0;">
-                                            CLB 2
+                                            <t t-esc="'CLB ' + (o.listening_clb or '0')"/>
                                         </div>
                                         <div style="text-align:center; white-space:nowrap; font-size:0; line-height:0;">
-                                            <span style="display:inline-block; width:32px; height:5px; background:#475D76; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:32px; height:5px; background:#475D76; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:32px; height:5px; background:#E7E7E7; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:32px; height:5px; background:#E7E7E7; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:32px; height:5px; background:#E7E7E7; border-radius:2px; margin:0;"></span>
+                                            <t t-foreach="range(1, 9)" t-as="i">
+                                                <span t-att-style="'display:inline-block;width:18px;height:5px;border-radius:2px;margin:0 4px 0 0;background:' + ('#475D76' if int(o.listening_clb or 0) >= i else '#E7E7E7')"/>
+                                            </t>
                                         </div>
                                     </div>
                                 </td>
@@ -124,14 +123,12 @@
                                 <td style="vertical-align:middle; text-align:right; padding:0;">
                                     <div style="display:inline-block; width:198px; height:76px; box-sizing:border-box; border:1px solid #111111; border-radius:4px; background:#ffffff; padding:10px 10px 8px 10px;">
                                         <div style="font-size:33px; line-height:1.05; font-weight:700; color:#000000; text-align:center; margin:0 0 13px 0;">
-                                            CLB 4
+                                            <t t-esc="'CLB ' + (o.reading_clb or '0')"/>
                                         </div>
                                         <div style="text-align:center; white-space:nowrap; font-size:0; line-height:0;">
-                                            <span style="display:inline-block; width:32px; height:5px; background:#5CB8B2; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:32px; height:5px; background:#5CB8B2; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:32px; height:5px; background:#5CB8B2; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:32px; height:5px; background:#5CB8B2; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:32px; height:5px; background:#DDEFEA; border-radius:2px; margin:0;"></span>
+                                            <t t-foreach="range(1, 9)" t-as="i">
+                                                <span t-att-style="'display:inline-block;width:18px;height:5px;border-radius:2px;margin:0 4px 0 0;background:' + ('#5CB8B2' if int(o.reading_clb or 0) >= i else '#DDEFEA')"/>
+                                            </t>
                                         </div>
                                     </div>
                                 </td>
@@ -163,14 +160,12 @@
                                 <td style="vertical-align:middle; text-align:right; padding:0;">
                                     <div style="display:inline-block; width:198px; height:76px; box-sizing:border-box; border:1px solid #111111; border-radius:4px; background:#ffffff; padding:10px 10px 8px 10px;">
                                         <div style="font-size:33px; line-height:1.05; font-weight:700; color:#000000; text-align:center; margin:0 0 13px 0;">
-                                            CLB 2
+                                            <t t-esc="'CLB ' + (o.speaking_clb or '0')"/>
                                         </div>
                                         <div style="text-align:center; white-space:nowrap; font-size:0; line-height:0;">
-                                            <span style="display:inline-block; width:32px; height:5px; background:#A50034; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:32px; height:5px; background:#A50034; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:32px; height:5px; background:#EFE6EA; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:32px; height:5px; background:#EFE6EA; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:32px; height:5px; background:#EFE6EA; border-radius:2px; margin:0;"></span>
+                                            <t t-foreach="range(1, 9)" t-as="i">
+                                                <span t-att-style="'display:inline-block;width:18px;height:5px;border-radius:2px;margin:0 4px 0 0;background:' + ('#A50034' if int(o.speaking_clb or 0) >= i else '#EFE6EA')"/>
+                                            </t>
                                         </div>
                                     </div>
                                 </td>
@@ -202,14 +197,12 @@
                                 <td style="vertical-align:middle; text-align:right; padding:0;">
                                     <div style="display:inline-block; width:198px; height:76px; box-sizing:border-box; border:1px solid #111111; border-radius:4px; background:#ffffff; padding:10px 10px 8px 10px;">
                                         <div style="font-size:33px; line-height:1.05; font-weight:700; color:#000000; text-align:center; margin:0 0 13px 0;">
-                                            CLB 3
+                                            <t t-esc="'CLB ' + (o.writing_clb or '0')"/>
                                         </div>
                                         <div style="text-align:center; white-space:nowrap; font-size:0; line-height:0;">
-                                            <span style="display:inline-block; width:32px; height:5px; background:#E04F39; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:32px; height:5px; background:#E04F39; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:32px; height:5px; background:#E04F39; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:32px; height:5px; background:#F2E3DF; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:32px; height:5px; background:#F2E3DF; border-radius:2px; margin:0;"></span>
+                                            <t t-foreach="range(1, 9)" t-as="i">
+                                                <span t-att-style="'display:inline-block;width:18px;height:5px;border-radius:2px;margin:0 4px 0 0;background:' + ('#E04F39' if int(o.writing_clb or 0) >= i else '#F2E3DF')"/>
+                                            </t>
                                         </div>
                                     </div>
                                 </td>
@@ -226,10 +219,7 @@
                             </tr>
                             <tr>
                                 <td style="border:1px solid #111111; min-height:118px; padding:22px 12px 22px 12px; font-size:13px; line-height:2.05; font-weight:400; color:#333333; box-sizing:border-box;">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vitae eleifend nisi.
-                                    Donec laoreet tellus eu egestas sollicitudin. Interdum et malesuada fames ac ante
-                                    ipsum primis in faucibus. Morbi in est mollis, consequat tortor in, tempor velit.
-                                    Cras ac nibh sit amet ex rutrum malesuada vel vitae augue.
+                                    <t t-out="all_skills_detail.recommendation or ''"/>
                                 </td>
                             </tr>
                         </table>
@@ -274,7 +264,7 @@
                                 <tr>
                                     <td style="width:58%; padding:0 0 18px 0; font-size:15.5px; color:#111111; font-weight:400;">
                                         Client Name:
-                                        <span t-esc="o.name or ''"/>
+                                        <span t-esc="o.partner_id.name or ''"/>
                                     </td>
                                     <td style="width:42%; padding:0 0 18px 0; font-size:15.5px; color:#111111; font-weight:400; text-align:left;">
                                         Language: English (ESL)
@@ -291,6 +281,8 @@
                             </table>
                         </div>
 
+                        <t t-set="reading_line" t-value="env['elearning.detail.line'].sudo().search([('detail_id.skill_type', '=', 'reading'), ('clb', '=', o.reading_clb or '0')], limit=1)"/>
+
                         <!-- MAIN SKILL ROW -->
                         <table style="width:100%; border-collapse:collapse; margin:0 0 44px 0;">
                             <tr>
@@ -302,14 +294,12 @@
                                 <td style="width:36%; vertical-align:middle; text-align:right; padding:0;">
                                     <div style="display:inline-block; width:210px; height:82px; box-sizing:border-box; border:1px solid #111111; border-radius:4px; background:#ffffff; padding:10px 10px 8px 10px;">
                                         <div style="font-size:36px; line-height:1.05; font-weight:700; color:#000000; text-align:center; margin:0 0 14px 0;">
-                                            CLB 4
+                                            <t t-esc="'CLB ' + (o.reading_clb or '0')"/>
                                         </div>
                                         <div style="text-align:center; white-space:nowrap; font-size:0; line-height:0;">
-                                            <span style="display:inline-block; width:34px; height:5px; background:#5CB8B2; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:34px; height:5px; background:#5CB8B2; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:34px; height:5px; background:#5CB8B2; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:34px; height:5px; background:#5CB8B2; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:34px; height:5px; background:#DDEFEA; border-radius:2px; margin:0;"></span>
+                                            <t t-foreach="range(1, 9)" t-as="i">
+                                                <span t-att-style="'display:inline-block;width:18px;height:5px;border-radius:2px;margin:0 4px 0 0;background:' + ('#5CB8B2' if int(o.reading_clb or 0) >= i else '#DDEFEA')"/>
+                                            </t>
                                         </div>
                                     </div>
                                 </td>
@@ -321,45 +311,17 @@
                             <tr>
                                 <td colspan="2"
                                     style="background:#DFF4EF; border-left:1px solid #111111; border-right:1px solid #111111; border-top:1px solid #111111; border-bottom:0; padding:16px 14px 15px 14px; font-size:17.5px; line-height:1.2; font-weight:700; color:#111111;">
-                                    CLB 4 Reading
+                                    <t t-esc="'CLB ' + (o.reading_clb or '0') + ' Reading'"/>
                                 </td>
                             </tr>
 
                             <tr>
                                 <td style="width:50%; height:260px; vertical-align:top; border-left:1px solid #111111; border-bottom:1px solid #111111; border-top:0; padding:30px 18px 30px 18px; font-size:14px; line-height:1.65; color:#111111;">
-                                    <div style="font-size:16px; margin:0 0 16px 0;">
-                                        I can...
-                                    </div>
-
-                                    <ul style="margin:0; padding-left:18px;">
-                                        <li style="margin:0 0 12px 0;">
-                                            <strong>Understand simple greetings.</strong>
-                                            <br/>
-                                            <span style="font-style:italic;">&quot;Hello. How are you?&quot;</span>
-                                        </li>
-                                        <li style="margin:0 0 12px 0;">
-                                            <strong>Understand a few simple words.</strong>
-                                            <br/>
-                                            <span style="font-style:italic;">&quot;Please sit down.&quot;</span>
-                                        </li>
-                                        <li style="margin:0 0 12px 0;">
-                                            <strong>Understand common expressions.</strong>
-                                            <br/>
-                                            <span style="font-style:italic;">&quot;Excuse me.&quot; &quot;Watch out!&quot;</span>
-                                        </li>
-                                        <li style="margin:0;">
-                                            <strong>Understand very simple information.</strong>
-                                            <br/>
-                                            <span style="font-style:italic;">&quot;My phone number is ...&quot;</span>
-                                        </li>
-                                    </ul>
+                                    <t t-out="reading_line.can_do_statement_left or ''"/>
                                 </td>
 
                                 <td style="width:50%; height:260px; vertical-align:top; border-right:1px solid #111111; border-bottom:1px solid #111111; border-top:0; padding:76px 18px 30px 18px; font-size:14px; line-height:2.15; color:#111111;">
-                                    I understand a few individual words and some familiar short phrases.
-                                    But, I only understand when the speaker speaks slowly and repeats.
-                                    I also need pictures or gestures to help me understand.
-                                    Understanding on the phone is too difficult for me.
+                                    <t t-out="reading_line.can_do_statement_right or ''"/>
                                 </td>
                             </tr>
                         </table>
@@ -373,10 +335,7 @@
                             </tr>
                             <tr>
                                 <td style="border:1px solid #111111; height:150px; padding:24px 14px 24px 14px; font-size:14px; line-height:2.15; font-weight:400; color:#333333; box-sizing:border-box;">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vitae eleifend nisi.
-                                    Donec laoreet tellus eu egestas sollicitudin. Interdum et malesuada fames ac ante
-                                    ipsum primis in faucibus. Morbi in est mollis, consequat tortor in, tempor velit.
-                                    Cras ac nibh sit amet ex rutrum malesuada vel vitae augue.
+                                    <t t-out="reading_line.recommendation or ''"/>
                                 </td>
                             </tr>
                         </table>
@@ -423,7 +382,7 @@
                                 <tr>
                                     <td style="width:58%; padding:0 0 18px 0; font-size:15.5px; color:#111111; font-weight:400;">
                                         Client Name:
-                                        <span t-esc="o.name or ''"/>
+                                        <span t-esc="o.partner_id.name or ''"/>
                                     </td>
                                     <td style="width:42%; padding:0 0 18px 0; font-size:15.5px; color:#111111; font-weight:400; text-align:left;">
                                         Language: English (ESL)
@@ -440,6 +399,8 @@
                             </table>
                         </div>
 
+                        <t t-set="listening_line" t-value="env['elearning.detail.line'].sudo().search([('detail_id.skill_type', '=', 'listening'), ('clb', '=', o.listening_clb or '0')], limit=1)"/>
+
                         <!-- MAIN SKILL ROW -->
                         <table style="width:100%; border-collapse:collapse; margin:0 0 44px 0;">
                             <tr>
@@ -451,14 +412,12 @@
                                 <td style="width:36%; vertical-align:middle; text-align:right; padding:0;">
                                     <div style="display:inline-block; width:210px; height:82px; box-sizing:border-box; border:1px solid #111111; border-radius:4px; background:#ffffff; padding:10px 10px 8px 10px;">
                                         <div style="font-size:36px; line-height:1.05; font-weight:700; color:#000000; text-align:center; margin:0 0 14px 0;">
-                                            CLB 2
+                                            <t t-esc="'CLB ' + (o.listening_clb or '0')"/>
                                         </div>
                                         <div style="text-align:center; white-space:nowrap; font-size:0; line-height:0;">
-                                            <span style="display:inline-block; width:34px; height:5px; background:#475D76; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:34px; height:5px; background:#475D76; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:34px; height:5px; background:#DDE7F1; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:34px; height:5px; background:#DDE7F1; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:34px; height:5px; background:#DDE7F1; border-radius:2px; margin:0;"></span>
+                                            <t t-foreach="range(1, 9)" t-as="i">
+                                                <span t-att-style="'display:inline-block;width:18px;height:5px;border-radius:2px;margin:0 4px 0 0;background:' + ('#475D76' if int(o.listening_clb or 0) >= i else '#DDE7F1')"/>
+                                            </t>
                                         </div>
                                     </div>
                                 </td>
@@ -470,45 +429,17 @@
                             <tr>
                                 <td colspan="2"
                                     style="background:#DCE9F6; border-left:1px solid #111111; border-right:1px solid #111111; border-top:1px solid #111111; border-bottom:0; padding:16px 14px 15px 14px; font-size:17.5px; line-height:1.2; font-weight:700; color:#111111;">
-                                    CLB 2 Listening
+                                    <t t-esc="'CLB ' + (o.listening_clb or '0') + ' Listening'"/>
                                 </td>
                             </tr>
 
                             <tr>
                                 <td style="width:50%; height:260px; vertical-align:top; border-left:1px solid #111111; border-bottom:1px solid #111111; border-top:0; padding:30px 18px 30px 18px; font-size:14px; line-height:1.65; color:#111111;">
-                                    <div style="font-size:16px; margin:0 0 16px 0;">
-                                        I can...
-                                    </div>
-
-                                    <ul style="margin:0; padding-left:18px;">
-                                        <li style="margin:0 0 12px 0;">
-                                            <strong>Understand simple greetings.</strong>
-                                            <br/>
-                                            <span style="font-style:italic;">&quot;Hello. How are you?&quot;</span>
-                                        </li>
-                                        <li style="margin:0 0 12px 0;">
-                                            <strong>Understand a few simple words.</strong>
-                                            <br/>
-                                            <span style="font-style:italic;">&quot;Please sit down.&quot;</span>
-                                        </li>
-                                        <li style="margin:0 0 12px 0;">
-                                            <strong>Understand common expressions.</strong>
-                                            <br/>
-                                            <span style="font-style:italic;">&quot;Excuse me.&quot; &quot;Watch out!&quot;</span>
-                                        </li>
-                                        <li style="margin:0;">
-                                            <strong>Understand very simple information.</strong>
-                                            <br/>
-                                            <span style="font-style:italic;">&quot;My phone number is ...&quot;</span>
-                                        </li>
-                                    </ul>
+                                    <t t-out="listening_line.can_do_statement_left or ''"/>
                                 </td>
 
                                 <td style="width:50%; height:260px; vertical-align:top; border-right:1px solid #111111; border-bottom:1px solid #111111; border-top:0; padding:76px 18px 30px 18px; font-size:14px; line-height:2.15; color:#111111;">
-                                    I understand a few individual words and some familiar short phrases.
-                                    But, I only understand when the speaker speaks slowly and repeats.
-                                    I also need pictures or gestures to help me understand.
-                                    Understanding on the phone is too difficult for me.
+                                    <t t-out="listening_line.can_do_statement_right or ''"/>
                                 </td>
                             </tr>
                         </table>
@@ -522,10 +453,7 @@
                             </tr>
                             <tr>
                                 <td style="border:1px solid #111111; height:150px; padding:24px 14px 24px 14px; font-size:14px; line-height:2.15; font-weight:400; color:#333333; box-sizing:border-box;">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vitae eleifend nisi.
-                                    Donec laoreet tellus eu egestas sollicitudin. Interdum et malesuada fames ac ante
-                                    ipsum primis in faucibus. Morbi in est mollis, consequat tortor in, tempor velit.
-                                    Cras ac nibh sit amet ex rutrum malesuada vel vitae augue.
+                                    <t t-out="listening_line.recommendation or ''"/>
                                 </td>
                             </tr>
                         </table>
@@ -572,7 +500,7 @@
                                 <tr>
                                     <td style="width:58%; padding:0 0 18px 0; font-size:15.5px; color:#111111; font-weight:400;">
                                         Client Name:
-                                        <span t-esc="o.name or ''"/>
+                                        <span t-esc="o.partner_id.name or ''"/>
                                     </td>
                                     <td style="width:42%; padding:0 0 18px 0; font-size:15.5px; color:#111111; font-weight:400; text-align:left;">
                                         Language: English (ESL)
@@ -589,6 +517,8 @@
                             </table>
                         </div>
 
+                        <t t-set="speaking_line" t-value="env['elearning.detail.line'].sudo().search([('detail_id.skill_type', '=', 'speaking'), ('clb', '=', o.speaking_clb or '0')], limit=1)"/>
+
                         <!-- MAIN SKILL ROW -->
                         <table style="width:100%; border-collapse:collapse; margin:0 0 44px 0;">
                             <tr>
@@ -600,14 +530,12 @@
                                 <td style="width:36%; vertical-align:middle; text-align:right; padding:0;">
                                     <div style="display:inline-block; width:210px; height:82px; box-sizing:border-box; border:1px solid #111111; border-radius:4px; background:#ffffff; padding:10px 10px 8px 10px;">
                                         <div style="font-size:36px; line-height:1.05; font-weight:700; color:#000000; text-align:center; margin:0 0 14px 0;">
-                                            CLB 2
+                                            <t t-esc="'CLB ' + (o.speaking_clb or '0')"/>
                                         </div>
                                         <div style="text-align:center; white-space:nowrap; font-size:0; line-height:0;">
-                                            <span style="display:inline-block; width:34px; height:5px; background:#A50034; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:34px; height:5px; background:#A50034; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:34px; height:5px; background:#EFE6EA; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:34px; height:5px; background:#EFE6EA; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:34px; height:5px; background:#EFE6EA; border-radius:2px; margin:0;"></span>
+                                            <t t-foreach="range(1, 9)" t-as="i">
+                                                <span t-att-style="'display:inline-block;width:18px;height:5px;border-radius:2px;margin:0 4px 0 0;background:' + ('#A50034' if int(o.speaking_clb or 0) >= i else '#EFE6EA')"/>
+                                            </t>
                                         </div>
                                     </div>
                                 </td>
@@ -619,45 +547,17 @@
                             <tr>
                                 <td colspan="2"
                                     style="background:#F5EEF1; border-left:1px solid #111111; border-right:1px solid #111111; border-top:1px solid #111111; border-bottom:0; padding:16px 14px 15px 14px; font-size:17.5px; line-height:1.2; font-weight:700; color:#111111;">
-                                    CLB 2 Speaking
+                                    <t t-esc="'CLB ' + (o.speaking_clb or '0') + ' Speaking'"/>
                                 </td>
                             </tr>
 
                             <tr>
                                 <td style="width:50%; height:260px; vertical-align:top; border-left:1px solid #111111; border-bottom:1px solid #111111; border-top:0; padding:30px 18px 30px 18px; font-size:14px; line-height:1.65; color:#111111;">
-                                    <div style="font-size:16px; margin:0 0 16px 0;">
-                                        I can...
-                                    </div>
-
-                                    <ul style="margin:0; padding-left:18px;">
-                                        <li style="margin:0 0 12px 0;">
-                                            <strong>Use simple greetings.</strong>
-                                            <br/>
-                                            <span style="font-style:italic;">&quot;Hello. How are you?&quot;</span>
-                                        </li>
-                                        <li style="margin:0 0 12px 0;">
-                                            <strong>Say a few simple words.</strong>
-                                            <br/>
-                                            <span style="font-style:italic;">&quot;Please sit down.&quot;</span>
-                                        </li>
-                                        <li style="margin:0 0 12px 0;">
-                                            <strong>Use common expressions.</strong>
-                                            <br/>
-                                            <span style="font-style:italic;">&quot;Excuse me.&quot; &quot;Thank you.&quot;</span>
-                                        </li>
-                                        <li style="margin:0;">
-                                            <strong>Give very simple information.</strong>
-                                            <br/>
-                                            <span style="font-style:italic;">&quot;My phone number is ...&quot;</span>
-                                        </li>
-                                    </ul>
+                                    <t t-out="speaking_line.can_do_statement_left or ''"/>
                                 </td>
 
                                 <td style="width:50%; height:260px; vertical-align:top; border-right:1px solid #111111; border-bottom:1px solid #111111; border-top:0; padding:76px 18px 30px 18px; font-size:14px; line-height:2.15; color:#111111;">
-                                    I can say a few individual words and some familiar short phrases.
-                                    I can answer simple questions when the other person speaks slowly.
-                                    I may need help, pictures, or gestures to explain what I mean.
-                                    Speaking on the phone is too difficult for me.
+                                    <t t-out="speaking_line.can_do_statement_right or ''"/>
                                 </td>
                             </tr>
                         </table>
@@ -671,10 +571,7 @@
                             </tr>
                             <tr>
                                 <td style="border:1px solid #111111; height:150px; padding:24px 14px 24px 14px; font-size:14px; line-height:2.15; font-weight:400; color:#333333; box-sizing:border-box;">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vitae eleifend nisi.
-                                    Donec laoreet tellus eu egestas sollicitudin. Interdum et malesuada fames ac ante
-                                    ipsum primis in faucibus. Morbi in est mollis, consequat tortor in, tempor velit.
-                                    Cras ac nibh sit amet ex rutrum malesuada vel vitae augue.
+                                    <t t-out="speaking_line.recommendation or ''"/>
                                 </td>
                             </tr>
                         </table>
@@ -721,7 +618,7 @@
                                 <tr>
                                     <td style="width:58%; padding:0 0 18px 0; font-size:15.5px; color:#111111; font-weight:400;">
                                         Client Name:
-                                        <span t-esc="o.name or ''"/>
+                                        <span t-esc="o.partner_id.name or ''"/>
                                     </td>
                                     <td style="width:42%; padding:0 0 18px 0; font-size:15.5px; color:#111111; font-weight:400; text-align:left;">
                                         Language: English (ESL)
@@ -738,6 +635,8 @@
                             </table>
                         </div>
 
+                        <t t-set="writing_line" t-value="env['elearning.detail.line'].sudo().search([('detail_id.skill_type', '=', 'writing'), ('clb', '=', o.writing_clb or '0')], limit=1)"/>
+
                         <!-- MAIN SKILL ROW -->
                         <table style="width:100%; border-collapse:collapse; margin:0 0 44px 0;">
                             <tr>
@@ -749,14 +648,12 @@
                                 <td style="width:36%; vertical-align:middle; text-align:right; padding:0;">
                                     <div style="display:inline-block; width:210px; height:82px; box-sizing:border-box; border:1px solid #111111; border-radius:4px; background:#ffffff; padding:10px 10px 8px 10px;">
                                         <div style="font-size:36px; line-height:1.05; font-weight:700; color:#000000; text-align:center; margin:0 0 14px 0;">
-                                            CLB 3
+                                            <t t-esc="'CLB ' + (o.writing_clb or '0')"/>
                                         </div>
                                         <div style="text-align:center; white-space:nowrap; font-size:0; line-height:0;">
-                                            <span style="display:inline-block; width:34px; height:5px; background:#E04F39; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:34px; height:5px; background:#E04F39; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:34px; height:5px; background:#E04F39; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:34px; height:5px; background:#F2E3DF; border-radius:2px; margin:0 6px 0 0;"></span>
-                                            <span style="display:inline-block; width:34px; height:5px; background:#F2E3DF; border-radius:2px; margin:0;"></span>
+                                            <t t-foreach="range(1, 9)" t-as="i">
+                                                <span t-att-style="'display:inline-block;width:18px;height:5px;border-radius:2px;margin:0 4px 0 0;background:' + ('#E04F39' if int(o.writing_clb or 0) >= i else '#F2E3DF')"/>
+                                            </t>
                                         </div>
                                     </div>
                                 </td>
@@ -768,45 +665,17 @@
                             <tr>
                                 <td colspan="2"
                                     style="background:#FBF1EE; border-left:1px solid #111111; border-right:1px solid #111111; border-top:1px solid #111111; border-bottom:0; padding:16px 14px 15px 14px; font-size:17.5px; line-height:1.2; font-weight:700; color:#111111;">
-                                    CLB 3 Writing
+                                    <t t-esc="'CLB ' + (o.writing_clb or '0') + ' Writing'"/>
                                 </td>
                             </tr>
 
                             <tr>
                                 <td style="width:50%; height:260px; vertical-align:top; border-left:1px solid #111111; border-bottom:1px solid #111111; border-top:0; padding:30px 18px 30px 18px; font-size:14px; line-height:1.65; color:#111111;">
-                                    <div style="font-size:16px; margin:0 0 16px 0;">
-                                        I can...
-                                    </div>
-
-                                    <ul style="margin:0; padding-left:18px;">
-                                        <li style="margin:0 0 12px 0;">
-                                            <strong>Write simple personal information.</strong>
-                                            <br/>
-                                            <span style="font-style:italic;">&quot;My name is Jane.&quot;</span>
-                                        </li>
-                                        <li style="margin:0 0 12px 0;">
-                                            <strong>Write short simple sentences.</strong>
-                                            <br/>
-                                            <span style="font-style:italic;">&quot;I live in Canada.&quot;</span>
-                                        </li>
-                                        <li style="margin:0 0 12px 0;">
-                                            <strong>Complete simple forms.</strong>
-                                            <br/>
-                                            <span style="font-style:italic;">Name, address, phone number.</span>
-                                        </li>
-                                        <li style="margin:0;">
-                                            <strong>Write a short simple message.</strong>
-                                            <br/>
-                                            <span style="font-style:italic;">&quot;I am sick today.&quot;</span>
-                                        </li>
-                                    </ul>
+                                    <t t-out="writing_line.can_do_statement_left or ''"/>
                                 </td>
 
                                 <td style="width:50%; height:260px; vertical-align:top; border-right:1px solid #111111; border-bottom:1px solid #111111; border-top:0; padding:76px 18px 30px 18px; font-size:14px; line-height:2.15; color:#111111;">
-                                    I can write short simple words, phrases, and sentences.
-                                    I can give basic personal information in writing.
-                                    I may need help with spelling, grammar, and sentence structure.
-                                    I can write better when I have examples to follow.
+                                    <t t-out="writing_line.can_do_statement_right or ''"/>
                                 </td>
                             </tr>
                         </table>
@@ -820,10 +689,7 @@
                             </tr>
                             <tr>
                                 <td style="border:1px solid #111111; height:150px; padding:24px 14px 24px 14px; font-size:14px; line-height:2.15; font-weight:400; color:#333333; box-sizing:border-box;">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vitae eleifend nisi.
-                                    Donec laoreet tellus eu egestas sollicitudin. Interdum et malesuada fames ac ante
-                                    ipsum primis in faucibus. Morbi in est mollis, consequat tortor in, tempor velit.
-                                    Cras ac nibh sit amet ex rutrum malesuada vel vitae augue.
+                                    <t t-out="writing_line.recommendation or ''"/>
                                 </td>
                             </tr>
                         </table>

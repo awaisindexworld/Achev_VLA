@@ -15,13 +15,13 @@
 
     <record id="action_report_language_assessment" model="ir.actions.report">
         <field name="name">Language Assessment Result</field>
-        <field name="model">res.partner</field>
+        <field name="model">slide.channel.partner</field>
         <field name="report_type">qweb-pdf</field>
         <field name="report_name">test_reports.report_language_assessment</field>
         <field name="report_file">test_reports.report_language_assessment</field>
-        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_model_id" ref="website_slides.model_slide_channel_partner"/>
         <field name="binding_type">report</field>
         <field name="paperformat_id" ref="test_reports.paperformat_language_assessment"/>
-        <field name="print_report_name">'Language Assessment - %s' % (object.name or 'Contact')</field>
+        <field name="print_report_name">'Language Assessment - %s' % (object.partner_id.name or 'Response')</field>
     </record>
 </odoo>

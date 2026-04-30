@@ -1,4 +1,6 @@
+import html as html_lib
 import json
+import re
 
 from odoo import fields, models
 
@@ -15,6 +17,7 @@ class ElearningDetail(models.Model):
             ('listening', 'Listening'),
             ('writing', 'Writing'),
             ('reading', 'Reading'),
+            ('all_skills', 'All Skills'),
         ],
         string='Skill',
         required=True,
@@ -25,6 +28,7 @@ class ElearningDetail(models.Model):
         'detail_id',
         string='Lines',
     )
+    recommendation = fields.Html(string='Recommendation')
 
 
 class ElearningDetailLine(models.Model):
@@ -40,13 +44,14 @@ class ElearningDetailLine(models.Model):
         ondelete='cascade',
     )
     clb = fields.Selection(
-        selection=[(str(i), str(i)) for i in range(1, 9)],
+        selection=[('0', '0')] + [(str(i), str(i)) for i in range(1, 9)],
         string='CLB',
         required=True,
+        default='0',
     )
-    can_do_statement = fields.Html(
+    can_do_statement = fields.Text(
         string='Can do statement',
-        help='Stores left and right can do statements in one field.',
+        help='Stores left and right can do statements as JSON in one field.',
     )
     can_do_statement_left = fields.Html(
         string='Can do statement Left',
@@ -63,10 +68,12 @@ class ElearningDetailLine(models.Model):
     def _deserialize_can_do_statement(self):
         self.ensure_one()
         default_value = {'left': '', 'right': ''}
-        if not self.can_do_statement:
+        raw = self.can_do_statement
+        if not raw:
             return default_value
+        # Try 1: clean JSON (fields.Text storage)
         try:
-            value = json.loads(self.can_do_statement)
+            value = json.loads(raw)
             if isinstance(value, dict):
                 return {
                     'left': value.get('left', '') or '',
@@ -74,10 +81,18 @@ class ElearningDetailLine(models.Model):
                 }
         except Exception:
             pass
-        return {
-            'left': self.can_do_statement or '',
-            'right': '',
-        }
+        # Try 2: strip HTML wrappers from legacy fields.Html storage
+        stripped = html_lib.unescape(re.sub(r'<[^>]+>', '', raw)).strip()
+        try:
+            value = json.loads(stripped)
+            if isinstance(value, dict):
+                return {
+                    'left': value.get('left', '') or '',
+                    'right': value.get('right', '') or '',
+                }
+        except Exception:
+            pass
+        return {'left': raw or '', 'right': ''}
 
     def _compute_can_do_statement_parts(self):
         for record in self:

@@ -1,8 +1,8 @@
 from odoo import models
 
 
-class ResPartner(models.Model):
-    _inherit = "res.partner"
+class SlideChannelPartner(models.Model):
+    _inherit = "slide.channel.partner"
 
     def action_print_language_assessment_report(self):
         self.ensure_one()

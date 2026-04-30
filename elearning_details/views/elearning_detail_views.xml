@@ -21,7 +21,10 @@
                         <field name="name"/>
                         <field name="skill_type" widget="radio" options="{'horizontal': true}"/>
                     </group>
-                    <notebook>
+                    <group invisible="skill_type != 'all_skills'">
+                        <field name="recommendation" nolabel="1"/>
+                    </group>
+                    <notebook invisible="skill_type == 'all_skills'">
                         <page string="Lines">
                             <field name="line_ids" context="{'default_detail_id': id}">
                                 <list string="Lines">
