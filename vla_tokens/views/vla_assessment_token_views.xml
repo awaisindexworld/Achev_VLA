@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_vla_assessment_token_list" model="ir.ui.view">
+        <field name="name">vla.assessment.token.list</field>
+        <field name="model">vla.assessment.token</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="token_type"/>
+                <field name="partner_id"/>
+                <field name="company_partner_id"/>
+                <field name="candidate_email"/>
+                <field name="duration"/>
+                <field name="state"/>
+                <field name="registration_url"/>
+                <field name="product_id"/>
+                <field name="channel_id"/>
+                <field name="course_url"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_vla_assessment_token_form" model="ir.ui.view">
+        <field name="name">vla.assessment.token.form</field>
+        <field name="model">vla.assessment.token</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name" readonly="1"/>
+                        <field name="token_code" readonly="1"/>
+                        <field name="token_type"/>
+                        <field name="state"/>
+                        <field name="duration"/>
+                        <field name="partner_id"/>
+                        <field name="company_partner_id"/>
+                        <field name="candidate_email"/>
+                        <field name="registration_url" readonly="1"/>
+                        <field name="product_id" readonly="1"/>
+                        <field name="channel_id" readonly="1"/>
+                        <field name="course_url" readonly="1"/>
+                        <field name="sale_order_id" readonly="1"/>
+                        <field name="invoice_id" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_vla_assessment_tokens" model="ir.actions.act_window">
+        <field name="name">Assessment Tokens</field>
+        <field name="res_model">vla.assessment.token</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem
+        id="menu_vla_assessment_tokens"
+        name="Assessment URLs"
+        parent="menu_vla_tokens_root"
+        action="action_vla_assessment_tokens"
+        sequence="30"
+    />
+
+    <template id="vla_assessment_token_landing" name="VLA Assessment Token Landing">
+        <t t-call="website.layout">
+            <div class="container py-5">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8">
+                        <div class="card shadow-sm">
+                            <div class="card-body p-4">
+                                <h1 class="h3 mb-3">Your Assessment Is Ready</h1>
+
+                                <p class="mb-2">
+                                    Assessment duration:
+                                    <strong>
+                                        <t t-out="duration"/>
+                                        minutes
+                                    </strong>
+                                </p>
+
+                                <t t-if="token.channel_id">
+                                    <p class="text-muted mb-4">
+                                        This registration URL has been validated. Click below to start your assigned course.
+                                    </p>
+                                    <a t-att-href="token.course_url" class="btn btn-primary">
+                                        Go to Your Course
+                                    </a>
+                                </t>
+
+                                <t t-else="">
+                                    <p class="text-muted mb-4">
+                                        This registration URL has been validated, but no course is connected to this product yet.
+                                        Please contact support.
+                                    </p>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

@@ -4,14 +4,6 @@
     const GATE_SELECTOR = '.o_survey_listening_gate';
     const HIDDEN_CLASS = 'o_survey_hidden_until_video_done';
 
-    function getQuestionWrapper(gate) {
-    return (
-        gate.closest('.js_question-wrapper') ||
-        gate.closest('.o_survey_form_content') ||
-        gate.closest('form')
-    );
-}
-
     function getVideo(gate) {
         return gate.querySelector('.o_survey_listening_video_player');
     }
@@ -20,37 +12,8 @@
         return gate.querySelector('.o_survey_start_watching_btn');
     }
 
-    function getAnswerTargets(questionWrapper, gate) {
-        if (!questionWrapper) {
-            return [];
-        }
-
-        const selectors = [
-            '.o_survey_answer_wrapper',
-            '.o_survey_question_multiple_choice',
-            '.o_survey_question_matrix',
-            '.o_survey_comment_container',
-            '.o_survey_question_text_box',
-            '.o_survey_question_char_box',
-            '.o_survey_question_numerical_box',
-            '.o_survey_question_date',
-            '.o_survey_question_datetime'
-        ];
-
-        const targets = [];
-
-        selectors.forEach(function (selector) {
-            questionWrapper.querySelectorAll(selector).forEach(function (el) {
-                if (el === gate || gate.contains(el)) {
-                    return;
-                }
-                if (!targets.includes(el)) {
-                    targets.push(el);
-                }
-            });
-        });
-
-        return targets;
+    function isSurveyGate(gate) {
+        return !!gate.dataset.questionId && !gate.classList.contains('o_course_listening_gate');
     }
 
     function getContinueButtons() {
@@ -60,47 +23,11 @@
     }
 
     function hideElement(el) {
-        if (!el || el.classList.contains(HIDDEN_CLASS)) {
-            return;
-        }
-
-        if (!el.dataset.oSurveyVideoDisplay) {
-            el.dataset.oSurveyVideoDisplay = el.style.display || '';
-        }
-
-        el.classList.add(HIDDEN_CLASS);
-        el.style.display = 'none';
-    }
-
-    function showElement(el) {
         if (!el) {
             return;
         }
-
-        el.classList.remove(HIDDEN_CLASS);
-        el.style.display = el.dataset.oSurveyVideoDisplay || '';
-    }
-
-    function disableContinue(btn) {
-        if (!btn) {
-            return;
-        }
-        btn.disabled = true;
-        btn.classList.add('disabled');
-        btn.setAttribute('aria-disabled', 'true');
-        btn.style.pointerEvents = 'none';
-        btn.style.opacity = '0.5';
-    }
-
-    function enableContinue(btn) {
-        if (!btn) {
-            return;
-        }
-        btn.disabled = false;
-        btn.classList.remove('disabled');
-        btn.removeAttribute('aria-disabled');
-        btn.style.pointerEvents = '';
-        btn.style.opacity = '';
+        el.classList.add(HIDDEN_CLASS);
+        el.style.display = 'none';
     }
 
     function lockVideo(gate, video) {
@@ -119,29 +46,20 @@
     }
 
     function refreshGate(gate) {
-    if (!gate || gate.dataset.state === 'completed') {
-        return;
+        if (!gate) {
+            return;
+        }
+
+        if (isSurveyGate(gate)) {
+            gate._continueButtons = getContinueButtons();
+            gate._continueButtons.forEach(hideElement);
+        }
     }
-
-    const questionWrapper = gate._questionWrapper || getQuestionWrapper(gate);
-    gate._questionWrapper = questionWrapper;
-
-    gate._answerTargets = getAnswerTargets(questionWrapper, gate);
-    gate._continueButtons = getContinueButtons();
-
-    // Keep answers visible before/during the video
-    gate._answerTargets.forEach(showElement);
-
-    // Still block Next/Finish until the video ends
-    gate._continueButtons.forEach(disableContinue);
-}
 
     function completeGate(gate, video) {
         gate.dataset.state = 'completed';
         lockVideo(gate, video);
-
-        (gate._answerTargets || []).forEach(showElement);
-        (gate._continueButtons || []).forEach(enableContinue);
+        refreshGate(gate);
 
         if (gate._refreshInterval) {
             clearInterval(gate._refreshInterval);
@@ -157,16 +75,13 @@
         gate.dataset.videoGateInit = '1';
         gate.dataset.state = 'ready';
 
-        const questionWrapper = getQuestionWrapper(gate);
         const video = getVideo(gate);
         const startButton = getStartButton(gate);
 
-        if (!questionWrapper || !video || !startButton) {
+        if (!video || !startButton) {
             return;
         }
 
-        gate._questionWrapper = questionWrapper;
-        gate._answerTargets = [];
         gate._continueButtons = [];
 
         video.controls = false;
@@ -258,33 +173,231 @@
         });
 
         gate._refreshInterval = window.setInterval(function () {
-            if (gate.dataset.state !== 'completed') {
-                refreshGate(gate);
-            }
+            refreshGate(gate);
         }, 300);
     }
 
     function initAll() {
         document.querySelectorAll(GATE_SELECTOR).forEach(function (gate) {
             initGate(gate);
-            if (gate.dataset.state !== 'completed') {
-                refreshGate(gate);
+            refreshGate(gate);
+        });
+    }
+
+    function hideContinueButtonEverywhere() {
+        if (!document.querySelector('.o_survey_listening_gate[data-question-id]')) {
+            return;
+        }
+
+        const selectors = [
+            '.o_survey_navigation_submit',
+            'button',
+            'input[type="submit"]',
+            'a.btn',
+            '.btn'
+        ];
+
+        document.querySelectorAll(selectors.join(',')).forEach(function (el) {
+            const text = (el.innerText || el.value || '').trim().toLowerCase();
+
+            if (
+                text === 'continue' ||
+                text === 'next' ||
+                text === 'finish' ||
+                text.includes('continue')
+            ) {
+                el.style.setProperty('display', 'none', 'important');
+                el.style.setProperty('visibility', 'hidden', 'important');
+                el.disabled = true;
+                el.setAttribute('aria-hidden', 'true');
+                el.setAttribute('tabindex', '-1');
+            }
+        });
+
+        document.querySelectorAll('*').forEach(function (el) {
+            const text = (el.innerText || '').trim().toLowerCase();
+
+            if (text === 'or press enter') {
+                el.style.setProperty('display', 'none', 'important');
             }
         });
     }
 
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initAll);
-    } else {
+    function boot() {
         initAll();
+        hideContinueButtonEverywhere();
+
+        window.setInterval(function () {
+            initAll();
+            hideContinueButtonEverywhere();
+        }, 300);
+
+        new MutationObserver(function () {
+            initAll();
+            hideContinueButtonEverywhere();
+        }).observe(document.body, {
+            childList: true,
+            subtree: true
+        });
     }
 
-    const observer = new MutationObserver(function () {
-        initAll();
-    });
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', boot);
+    } else {
+        boot();
+    }
+})();
+// Course/eLearning listening video injection
+(function () {
+    'use strict';
 
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true
-    });
+    function isFullscreenLesson() {
+        return window.location.href.includes('fullscreen=1');
+    }
+
+    function isAudio(filename) {
+        filename = (filename || '').toLowerCase();
+        return filename.endsWith('.mp3') || filename.endsWith('.wav') || filename.endsWith('.ogg');
+    }
+
+    function getSlideId() {
+        const match = window.location.href.match(/-(\d+)(?:\?|#|$)/);
+        return match ? match[1] : false;
+    }
+
+    function findFullscreenTarget() {
+        return document.querySelector('.o_wslides_fs_article')
+            || document.querySelector('.o_wslides_fs_content .container')
+            || document.querySelector('.o_wslides_fs_content')
+            || document.querySelector('main');
+    }
+
+    async function injectCourseVideo() {
+        if (!isFullscreenLesson()) {
+            return;
+        }
+
+        const slideId = getSlideId();
+        const target = findFullscreenTarget();
+
+        if (!slideId || !target || document.querySelector('.o_course_listening_gate')) {
+            return;
+        }
+
+        let data;
+        try {
+            const response = await fetch('/slides/listening/video_info/' + slideId);
+            data = await response.json();
+        } catch (error) {
+            return;
+        }
+
+        if (!data || !data.enabled || !data.media_url) {
+            return;
+        }
+
+        const mediaHtml = isAudio(data.filename)
+            ? `<audio class="o_survey_listening_video_player" preload="auto" style="width:100%;max-width:760px;"><source src="${data.media_url}"/></audio>`
+            : `<video class="o_survey_listening_video_player" preload="auto" playsinline="playsinline" style="width:100%;max-width:760px;height:auto;border-radius:10px;background:#000;"><source src="${data.media_url}"/></video>`;
+
+        const wrapper = document.createElement('div');
+        wrapper.className = 'o_survey_listening_gate o_course_listening_gate';
+        wrapper.dataset.slideId = slideId;
+        wrapper.innerHTML = `
+            <div style="width:100%;min-height:calc(100vh - 160px);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:28px 24px;background:#111821;">
+                <button type="button" class="btn btn-primary o_survey_start_watching_btn mb-3">Start</button>
+                <div class="o_survey_listening_video_wrap" style="width:100%;max-width:760px;text-align:center;">
+                    ${mediaHtml}
+                </div>
+            </div>
+        `;
+
+        target.innerHTML = '';
+        target.appendChild(wrapper);
+
+        const video = wrapper.querySelector('.o_survey_listening_video_player');
+        const startButton = wrapper.querySelector('.o_survey_start_watching_btn');
+
+        let started = false;
+        let completed = false;
+        let maxAllowedTime = 0;
+
+        video.controls = false;
+        video.removeAttribute('controls');
+        video.preload = 'auto';
+        video.autoplay = false;
+        video.muted = false;
+        video.setAttribute('playsinline', 'true');
+        video.setAttribute('webkit-playsinline', 'true');
+        video.setAttribute('controlsList', 'nodownload noplaybackrate noremoteplayback nofullscreen');
+        video.setAttribute('disablePictureInPicture', 'true');
+
+        startButton.addEventListener('click', function () {
+            if (started || completed) {
+                return;
+            }
+
+            started = true;
+            startButton.disabled = true;
+            startButton.classList.add('disabled');
+            startButton.setAttribute('aria-disabled', 'true');
+
+            video.play().catch(function () {
+                started = false;
+                startButton.disabled = false;
+                startButton.classList.remove('disabled');
+                startButton.removeAttribute('aria-disabled');
+            });
+        });
+
+        video.addEventListener('play', function () {
+            if (!completed) {
+                started = true;
+                startButton.disabled = true;
+                startButton.classList.add('disabled');
+                startButton.setAttribute('aria-disabled', 'true');
+            }
+        });
+
+        video.addEventListener('timeupdate', function () {
+            if (!completed && video.currentTime > maxAllowedTime) {
+                maxAllowedTime = video.currentTime;
+            }
+        });
+
+        video.addEventListener('seeking', function () {
+            if (started && !completed && video.currentTime > maxAllowedTime + 0.15) {
+                video.currentTime = maxAllowedTime;
+            }
+        });
+
+        video.addEventListener('pause', function () {
+            if (started && !completed && video.currentTime < (video.duration || Infinity)) {
+                video.play().catch(function () {});
+            }
+        });
+
+        video.addEventListener('ended', function () {
+            completed = true;
+            wrapper.dataset.state = 'completed';
+
+            video.pause();
+            video.controls = false;
+            video.removeAttribute('controls');
+            video.style.pointerEvents = 'none';
+
+            wrapper.classList.add('o_survey_video_completed');
+        });
+    }
+
+    function bootCourseVideo() {
+        injectCourseVideo();
+        window.setInterval(injectCourseVideo, 700);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', bootCourseVideo);
+    } else {
+        bootCourseVideo();
+    }
 })();

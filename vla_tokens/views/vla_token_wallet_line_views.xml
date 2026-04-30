@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_vla_token_wallet_line_list" model="ir.ui.view">
+        <field name="name">vla.token.wallet.line.list</field>
+        <field name="model">vla.token.wallet.line</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="partner_id"/>
+                <field name="duration"/>
+                <field name="balance"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_vla_token_wallet_transaction_list" model="ir.ui.view">
+        <field name="name">vla.token.wallet.transaction.list</field>
+        <field name="model">vla.token.wallet.transaction</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="create_date"/>
+                <field name="partner_id"/>
+                <field name="duration"/>
+                <field name="amount"/>
+                <field name="balance_after"/>
+                <field name="reason"/>
+                <field name="product_id"/>
+                <field name="invoice_id"/>
+                <field name="note"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_vla_token_wallet_lines" model="ir.actions.act_window">
+        <field name="name">VLA Wallet Balances</field>
+        <field name="res_model">vla.token.wallet.line</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <record id="action_vla_token_wallet_transactions" model="ir.actions.act_window">
+        <field name="name">VLA Token Ledger</field>
+        <field name="res_model">vla.token.wallet.transaction</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <menuitem id="menu_vla_tokens_root" name="VLA Tokens" parent="contacts.menu_contacts" sequence="95"/>
+    <menuitem id="menu_vla_token_wallet_lines" name="Wallet Balances" parent="menu_vla_tokens_root" action="action_vla_token_wallet_lines" sequence="10"/>
+    <menuitem id="menu_vla_token_wallet_transactions" name="Token Ledger" parent="menu_vla_tokens_root" action="action_vla_token_wallet_transactions" sequence="20"/>
+</odoo>

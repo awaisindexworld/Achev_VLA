@@ -1,0 +1,842 @@
+<odoo>
+    <template id="report_language_assessment">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+
+                <t t-set="base_url" t-value="(web_base_url or '').rstrip('/')"/>
+
+                <!-- ========================= -->
+                <!-- PAGE 1 -->
+                <!-- ========================= -->
+                <div class="page"
+                     style="margin:0; padding:0; background:#ffffff; font-family:Poppins, Arial, sans-serif;">
+                    <div style="width:100%; min-height:297mm; box-sizing:border-box; padding:16mm 14mm 12mm 14mm; background:#ffffff; color:#000000;">
+
+                        <!-- HEADER -->
+                        <table style="width:100%; border-collapse:collapse; margin:0 0 26px 0;">
+                            <tr>
+                                <td style="width:68%; vertical-align:top; padding:0;">
+                                    <div style="font-size:26px; line-height:1.2; font-weight:700; color:#000000; margin:0 0 10px 0;">
+                                        Language Assessment Result
+                                    </div>
+                                    <div style="font-size:14px; line-height:1.45; font-weight:400; color:#333333; margin:0;">
+                                        Thank you for using the Canadian Language Benchmarks
+                                        <br/>
+                                        virtual language assessment (CLB-VLA).
+                                    </div>
+                                </td>
+
+                                <td style="width:32%; vertical-align:top; text-align:right; padding:0;">
+                                    <img t-att-src="base_url + '/test_reports/static/src/img/achiev_logo.png'"
+                                         style="width:135px; height:auto; display:inline-block; margin-top:4px; border:0; outline:none;"/>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- TOP INFO BOX -->
+                        <div style="width:100%; border:1px solid #c8c8c8; border-radius:4px; background:#f4f5f6; box-sizing:border-box; padding:22px 32px; margin:0 0 42px 0;">
+                            <table style="width:100%; border-collapse:collapse;">
+                                <tr>
+                                    <td style="width:58%; padding:0 0 18px 0; font-size:15.5px; color:#111111; font-weight:400;">
+                                        Client Name:
+                                        <span t-esc="o.name or ''"/>
+                                    </td>
+                                    <td style="width:42%; padding:0 0 18px 0; font-size:15.5px; color:#111111; font-weight:400; text-align:left;">
+                                        Language: English (ESL)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:0; font-size:15.5px; color:#111111; font-weight:400;">
+                                        Language Skill: Listening 2
+                                    </td>
+                                    <td style="padding:0; font-size:15.5px; color:#111111; font-weight:400; text-align:left;">
+                                        Test Date: Jan-20-2026
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- SKILLS -->
+                        <table style="width:100%; border-collapse:separate; border-spacing:0 24px; margin:0 0 48px 0;">
+
+                            <!-- LISTENING -->
+                            <tr>
+                                <td style="width:64%; vertical-align:middle; padding:0;">
+                                    <table style="border-collapse:collapse;">
+                                        <tr>
+                                            <td style="width:112px; vertical-align:middle; padding:0;">
+                                                <div style="width:96px; height:96px; overflow:hidden;">
+                                                    <img t-att-src="base_url + '/test_reports/static/src/img/listening_icon.png'"
+                                                         style="height:96px; width:auto; display:block; border:0; outline:none;"/>
+                                                </div>
+                                            </td>
+                                            <td style="vertical-align:middle; padding:0;">
+                                                <div style="font-size:18px; line-height:1.15; font-weight:400; color:#111111; margin:0 0 7px 0;">
+                                                    Language Skill
+                                                </div>
+                                                <div style="font-size:42px; line-height:1.05; font-weight:600; color:#111111; margin:0;">
+                                                    Listening
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+
+                                <td style="width:36%; vertical-align:middle; text-align:right; padding:0;">
+                                    <div style="display:inline-block; width:198px; height:76px; box-sizing:border-box; border:1px solid #111111; border-radius:4px; background:#ffffff; padding:10px 10px 8px 10px;">
+                                        <div style="font-size:33px; line-height:1.05; font-weight:700; color:#000000; text-align:center; margin:0 0 13px 0;">
+                                            CLB 2
+                                        </div>
+                                        <div style="text-align:center; white-space:nowrap; font-size:0; line-height:0;">
+                                            <span style="display:inline-block; width:32px; height:5px; background:#475D76; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:32px; height:5px; background:#475D76; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:32px; height:5px; background:#E7E7E7; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:32px; height:5px; background:#E7E7E7; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:32px; height:5px; background:#E7E7E7; border-radius:2px; margin:0;"></span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- READING -->
+                            <tr>
+                                <td style="vertical-align:middle; padding:0;">
+                                    <table style="border-collapse:collapse;">
+                                        <tr>
+                                            <td style="width:112px; vertical-align:middle; padding:0;">
+                                                <div style="width:96px; height:96px; overflow:hidden;">
+                                                    <img t-att-src="base_url + '/test_reports/static/src/img/reading_icon.png'"
+                                                         style="height:96px; width:auto; display:block; border:0; outline:none;"/>
+                                                </div>
+                                            </td>
+                                            <td style="vertical-align:middle; padding:0;">
+                                                <div style="font-size:18px; line-height:1.15; font-weight:400; color:#111111; margin:0 0 7px 0;">
+                                                    Language Skill
+                                                </div>
+                                                <div style="font-size:42px; line-height:1.05; font-weight:600; color:#111111; margin:0;">
+                                                    Reading
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+
+                                <td style="vertical-align:middle; text-align:right; padding:0;">
+                                    <div style="display:inline-block; width:198px; height:76px; box-sizing:border-box; border:1px solid #111111; border-radius:4px; background:#ffffff; padding:10px 10px 8px 10px;">
+                                        <div style="font-size:33px; line-height:1.05; font-weight:700; color:#000000; text-align:center; margin:0 0 13px 0;">
+                                            CLB 4
+                                        </div>
+                                        <div style="text-align:center; white-space:nowrap; font-size:0; line-height:0;">
+                                            <span style="display:inline-block; width:32px; height:5px; background:#5CB8B2; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:32px; height:5px; background:#5CB8B2; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:32px; height:5px; background:#5CB8B2; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:32px; height:5px; background:#5CB8B2; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:32px; height:5px; background:#DDEFEA; border-radius:2px; margin:0;"></span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- SPEAKING -->
+                            <tr>
+                                <td style="vertical-align:middle; padding:0;">
+                                    <table style="border-collapse:collapse;">
+                                        <tr>
+                                            <td style="width:112px; vertical-align:middle; padding:0;">
+                                                <div style="width:96px; height:96px; overflow:hidden;">
+                                                    <img t-att-src="base_url + '/test_reports/static/src/img/speaking_icon.png'"
+                                                         style="height:96px; width:auto; display:block; border:0; outline:none;"/>
+                                                </div>
+                                            </td>
+                                            <td style="vertical-align:middle; padding:0;">
+                                                <div style="font-size:18px; line-height:1.15; font-weight:400; color:#111111; margin:0 0 7px 0;">
+                                                    Language Skill
+                                                </div>
+                                                <div style="font-size:42px; line-height:1.05; font-weight:600; color:#111111; margin:0;">
+                                                    Speaking
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+
+                                <td style="vertical-align:middle; text-align:right; padding:0;">
+                                    <div style="display:inline-block; width:198px; height:76px; box-sizing:border-box; border:1px solid #111111; border-radius:4px; background:#ffffff; padding:10px 10px 8px 10px;">
+                                        <div style="font-size:33px; line-height:1.05; font-weight:700; color:#000000; text-align:center; margin:0 0 13px 0;">
+                                            CLB 2
+                                        </div>
+                                        <div style="text-align:center; white-space:nowrap; font-size:0; line-height:0;">
+                                            <span style="display:inline-block; width:32px; height:5px; background:#A50034; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:32px; height:5px; background:#A50034; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:32px; height:5px; background:#EFE6EA; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:32px; height:5px; background:#EFE6EA; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:32px; height:5px; background:#EFE6EA; border-radius:2px; margin:0;"></span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- WRITING -->
+                            <tr>
+                                <td style="vertical-align:middle; padding:0;">
+                                    <table style="border-collapse:collapse;">
+                                        <tr>
+                                            <td style="width:112px; vertical-align:middle; padding:0;">
+                                                <div style="width:96px; height:96px; overflow:hidden;">
+                                                    <img t-att-src="base_url + '/test_reports/static/src/img/writing_icon.png'"
+                                                         style="height:96px; width:auto; display:block; border:0; outline:none;"/>
+                                                </div>
+                                            </td>
+                                            <td style="vertical-align:middle; padding:0;">
+                                                <div style="font-size:18px; line-height:1.15; font-weight:400; color:#111111; margin:0 0 7px 0;">
+                                                    Language Skill
+                                                </div>
+                                                <div style="font-size:42px; line-height:1.05; font-weight:600; color:#111111; margin:0;">
+                                                    Writing
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+
+                                <td style="vertical-align:middle; text-align:right; padding:0;">
+                                    <div style="display:inline-block; width:198px; height:76px; box-sizing:border-box; border:1px solid #111111; border-radius:4px; background:#ffffff; padding:10px 10px 8px 10px;">
+                                        <div style="font-size:33px; line-height:1.05; font-weight:700; color:#000000; text-align:center; margin:0 0 13px 0;">
+                                            CLB 3
+                                        </div>
+                                        <div style="text-align:center; white-space:nowrap; font-size:0; line-height:0;">
+                                            <span style="display:inline-block; width:32px; height:5px; background:#E04F39; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:32px; height:5px; background:#E04F39; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:32px; height:5px; background:#E04F39; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:32px; height:5px; background:#F2E3DF; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:32px; height:5px; background:#F2E3DF; border-radius:2px; margin:0;"></span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </table>
+
+                        <!-- RECOMMENDATION BOX -->
+                        <table style="width:100%; border-collapse:collapse; border:1px solid #111111; margin:0 0 42px 0;">
+                            <tr>
+                                <td style="background:#E9E9E9; border:1px solid #111111; padding:14px 12px 13px 12px; font-size:16.5px; line-height:1.2; font-weight:700; color:#111111;">
+                                    Recommendation and Next Step
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid #111111; min-height:118px; padding:22px 12px 22px 12px; font-size:13px; line-height:2.05; font-weight:400; color:#333333; box-sizing:border-box;">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vitae eleifend nisi.
+                                    Donec laoreet tellus eu egestas sollicitudin. Interdum et malesuada fames ac ante
+                                    ipsum primis in faucibus. Morbi in est mollis, consequat tortor in, tempor velit.
+                                    Cras ac nibh sit amet ex rutrum malesuada vel vitae augue.
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- FOOTNOTE -->
+                        <div style="width:100%; text-align:center; font-size:12px; line-height:1.2; font-weight:400; color:#404040; margin-top:24px;">
+                            *Please note that CLB-OSA results are informal and unofficial.
+                        </div>
+
+                    </div>
+                </div>                <!-- ========================= -->
+                <!-- PAGE 2 -->
+                <!-- ========================= -->
+                <div class="page"
+                     style="margin:0; padding:0; background:#ffffff; font-family:Poppins, Arial, sans-serif; page-break-before:always;">
+                    <div style="width:100%; min-height:297mm; box-sizing:border-box; padding:16mm 14mm 12mm 14mm; background:#ffffff; color:#000000;">
+
+                        <!-- HEADER -->
+                        <table style="width:100%; border-collapse:collapse; margin:0 0 28px 0;">
+                            <tr>
+                                <td style="width:68%; vertical-align:top; padding:0;">
+                                    <div style="font-size:26px; line-height:1.2; font-weight:700; color:#000000; margin:0 0 10px 0;">
+                                        Language Assessment Result
+                                    </div>
+                                    <div style="font-size:14px; line-height:1.45; font-weight:400; color:#333333; margin:0;">
+                                        Thank you for using the Canadian Language Benchmarks
+                                        <br/>
+                                        virtual language assessment (CLB-VLA).
+                                    </div>
+                                </td>
+
+                                <td style="width:32%; vertical-align:top; text-align:right; padding:0;">
+                                    <img t-att-src="base_url + '/test_reports/static/src/img/achiev_logo.png'"
+                                         style="width:135px; height:auto; display:inline-block; margin-top:4px; border:0; outline:none;"/>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- TOP INFO BOX -->
+                        <div style="width:100%; border:1px solid #c8c8c8; border-radius:4px; background:#f4f5f6; box-sizing:border-box; padding:22px 32px; margin:0 0 46px 0;">
+                            <table style="width:100%; border-collapse:collapse;">
+                                <tr>
+                                    <td style="width:58%; padding:0 0 18px 0; font-size:15.5px; color:#111111; font-weight:400;">
+                                        Client Name:
+                                        <span t-esc="o.name or ''"/>
+                                    </td>
+                                    <td style="width:42%; padding:0 0 18px 0; font-size:15.5px; color:#111111; font-weight:400; text-align:left;">
+                                        Language: English (ESL)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:0; font-size:15.5px; color:#111111; font-weight:400;">
+                                        Language Skill: Reading 1
+                                    </td>
+                                    <td style="padding:0; font-size:15.5px; color:#111111; font-weight:400; text-align:left;">
+                                        Test Date: Jan-20-2026
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- MAIN SKILL ROW -->
+                        <table style="width:100%; border-collapse:collapse; margin:0 0 44px 0;">
+                            <tr>
+                                <td style="width:64%; vertical-align:middle; padding:0;">
+                                    <img t-att-src="base_url + '/test_reports/static/src/img/reading_icon.png'"
+                                         style="height:110px; width:auto; display:block; border:0; outline:none; vertical-align:middle;"/>
+                                </td>
+
+                                <td style="width:36%; vertical-align:middle; text-align:right; padding:0;">
+                                    <div style="display:inline-block; width:210px; height:82px; box-sizing:border-box; border:1px solid #111111; border-radius:4px; background:#ffffff; padding:10px 10px 8px 10px;">
+                                        <div style="font-size:36px; line-height:1.05; font-weight:700; color:#000000; text-align:center; margin:0 0 14px 0;">
+                                            CLB 4
+                                        </div>
+                                        <div style="text-align:center; white-space:nowrap; font-size:0; line-height:0;">
+                                            <span style="display:inline-block; width:34px; height:5px; background:#5CB8B2; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:34px; height:5px; background:#5CB8B2; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:34px; height:5px; background:#5CB8B2; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:34px; height:5px; background:#5CB8B2; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:34px; height:5px; background:#DDEFEA; border-radius:2px; margin:0;"></span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- CLB READING DETAILS BOX -->
+                        <table style="width:100%; border-collapse:collapse; border:1px solid #111111; margin:0 0 50px 0;">
+                            <tr>
+                                <td colspan="2"
+                                    style="background:#DFF4EF; border-left:1px solid #111111; border-right:1px solid #111111; border-top:1px solid #111111; border-bottom:0; padding:16px 14px 15px 14px; font-size:17.5px; line-height:1.2; font-weight:700; color:#111111;">
+                                    CLB 4 Reading
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="width:50%; height:260px; vertical-align:top; border-left:1px solid #111111; border-bottom:1px solid #111111; border-top:0; padding:30px 18px 30px 18px; font-size:14px; line-height:1.65; color:#111111;">
+                                    <div style="font-size:16px; margin:0 0 16px 0;">
+                                        I can...
+                                    </div>
+
+                                    <ul style="margin:0; padding-left:18px;">
+                                        <li style="margin:0 0 12px 0;">
+                                            <strong>Understand simple greetings.</strong>
+                                            <br/>
+                                            <span style="font-style:italic;">&quot;Hello. How are you?&quot;</span>
+                                        </li>
+                                        <li style="margin:0 0 12px 0;">
+                                            <strong>Understand a few simple words.</strong>
+                                            <br/>
+                                            <span style="font-style:italic;">&quot;Please sit down.&quot;</span>
+                                        </li>
+                                        <li style="margin:0 0 12px 0;">
+                                            <strong>Understand common expressions.</strong>
+                                            <br/>
+                                            <span style="font-style:italic;">&quot;Excuse me.&quot; &quot;Watch out!&quot;</span>
+                                        </li>
+                                        <li style="margin:0;">
+                                            <strong>Understand very simple information.</strong>
+                                            <br/>
+                                            <span style="font-style:italic;">&quot;My phone number is ...&quot;</span>
+                                        </li>
+                                    </ul>
+                                </td>
+
+                                <td style="width:50%; height:260px; vertical-align:top; border-right:1px solid #111111; border-bottom:1px solid #111111; border-top:0; padding:76px 18px 30px 18px; font-size:14px; line-height:2.15; color:#111111;">
+                                    I understand a few individual words and some familiar short phrases.
+                                    But, I only understand when the speaker speaks slowly and repeats.
+                                    I also need pictures or gestures to help me understand.
+                                    Understanding on the phone is too difficult for me.
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- RECOMMENDATION BOX -->
+                        <table style="width:100%; border-collapse:collapse; border:1px solid #111111; margin:0 0 52px 0;">
+                            <tr>
+                                <td style="background:#E9E9E9; border:1px solid #111111; padding:16px 14px 15px 14px; font-size:17.5px; line-height:1.2; font-weight:700; color:#111111;">
+                                    Recommendation
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid #111111; height:150px; padding:24px 14px 24px 14px; font-size:14px; line-height:2.15; font-weight:400; color:#333333; box-sizing:border-box;">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vitae eleifend nisi.
+                                    Donec laoreet tellus eu egestas sollicitudin. Interdum et malesuada fames ac ante
+                                    ipsum primis in faucibus. Morbi in est mollis, consequat tortor in, tempor velit.
+                                    Cras ac nibh sit amet ex rutrum malesuada vel vitae augue.
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- FOOTNOTE -->
+                        <div style="width:100%; text-align:center; font-size:12px; line-height:1.2; font-weight:400; color:#404040; margin-top:32px;">
+                            *Please note that CLB-OSA results are informal and unofficial.
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ========================= -->
+                <!-- PAGE 3 -->
+                <!-- ========================= -->
+                <div class="page"
+                     style="margin:0; padding:0; background:#ffffff; font-family:Poppins, Arial, sans-serif; page-break-before:always;">
+                    <div style="width:100%; min-height:297mm; box-sizing:border-box; padding:16mm 14mm 12mm 14mm; background:#ffffff; color:#000000;">
+
+                        <!-- HEADER -->
+                        <table style="width:100%; border-collapse:collapse; margin:0 0 28px 0;">
+                            <tr>
+                                <td style="width:68%; vertical-align:top; padding:0;">
+                                    <div style="font-size:26px; line-height:1.2; font-weight:700; color:#000000; margin:0 0 10px 0;">
+                                        Language Assessment Result
+                                    </div>
+                                    <div style="font-size:14px; line-height:1.45; font-weight:400; color:#333333; margin:0;">
+                                        Thank you for using the Canadian Language Benchmarks
+                                        <br/>
+                                        virtual language assessment (CLB-VLA).
+                                    </div>
+                                </td>
+
+                                <td style="width:32%; vertical-align:top; text-align:right; padding:0;">
+                                    <img t-att-src="base_url + '/test_reports/static/src/img/achiev_logo.png'"
+                                         style="width:135px; height:auto; display:inline-block; margin-top:4px; border:0; outline:none;"/>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- TOP INFO BOX -->
+                        <div style="width:100%; border:1px solid #c8c8c8; border-radius:4px; background:#f4f5f6; box-sizing:border-box; padding:22px 32px; margin:0 0 46px 0;">
+                            <table style="width:100%; border-collapse:collapse;">
+                                <tr>
+                                    <td style="width:58%; padding:0 0 18px 0; font-size:15.5px; color:#111111; font-weight:400;">
+                                        Client Name:
+                                        <span t-esc="o.name or ''"/>
+                                    </td>
+                                    <td style="width:42%; padding:0 0 18px 0; font-size:15.5px; color:#111111; font-weight:400; text-align:left;">
+                                        Language: English (ESL)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:0; font-size:15.5px; color:#111111; font-weight:400;">
+                                        Language Skill: Listening 2
+                                    </td>
+                                    <td style="padding:0; font-size:15.5px; color:#111111; font-weight:400; text-align:left;">
+                                        Test Date: Jan-20-2026
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- MAIN SKILL ROW -->
+                        <table style="width:100%; border-collapse:collapse; margin:0 0 44px 0;">
+                            <tr>
+                                <td style="width:64%; vertical-align:middle; padding:0;">
+                                    <img t-att-src="base_url + '/test_reports/static/src/img/listening_icon.png'"
+                                         style="height:110px; width:auto; display:block; border:0; outline:none; vertical-align:middle;"/>
+                                </td>
+
+                                <td style="width:36%; vertical-align:middle; text-align:right; padding:0;">
+                                    <div style="display:inline-block; width:210px; height:82px; box-sizing:border-box; border:1px solid #111111; border-radius:4px; background:#ffffff; padding:10px 10px 8px 10px;">
+                                        <div style="font-size:36px; line-height:1.05; font-weight:700; color:#000000; text-align:center; margin:0 0 14px 0;">
+                                            CLB 2
+                                        </div>
+                                        <div style="text-align:center; white-space:nowrap; font-size:0; line-height:0;">
+                                            <span style="display:inline-block; width:34px; height:5px; background:#475D76; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:34px; height:5px; background:#475D76; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:34px; height:5px; background:#DDE7F1; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:34px; height:5px; background:#DDE7F1; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:34px; height:5px; background:#DDE7F1; border-radius:2px; margin:0;"></span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- CLB LISTENING DETAILS BOX -->
+                        <table style="width:100%; border-collapse:collapse; border:1px solid #111111; margin:0 0 50px 0;">
+                            <tr>
+                                <td colspan="2"
+                                    style="background:#DCE9F6; border-left:1px solid #111111; border-right:1px solid #111111; border-top:1px solid #111111; border-bottom:0; padding:16px 14px 15px 14px; font-size:17.5px; line-height:1.2; font-weight:700; color:#111111;">
+                                    CLB 2 Listening
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="width:50%; height:260px; vertical-align:top; border-left:1px solid #111111; border-bottom:1px solid #111111; border-top:0; padding:30px 18px 30px 18px; font-size:14px; line-height:1.65; color:#111111;">
+                                    <div style="font-size:16px; margin:0 0 16px 0;">
+                                        I can...
+                                    </div>
+
+                                    <ul style="margin:0; padding-left:18px;">
+                                        <li style="margin:0 0 12px 0;">
+                                            <strong>Understand simple greetings.</strong>
+                                            <br/>
+                                            <span style="font-style:italic;">&quot;Hello. How are you?&quot;</span>
+                                        </li>
+                                        <li style="margin:0 0 12px 0;">
+                                            <strong>Understand a few simple words.</strong>
+                                            <br/>
+                                            <span style="font-style:italic;">&quot;Please sit down.&quot;</span>
+                                        </li>
+                                        <li style="margin:0 0 12px 0;">
+                                            <strong>Understand common expressions.</strong>
+                                            <br/>
+                                            <span style="font-style:italic;">&quot;Excuse me.&quot; &quot;Watch out!&quot;</span>
+                                        </li>
+                                        <li style="margin:0;">
+                                            <strong>Understand very simple information.</strong>
+                                            <br/>
+                                            <span style="font-style:italic;">&quot;My phone number is ...&quot;</span>
+                                        </li>
+                                    </ul>
+                                </td>
+
+                                <td style="width:50%; height:260px; vertical-align:top; border-right:1px solid #111111; border-bottom:1px solid #111111; border-top:0; padding:76px 18px 30px 18px; font-size:14px; line-height:2.15; color:#111111;">
+                                    I understand a few individual words and some familiar short phrases.
+                                    But, I only understand when the speaker speaks slowly and repeats.
+                                    I also need pictures or gestures to help me understand.
+                                    Understanding on the phone is too difficult for me.
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- RECOMMENDATION BOX -->
+                        <table style="width:100%; border-collapse:collapse; border:1px solid #111111; margin:0 0 52px 0;">
+                            <tr>
+                                <td style="background:#E9E9E9; border:1px solid #111111; padding:16px 14px 15px 14px; font-size:17.5px; line-height:1.2; font-weight:700; color:#111111;">
+                                    Recommendation
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid #111111; height:150px; padding:24px 14px 24px 14px; font-size:14px; line-height:2.15; font-weight:400; color:#333333; box-sizing:border-box;">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vitae eleifend nisi.
+                                    Donec laoreet tellus eu egestas sollicitudin. Interdum et malesuada fames ac ante
+                                    ipsum primis in faucibus. Morbi in est mollis, consequat tortor in, tempor velit.
+                                    Cras ac nibh sit amet ex rutrum malesuada vel vitae augue.
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- FOOTNOTE -->
+                        <div style="width:100%; text-align:center; font-size:12px; line-height:1.2; font-weight:400; color:#404040; margin-top:32px;">
+                            *Please note that CLB-OSA results are informal and unofficial.
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ========================= -->
+                <!-- PAGE 4 -->
+                <!-- ========================= -->
+                <div class="page"
+                     style="margin:0; padding:0; background:#ffffff; font-family:Poppins, Arial, sans-serif; page-break-before:always;">
+                    <div style="width:100%; min-height:297mm; box-sizing:border-box; padding:16mm 14mm 12mm 14mm; background:#ffffff; color:#000000;">
+
+                        <!-- HEADER -->
+                        <table style="width:100%; border-collapse:collapse; margin:0 0 28px 0;">
+                            <tr>
+                                <td style="width:68%; vertical-align:top; padding:0;">
+                                    <div style="font-size:26px; line-height:1.2; font-weight:700; color:#000000; margin:0 0 10px 0;">
+                                        Language Assessment Result
+                                    </div>
+                                    <div style="font-size:14px; line-height:1.45; font-weight:400; color:#333333; margin:0;">
+                                        Thank you for using the Canadian Language Benchmarks
+                                        <br/>
+                                        virtual language assessment (CLB-VLA).
+                                    </div>
+                                </td>
+
+                                <td style="width:32%; vertical-align:top; text-align:right; padding:0;">
+                                    <img t-att-src="base_url + '/test_reports/static/src/img/achiev_logo.png'"
+                                         style="width:135px; height:auto; display:inline-block; margin-top:4px; border:0; outline:none;"/>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- TOP INFO BOX -->
+                        <div style="width:100%; border:1px solid #c8c8c8; border-radius:4px; background:#f4f5f6; box-sizing:border-box; padding:22px 32px; margin:0 0 46px 0;">
+                            <table style="width:100%; border-collapse:collapse;">
+                                <tr>
+                                    <td style="width:58%; padding:0 0 18px 0; font-size:15.5px; color:#111111; font-weight:400;">
+                                        Client Name:
+                                        <span t-esc="o.name or ''"/>
+                                    </td>
+                                    <td style="width:42%; padding:0 0 18px 0; font-size:15.5px; color:#111111; font-weight:400; text-align:left;">
+                                        Language: English (ESL)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:0; font-size:15.5px; color:#111111; font-weight:400;">
+                                        Language Skill: Speaking 2
+                                    </td>
+                                    <td style="padding:0; font-size:15.5px; color:#111111; font-weight:400; text-align:left;">
+                                        Test Date: Jan-20-2026
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- MAIN SKILL ROW -->
+                        <table style="width:100%; border-collapse:collapse; margin:0 0 44px 0;">
+                            <tr>
+                                <td style="width:64%; vertical-align:middle; padding:0;">
+                                    <img t-att-src="base_url + '/test_reports/static/src/img/speaking_icon.png'"
+                                         style="height:110px; width:auto; display:block; border:0; outline:none; vertical-align:middle;"/>
+                                </td>
+
+                                <td style="width:36%; vertical-align:middle; text-align:right; padding:0;">
+                                    <div style="display:inline-block; width:210px; height:82px; box-sizing:border-box; border:1px solid #111111; border-radius:4px; background:#ffffff; padding:10px 10px 8px 10px;">
+                                        <div style="font-size:36px; line-height:1.05; font-weight:700; color:#000000; text-align:center; margin:0 0 14px 0;">
+                                            CLB 2
+                                        </div>
+                                        <div style="text-align:center; white-space:nowrap; font-size:0; line-height:0;">
+                                            <span style="display:inline-block; width:34px; height:5px; background:#A50034; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:34px; height:5px; background:#A50034; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:34px; height:5px; background:#EFE6EA; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:34px; height:5px; background:#EFE6EA; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:34px; height:5px; background:#EFE6EA; border-radius:2px; margin:0;"></span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- CLB SPEAKING DETAILS BOX -->
+                        <table style="width:100%; border-collapse:collapse; border:1px solid #111111; margin:0 0 50px 0;">
+                            <tr>
+                                <td colspan="2"
+                                    style="background:#F5EEF1; border-left:1px solid #111111; border-right:1px solid #111111; border-top:1px solid #111111; border-bottom:0; padding:16px 14px 15px 14px; font-size:17.5px; line-height:1.2; font-weight:700; color:#111111;">
+                                    CLB 2 Speaking
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="width:50%; height:260px; vertical-align:top; border-left:1px solid #111111; border-bottom:1px solid #111111; border-top:0; padding:30px 18px 30px 18px; font-size:14px; line-height:1.65; color:#111111;">
+                                    <div style="font-size:16px; margin:0 0 16px 0;">
+                                        I can...
+                                    </div>
+
+                                    <ul style="margin:0; padding-left:18px;">
+                                        <li style="margin:0 0 12px 0;">
+                                            <strong>Use simple greetings.</strong>
+                                            <br/>
+                                            <span style="font-style:italic;">&quot;Hello. How are you?&quot;</span>
+                                        </li>
+                                        <li style="margin:0 0 12px 0;">
+                                            <strong>Say a few simple words.</strong>
+                                            <br/>
+                                            <span style="font-style:italic;">&quot;Please sit down.&quot;</span>
+                                        </li>
+                                        <li style="margin:0 0 12px 0;">
+                                            <strong>Use common expressions.</strong>
+                                            <br/>
+                                            <span style="font-style:italic;">&quot;Excuse me.&quot; &quot;Thank you.&quot;</span>
+                                        </li>
+                                        <li style="margin:0;">
+                                            <strong>Give very simple information.</strong>
+                                            <br/>
+                                            <span style="font-style:italic;">&quot;My phone number is ...&quot;</span>
+                                        </li>
+                                    </ul>
+                                </td>
+
+                                <td style="width:50%; height:260px; vertical-align:top; border-right:1px solid #111111; border-bottom:1px solid #111111; border-top:0; padding:76px 18px 30px 18px; font-size:14px; line-height:2.15; color:#111111;">
+                                    I can say a few individual words and some familiar short phrases.
+                                    I can answer simple questions when the other person speaks slowly.
+                                    I may need help, pictures, or gestures to explain what I mean.
+                                    Speaking on the phone is too difficult for me.
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- RECOMMENDATION BOX -->
+                        <table style="width:100%; border-collapse:collapse; border:1px solid #111111; margin:0 0 52px 0;">
+                            <tr>
+                                <td style="background:#E9E9E9; border:1px solid #111111; padding:16px 14px 15px 14px; font-size:17.5px; line-height:1.2; font-weight:700; color:#111111;">
+                                    Recommendation
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid #111111; height:150px; padding:24px 14px 24px 14px; font-size:14px; line-height:2.15; font-weight:400; color:#333333; box-sizing:border-box;">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vitae eleifend nisi.
+                                    Donec laoreet tellus eu egestas sollicitudin. Interdum et malesuada fames ac ante
+                                    ipsum primis in faucibus. Morbi in est mollis, consequat tortor in, tempor velit.
+                                    Cras ac nibh sit amet ex rutrum malesuada vel vitae augue.
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- FOOTNOTE -->
+                        <div style="width:100%; text-align:center; font-size:12px; line-height:1.2; font-weight:400; color:#404040; margin-top:32px;">
+                            *Please note that CLB-OSA results are informal and unofficial.
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ========================= -->
+                <!-- PAGE 5 -->
+                <!-- ========================= -->
+                <div class="page"
+                     style="margin:0; padding:0; background:#ffffff; font-family:Poppins, Arial, sans-serif; page-break-before:always;">
+                    <div style="width:100%; min-height:297mm; box-sizing:border-box; padding:16mm 14mm 12mm 14mm; background:#ffffff; color:#000000;">
+
+                        <!-- HEADER -->
+                        <table style="width:100%; border-collapse:collapse; margin:0 0 28px 0;">
+                            <tr>
+                                <td style="width:68%; vertical-align:top; padding:0;">
+                                    <div style="font-size:26px; line-height:1.2; font-weight:700; color:#000000; margin:0 0 10px 0;">
+                                        Language Assessment Result
+                                    </div>
+                                    <div style="font-size:14px; line-height:1.45; font-weight:400; color:#333333; margin:0;">
+                                        Thank you for using the Canadian Language Benchmarks
+                                        <br/>
+                                        virtual language assessment (CLB-VLA).
+                                    </div>
+                                </td>
+
+                                <td style="width:32%; vertical-align:top; text-align:right; padding:0;">
+                                    <img t-att-src="base_url + '/test_reports/static/src/img/achiev_logo.png'"
+                                         style="width:135px; height:auto; display:inline-block; margin-top:4px; border:0; outline:none;"/>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- TOP INFO BOX -->
+                        <div style="width:100%; border:1px solid #c8c8c8; border-radius:4px; background:#f4f5f6; box-sizing:border-box; padding:22px 32px; margin:0 0 46px 0;">
+                            <table style="width:100%; border-collapse:collapse;">
+                                <tr>
+                                    <td style="width:58%; padding:0 0 18px 0; font-size:15.5px; color:#111111; font-weight:400;">
+                                        Client Name:
+                                        <span t-esc="o.name or ''"/>
+                                    </td>
+                                    <td style="width:42%; padding:0 0 18px 0; font-size:15.5px; color:#111111; font-weight:400; text-align:left;">
+                                        Language: English (ESL)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:0; font-size:15.5px; color:#111111; font-weight:400;">
+                                        Language Skill: Writing 3
+                                    </td>
+                                    <td style="padding:0; font-size:15.5px; color:#111111; font-weight:400; text-align:left;">
+                                        Test Date: Jan-20-2026
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <!-- MAIN SKILL ROW -->
+                        <table style="width:100%; border-collapse:collapse; margin:0 0 44px 0;">
+                            <tr>
+                                <td style="width:64%; vertical-align:middle; padding:0;">
+                                    <img t-att-src="base_url + '/test_reports/static/src/img/writing_icon.png'"
+                                         style="height:110px; width:auto; display:block; border:0; outline:none; vertical-align:middle;"/>
+                                </td>
+
+                                <td style="width:36%; vertical-align:middle; text-align:right; padding:0;">
+                                    <div style="display:inline-block; width:210px; height:82px; box-sizing:border-box; border:1px solid #111111; border-radius:4px; background:#ffffff; padding:10px 10px 8px 10px;">
+                                        <div style="font-size:36px; line-height:1.05; font-weight:700; color:#000000; text-align:center; margin:0 0 14px 0;">
+                                            CLB 3
+                                        </div>
+                                        <div style="text-align:center; white-space:nowrap; font-size:0; line-height:0;">
+                                            <span style="display:inline-block; width:34px; height:5px; background:#E04F39; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:34px; height:5px; background:#E04F39; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:34px; height:5px; background:#E04F39; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:34px; height:5px; background:#F2E3DF; border-radius:2px; margin:0 6px 0 0;"></span>
+                                            <span style="display:inline-block; width:34px; height:5px; background:#F2E3DF; border-radius:2px; margin:0;"></span>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- CLB WRITING DETAILS BOX -->
+                        <table style="width:100%; border-collapse:collapse; border:1px solid #111111; margin:0 0 50px 0;">
+                            <tr>
+                                <td colspan="2"
+                                    style="background:#FBF1EE; border-left:1px solid #111111; border-right:1px solid #111111; border-top:1px solid #111111; border-bottom:0; padding:16px 14px 15px 14px; font-size:17.5px; line-height:1.2; font-weight:700; color:#111111;">
+                                    CLB 3 Writing
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td style="width:50%; height:260px; vertical-align:top; border-left:1px solid #111111; border-bottom:1px solid #111111; border-top:0; padding:30px 18px 30px 18px; font-size:14px; line-height:1.65; color:#111111;">
+                                    <div style="font-size:16px; margin:0 0 16px 0;">
+                                        I can...
+                                    </div>
+
+                                    <ul style="margin:0; padding-left:18px;">
+                                        <li style="margin:0 0 12px 0;">
+                                            <strong>Write simple personal information.</strong>
+                                            <br/>
+                                            <span style="font-style:italic;">&quot;My name is Jane.&quot;</span>
+                                        </li>
+                                        <li style="margin:0 0 12px 0;">
+                                            <strong>Write short simple sentences.</strong>
+                                            <br/>
+                                            <span style="font-style:italic;">&quot;I live in Canada.&quot;</span>
+                                        </li>
+                                        <li style="margin:0 0 12px 0;">
+                                            <strong>Complete simple forms.</strong>
+                                            <br/>
+                                            <span style="font-style:italic;">Name, address, phone number.</span>
+                                        </li>
+                                        <li style="margin:0;">
+                                            <strong>Write a short simple message.</strong>
+                                            <br/>
+                                            <span style="font-style:italic;">&quot;I am sick today.&quot;</span>
+                                        </li>
+                                    </ul>
+                                </td>
+
+                                <td style="width:50%; height:260px; vertical-align:top; border-right:1px solid #111111; border-bottom:1px solid #111111; border-top:0; padding:76px 18px 30px 18px; font-size:14px; line-height:2.15; color:#111111;">
+                                    I can write short simple words, phrases, and sentences.
+                                    I can give basic personal information in writing.
+                                    I may need help with spelling, grammar, and sentence structure.
+                                    I can write better when I have examples to follow.
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- RECOMMENDATION BOX -->
+                        <table style="width:100%; border-collapse:collapse; border:1px solid #111111; margin:0 0 52px 0;">
+                            <tr>
+                                <td style="background:#E9E9E9; border:1px solid #111111; padding:16px 14px 15px 14px; font-size:17.5px; line-height:1.2; font-weight:700; color:#111111;">
+                                    Recommendation
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border:1px solid #111111; height:150px; padding:24px 14px 24px 14px; font-size:14px; line-height:2.15; font-weight:400; color:#333333; box-sizing:border-box;">
+                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi vitae eleifend nisi.
+                                    Donec laoreet tellus eu egestas sollicitudin. Interdum et malesuada fames ac ante
+                                    ipsum primis in faucibus. Morbi in est mollis, consequat tortor in, tempor velit.
+                                    Cras ac nibh sit amet ex rutrum malesuada vel vitae augue.
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- FOOTNOTE -->
+                        <div style="width:100%; text-align:center; font-size:12px; line-height:1.2; font-weight:400; color:#404040; margin-top:32px;">
+                            *Please note that CLB-OSA results are informal and unofficial.
+                        </div>
+
+                    </div>
+                </div>
+
+            </t>
+        </t>
+    </template>
+</odoo>

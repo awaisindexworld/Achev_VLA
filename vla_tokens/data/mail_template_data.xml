@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="mail_template_b2c_assessment_token" model="mail.template">
+        <field name="name">VLA B2C Assessment Token</field>
+        <field name="model_id" ref="model_vla_assessment_token"/>
+        <field name="subject">Your assessment link is ready</field>
+        <field name="email_from">{{ user.email_formatted or user.company_id.email }}</field>
+        <field name="email_to">{{ object.partner_id.email or object.candidate_email }}</field>
+        <field name="body_html" type="html">
+            <div style="margin:0;padding:0;font-family:Arial,sans-serif;font-size:14px;color:#222;">
+                <p>Hello <t t-out="object.partner_id.name or 'there'"/>,</p>
+                <p>Thank you for your purchase. Your <strong><t t-out="object.duration"/> minute</strong> assessment link is ready.</p>
+                <p>
+                    <a t-att-href="object.registration_url" style="display:inline-block;padding:10px 16px;background:#714B67;color:#fff;text-decoration:none;border-radius:4px;">
+                        Start Assessment
+                    </a>
+                </p>
+                <p>If the button does not work, copy and paste this link into your browser:</p>
+                <p><t t-out="object.registration_url"/></p>
+            </div>
+        </field>
+        <field name="auto_delete" eval="False"/>
+    </record>
+</odoo>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <template id="vla_product_variant_note" inherit_id="website_sale.product">
+        <xpath expr="//div[@id='add_to_cart_wrap']" position="before">
+            <div
+                id="vla_variant_note"
+                class="alert alert-info mt-3 d-none"
+                role="alert">
+            </div>
+        </xpath>
+    </template>
+</odoo>

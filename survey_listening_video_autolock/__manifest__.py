@@ -5,9 +5,12 @@
     "category": "Marketing/Surveys",
     "author": "Me",
     "license": "LGPL-3",
-    "depends": ["survey"],
+    "depends": ["survey",
+                "website_slides",
+                ],
     "data": [
         "views/survey_question_views.xml",
+        "views/slide_slide_views.xml",
     ],
 
     "assets": {

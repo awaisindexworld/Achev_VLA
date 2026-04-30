@@ -1,0 +1,27 @@
+<odoo>
+    <record id="paperformat_language_assessment" model="report.paperformat">
+        <field name="name">Language Assessment A4</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">10</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">96</field>
+    </record>
+
+    <record id="action_report_language_assessment" model="ir.actions.report">
+        <field name="name">Language Assessment Result</field>
+        <field name="model">res.partner</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">test_reports.report_language_assessment</field>
+        <field name="report_file">test_reports.report_language_assessment</field>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="test_reports.paperformat_language_assessment"/>
+        <field name="print_report_name">'Language Assessment - %s' % (object.name or 'Contact')</field>
+    </record>
+</odoo>

@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_vla_token_wallet_line_user,vla.token.wallet.line.user,model_vla_token_wallet_line,base.group_user,1,1,1,1
+access_vla_token_wallet_transaction_user,vla.token.wallet.transaction.user,model_vla_token_wallet_transaction,base.group_user,1,1,1,1
+access_vla_assessment_token_user,vla.assessment.token.user,model_vla_assessment_token,base.group_user,1,1,1,1
+access_vla_assessment_token_public,vla.assessment.token.public,model_vla_assessment_token,base.group_public,0,0,0,0

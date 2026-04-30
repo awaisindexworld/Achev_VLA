@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_product_product_form_vla_tokens" model="ir.ui.view">
+        <field name="name">product.product.form.vla.tokens</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='sales']" position="inside">
+                <group string="VLA Tokens">
+                    <group>
+                        <field name="vla_is_token_product"/>
+                        <field name="vla_token_market" invisible="not vla_is_token_product" required="vla_is_token_product"/>
+                        <field name="vla_token_duration" invisible="not vla_is_token_product" required="vla_is_token_product"/>
+                        <field name="vla_token_qty" invisible="not vla_is_token_product" required="vla_is_token_product"/>
+                        <field name="vla_website_variant_note" widget="html" invisible="not vla_is_token_product"/>
+                    </group>
+                    <group invisible="not vla_is_token_product">
+                        <div class="text-muted">
+                            Configure this on each variant. New flow: create main products for 30-minute and 60-minute courses, then create variants for 1, 50, and 100 tokens. Quantity 1 is B2C and emails a direct assessment URL. Quantities 50 and 100 credit the B2B company wallet.
+                        </div>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

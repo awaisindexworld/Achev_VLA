@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="slide_fullscreen_listening_video"
+              inherit_id="website_slides.slide_fullscreen_content"
+              name="Slide Fullscreen Listening Audio Video">
+
+        <xpath expr="//div[contains(@class, 'o_wslides_fs_content')]" position="inside">
+            <t t-if="slide.listening_video_type != 'none'">
+                <div class="o_survey_listening_gate o_course_listening_gate mb-4"
+                     t-att-data-slide-id="slide.id"
+                     data-state="ready">
+
+                    <button type="button"
+                            class="btn btn-primary o_survey_start_watching_btn mb-3">
+                        Start
+                    </button>
+
+                    <div class="o_survey_listening_video_wrap">
+                        <t t-if="slide.listening_video_type == 'upload'">
+                            <video t-if="not slide.listening_video_filename or not slide.listening_video_filename.lower().endswith(('.mp3', '.wav', '.ogg'))"
+                                   class="o_survey_listening_video_player"
+                                   preload="auto"
+                                   playsinline="playsinline"
+                                   style="width: 100%; max-width: 650px; height: auto; border-radius: 10px; background: #000;">
+                                <source t-att-src="'/slides/listening/video/%s' % slide.id"/>
+                            </video>
+
+                            <audio t-if="slide.listening_video_filename and slide.listening_video_filename.lower().endswith(('.mp3', '.wav', '.ogg'))"
+                                   class="o_survey_listening_video_player o_survey_listening_audio_player"
+                                   preload="auto"
+                                   style="width: 100%; max-width: 650px;">
+                                <source t-att-src="'/slides/listening/video/%s' % slide.id"/>
+                            </audio>
+                        </t>
+
+                        <t t-if="slide.listening_video_type == 'url'">
+                            <video t-if="not slide.listening_video_url.lower().endswith(('.mp3', '.wav', '.ogg'))"
+                                   class="o_survey_listening_video_player"
+                                   preload="auto"
+                                   playsinline="playsinline"
+                                   style="width: 100%; max-width: 650px; height: auto; border-radius: 10px; background: #000;">
+                                <source t-att-src="slide.listening_video_url"/>
+                            </video>
+
+                            <audio t-if="slide.listening_video_url.lower().endswith(('.mp3', '.wav', '.ogg'))"
+                                   class="o_survey_listening_video_player o_survey_listening_audio_player"
+                                   preload="auto"
+                                   style="width: 100%; max-width: 650px;">
+                                <source t-att-src="slide.listening_video_url"/>
+                            </audio>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+
+    </template>
+
+</odoo>
