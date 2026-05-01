@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="survey_survey_view_form_survey_randomizer" model="ir.ui.view">
+        <field name="name">survey.survey.form.survey.randomizer</field>
+        <field name="model">survey.survey</field>
+        <field name="inherit_id" ref="survey.survey_survey_view_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Replace native Question Selection on the Options tab only. -->
+            <xpath expr="//page[@name='options']//field[@name='questions_selection']" position="replace">
+                <field name="questions_selection" invisible="1"/>
+                <field name="vla_randomize_by_section"/>
+                <field name="vla_random_total_questions"
+                       invisible="not vla_randomize_by_section"
+                       required="vla_randomize_by_section"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
