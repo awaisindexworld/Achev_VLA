@@ -26,7 +26,8 @@
 
         try {
             media.pause();
-        } catch (error) {}
+        } catch (error) {
+        }
 
         media.controls = false;
         media.removeAttribute('controls');
@@ -129,7 +130,6 @@
         }
 
         gate.dataset.videoGateInit = '1';
-        gate.dataset.state = 'ready';
 
         const video = getVideo(gate);
         const startButton = getStartButton(gate);
@@ -148,8 +148,12 @@
         video.setAttribute('controlsList', 'nodownload noplaybackrate noremoteplayback nofullscreen');
         video.setAttribute('disablePictureInPicture', 'true');
 
-        let started = false;
-        let completed = false;
+        const questionId = gate.dataset.questionId;
+        const storageKey = questionId ? 'vlga_q_' + questionId : null;
+        const savedState = storageKey ? sessionStorage.getItem(storageKey) : null;
+
+        let started = savedState === 'started';
+        let completed = savedState === 'completed';
         let maxAllowedTime = 0;
 
         function disableStartButton() {
@@ -162,6 +166,20 @@
             startButton.disabled = false;
             startButton.classList.remove('disabled');
             startButton.removeAttribute('aria-disabled');
+        }
+
+        // Restore completed state: lock video and disable button
+        if (completed) {
+            lockVideo(gate, video);
+            disableStartButton();
+            return;
+        }
+
+        gate.dataset.state = started ? 'playing' : 'ready';
+
+        // Restore started state: only disable the button, do nothing else
+        if (started) {
+            disableStartButton();
         }
 
         startButton.addEventListener('click', function () {
@@ -178,12 +196,19 @@
             gate.dataset.state = 'playing';
             disableStartButton();
 
+            if (storageKey) {
+                sessionStorage.setItem(storageKey, 'started');
+            }
+
             const playPromise = video.play();
             if (playPromise && typeof playPromise.catch === 'function') {
                 playPromise.catch(function () {
                     started = false;
                     gate.dataset.state = 'ready';
                     enableStartButton();
+                    if (storageKey) {
+                        sessionStorage.removeItem(storageKey);
+                    }
                 });
             }
         });
@@ -242,13 +267,18 @@
             }
 
             if (started && video.currentTime < (video.duration || Infinity)) {
-                video.play().catch(function () {});
+                video.play().catch(function () {
+                });
             }
         });
 
         video.addEventListener('ended', function () {
             completed = true;
             lockVideo(gate, video);
+            disableStartButton();
+            if (storageKey) {
+                sessionStorage.setItem(storageKey, 'completed');
+            }
         });
     }
 
@@ -332,7 +362,6 @@
         const wrapper = document.createElement('div');
         wrapper.className = 'o_survey_listening_gate o_course_listening_gate';
         wrapper.dataset.slideId = slideId;
-        wrapper.dataset.state = 'ready';
         wrapper.innerHTML = `
             <div style="width:100%;min-height:calc(100vh - 160px);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:28px 24px;background:#111821;">
                 <button type="button" class="btn btn-primary o_survey_start_watching_btn mb-3">Start</button>
@@ -348,8 +377,11 @@
         const video = wrapper.querySelector('.o_survey_listening_video_player');
         const startButton = wrapper.querySelector('.o_survey_start_watching_btn');
 
-        let started = false;
-        let completed = false;
+        const storageKey = 'vlga_s_' + slideId;
+        const savedState = sessionStorage.getItem(storageKey);
+
+        let started = savedState === 'started';
+        let completed = savedState === 'completed';
         let maxAllowedTime = 0;
 
         video.controls = false;
@@ -361,6 +393,38 @@
         video.setAttribute('webkit-playsinline', 'true');
         video.setAttribute('controlsList', 'nodownload noplaybackrate noremoteplayback nofullscreen');
         video.setAttribute('disablePictureInPicture', 'true');
+
+        function disableStartButton() {
+            startButton.disabled = true;
+            startButton.classList.add('disabled');
+            startButton.setAttribute('aria-disabled', 'true');
+        }
+
+        function enableStartButton() {
+            startButton.disabled = false;
+            startButton.classList.remove('disabled');
+            startButton.removeAttribute('aria-disabled');
+        }
+
+        // Restore completed state: lock video and disable button
+        if (completed) {
+            wrapper.dataset.state = 'completed';
+            video.dataset.forceLocked = '1';
+            video.controls = false;
+            video.removeAttribute('controls');
+            video.style.pointerEvents = 'none';
+            video.setAttribute('tabindex', '-1');
+            wrapper.classList.add('o_survey_video_completed');
+            disableStartButton();
+            return;
+        }
+
+        wrapper.dataset.state = started ? 'playing' : 'ready';
+
+        // Restore started state: only disable the button, do nothing else
+        if (started) {
+            disableStartButton();
+        }
 
         startButton.addEventListener('click', function () {
             if (
@@ -374,16 +438,14 @@
 
             started = true;
             wrapper.dataset.state = 'playing';
-            startButton.disabled = true;
-            startButton.classList.add('disabled');
-            startButton.setAttribute('aria-disabled', 'true');
+            disableStartButton();
+            sessionStorage.setItem(storageKey, 'started');
 
             video.play().catch(function () {
                 started = false;
                 wrapper.dataset.state = 'ready';
-                startButton.disabled = false;
-                startButton.classList.remove('disabled');
-                startButton.removeAttribute('aria-disabled');
+                enableStartButton();
+                sessionStorage.removeItem(storageKey);
             });
         });
 
@@ -399,9 +461,7 @@
 
             started = true;
             wrapper.dataset.state = 'playing';
-            startButton.disabled = true;
-            startButton.classList.add('disabled');
-            startButton.setAttribute('aria-disabled', 'true');
+            disableStartButton();
         });
 
         video.addEventListener('timeupdate', function () {
@@ -443,7 +503,8 @@
             }
 
             if (started && video.currentTime < (video.duration || Infinity)) {
-                video.play().catch(function () {});
+                video.play().catch(function () {
+                });
             }
         });
 
@@ -459,6 +520,8 @@
             video.setAttribute('tabindex', '-1');
 
             wrapper.classList.add('o_survey_video_completed');
+            disableStartButton();
+            sessionStorage.setItem(storageKey, 'completed');
         });
     }
 
