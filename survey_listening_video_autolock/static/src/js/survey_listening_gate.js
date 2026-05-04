@@ -11,6 +11,10 @@
         return gate.querySelector('.o_survey_start_watching_btn');
     }
 
+    function getStopButton(gate) {
+        return gate.querySelector('.o_survey_stop_watching_btn');
+    }
+
     function hardStopAndLockMedia(gate) {
         if (!gate) {
             return;
@@ -35,6 +39,11 @@
         media.setAttribute('tabindex', '-1');
 
         gate.classList.add('o_survey_video_completed');
+
+        const stopBtn = getStopButton(gate);
+        if (stopBtn) {
+            stopBtn.classList.add('d-none');
+        }
 
         const note = gate.querySelector('.o_survey_video_locked_note');
         if (note) {
@@ -61,7 +70,8 @@
             return false;
         }
 
-        if (button.classList.contains('o_survey_start_watching_btn')) {
+        if (button.classList.contains('o_survey_start_watching_btn') ||
+            button.classList.contains('o_survey_stop_watching_btn')) {
             return false;
         }
 
@@ -118,6 +128,11 @@
         video.setAttribute('tabindex', '-1');
         gate.classList.add('o_survey_video_completed');
 
+        const stopBtn = getStopButton(gate);
+        if (stopBtn) {
+            stopBtn.classList.add('d-none');
+        }
+
         const note = gate.querySelector('.o_survey_video_locked_note');
         if (note) {
             note.classList.remove('d-none');
@@ -133,6 +148,7 @@
 
         const video = getVideo(gate);
         const startButton = getStartButton(gate);
+        const stopButton = getStopButton(gate);
 
         if (!video || !startButton) {
             return;
@@ -149,11 +165,13 @@
         video.setAttribute('disablePictureInPicture', 'true');
 
         const questionId = gate.dataset.questionId;
-        const storageKey = questionId ? 'vlga_q_' + questionId : null;
+        const slideId = gate.dataset.slideId;
+        const storageKey = questionId ? 'vlga_q_' + questionId : (slideId ? 'vlga_s_' + slideId : null);
         const savedState = storageKey ? sessionStorage.getItem(storageKey) : null;
 
-        let started = savedState === 'started';
+        let started = savedState === 'started' || savedState === 'paused';
         let completed = savedState === 'completed';
+        let userPaused = savedState === 'paused';
         let maxAllowedTime = 0;
 
         function disableStartButton() {
@@ -168,6 +186,18 @@
             startButton.removeAttribute('aria-disabled');
         }
 
+        function showStopButton() {
+            if (stopButton) {
+                stopButton.classList.remove('d-none');
+            }
+        }
+
+        function hideStopButton() {
+            if (stopButton) {
+                stopButton.classList.add('d-none');
+            }
+        }
+
         // Restore completed state: lock video and disable button
         if (completed) {
             lockVideo(gate, video);
@@ -175,16 +205,20 @@
             return;
         }
 
-        gate.dataset.state = started ? 'playing' : 'ready';
-
-        // Restore started state: only disable the button, do nothing else
-        if (started) {
+        if (userPaused) {
+            gate.dataset.state = 'paused';
+            enableStartButton();
+            hideStopButton();
+        } else if (started) {
+            gate.dataset.state = 'playing';
             disableStartButton();
+            showStopButton();
+        } else {
+            gate.dataset.state = 'ready';
         }
 
         startButton.addEventListener('click', function () {
             if (
-                started ||
                 completed ||
                 video.dataset.forceLocked === '1' ||
                 gate.dataset.state === 'completed'
@@ -192,9 +226,35 @@
                 return;
             }
 
+            // Resume after user paused via Stop button
+            if (userPaused) {
+                userPaused = false;
+                gate.dataset.state = 'playing';
+                disableStartButton();
+                showStopButton();
+                if (storageKey) {
+                    sessionStorage.setItem(storageKey, 'started');
+                }
+                video.play().catch(function () {
+                    userPaused = true;
+                    gate.dataset.state = 'paused';
+                    enableStartButton();
+                    hideStopButton();
+                    if (storageKey) {
+                        sessionStorage.setItem(storageKey, 'paused');
+                    }
+                });
+                return;
+            }
+
+            if (started) {
+                return;
+            }
+
             started = true;
             gate.dataset.state = 'playing';
             disableStartButton();
+            showStopButton();
 
             if (storageKey) {
                 sessionStorage.setItem(storageKey, 'started');
@@ -206,12 +266,35 @@
                     started = false;
                     gate.dataset.state = 'ready';
                     enableStartButton();
+                    hideStopButton();
                     if (storageKey) {
                         sessionStorage.removeItem(storageKey);
                     }
                 });
             }
         });
+
+        if (stopButton) {
+            stopButton.addEventListener('click', function () {
+                if (
+                    !started ||
+                    completed ||
+                    video.dataset.forceLocked === '1' ||
+                    gate.dataset.state === 'completed'
+                ) {
+                    return;
+                }
+
+                userPaused = true;
+                gate.dataset.state = 'paused';
+                hideStopButton();
+                enableStartButton();
+                if (storageKey) {
+                    sessionStorage.setItem(storageKey, 'paused');
+                }
+                video.pause();
+            });
+        }
 
         video.addEventListener('play', function () {
             if (
@@ -226,6 +309,7 @@
             started = true;
             gate.dataset.state = 'playing';
             disableStartButton();
+            showStopButton();
         });
 
         video.addEventListener('timeupdate', function () {
@@ -263,6 +347,11 @@
                 video.dataset.forceLocked === '1' ||
                 gate.dataset.state === 'completed'
             ) {
+                return;
+            }
+
+            // Stop button deliberately paused the video — do not auto-resume.
+            if (userPaused) {
                 return;
             }
 
@@ -364,7 +453,10 @@
         wrapper.dataset.slideId = slideId;
         wrapper.innerHTML = `
             <div style="width:100%;min-height:calc(100vh - 160px);display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:28px 24px;background:#111821;">
-                <button type="button" class="btn btn-primary o_survey_start_watching_btn mb-3">Start</button>
+                <div style="display:flex;gap:8px;margin-bottom:12px;">
+                    <button type="button" class="btn btn-primary o_survey_start_watching_btn">Start</button>
+                    <button type="button" class="btn btn-secondary o_survey_stop_watching_btn d-none">Stop</button>
+                </div>
                 <div class="o_survey_listening_video_wrap" style="width:100%;max-width:760px;text-align:center;">
                     ${mediaHtml}
                 </div>
@@ -376,12 +468,14 @@
 
         const video = wrapper.querySelector('.o_survey_listening_video_player');
         const startButton = wrapper.querySelector('.o_survey_start_watching_btn');
+        const stopButton = wrapper.querySelector('.o_survey_stop_watching_btn');
 
         const storageKey = 'vlga_s_' + slideId;
         const savedState = sessionStorage.getItem(storageKey);
 
-        let started = savedState === 'started';
+        let started = savedState === 'started' || savedState === 'paused';
         let completed = savedState === 'completed';
+        let userPaused = savedState === 'paused';
         let maxAllowedTime = 0;
 
         video.controls = false;
@@ -406,7 +500,15 @@
             startButton.removeAttribute('aria-disabled');
         }
 
-        // Restore completed state: lock video and disable button
+        function showStopButton() {
+            stopButton.classList.remove('d-none');
+        }
+
+        function hideStopButton() {
+            stopButton.classList.add('d-none');
+        }
+
+        // Restore completed state: lock video and hide stop button
         if (completed) {
             wrapper.dataset.state = 'completed';
             video.dataset.forceLocked = '1';
@@ -416,19 +518,24 @@
             video.setAttribute('tabindex', '-1');
             wrapper.classList.add('o_survey_video_completed');
             disableStartButton();
+            hideStopButton();
             return;
         }
 
-        wrapper.dataset.state = started ? 'playing' : 'ready';
-
-        // Restore started state: only disable the button, do nothing else
-        if (started) {
+        if (userPaused) {
+            wrapper.dataset.state = 'paused';
+            enableStartButton();
+            hideStopButton();
+        } else if (started) {
+            wrapper.dataset.state = 'playing';
             disableStartButton();
+            showStopButton();
+        } else {
+            wrapper.dataset.state = 'ready';
         }
 
         startButton.addEventListener('click', function () {
             if (
-                started ||
                 completed ||
                 video.dataset.forceLocked === '1' ||
                 wrapper.dataset.state === 'completed'
@@ -436,17 +543,58 @@
                 return;
             }
 
+            // Resume after user paused via Stop button
+            if (userPaused) {
+                userPaused = false;
+                wrapper.dataset.state = 'playing';
+                disableStartButton();
+                showStopButton();
+                sessionStorage.setItem(storageKey, 'started');
+                video.play().catch(function () {
+                    userPaused = true;
+                    wrapper.dataset.state = 'paused';
+                    enableStartButton();
+                    hideStopButton();
+                    sessionStorage.setItem(storageKey, 'paused');
+                });
+                return;
+            }
+
+            if (started) {
+                return;
+            }
+
             started = true;
             wrapper.dataset.state = 'playing';
             disableStartButton();
+            showStopButton();
             sessionStorage.setItem(storageKey, 'started');
 
             video.play().catch(function () {
                 started = false;
                 wrapper.dataset.state = 'ready';
                 enableStartButton();
+                hideStopButton();
                 sessionStorage.removeItem(storageKey);
             });
+        });
+
+        stopButton.addEventListener('click', function () {
+            if (
+                !started ||
+                completed ||
+                video.dataset.forceLocked === '1' ||
+                wrapper.dataset.state === 'completed'
+            ) {
+                return;
+            }
+
+            userPaused = true;
+            wrapper.dataset.state = 'paused';
+            hideStopButton();
+            enableStartButton();
+            sessionStorage.setItem(storageKey, 'paused');
+            video.pause();
         });
 
         video.addEventListener('play', function () {
@@ -462,6 +610,7 @@
             started = true;
             wrapper.dataset.state = 'playing';
             disableStartButton();
+            showStopButton();
         });
 
         video.addEventListener('timeupdate', function () {
@@ -502,6 +651,11 @@
                 return;
             }
 
+            // Stop button deliberately paused the video — do not auto-resume.
+            if (userPaused) {
+                return;
+            }
+
             if (started && video.currentTime < (video.duration || Infinity)) {
                 video.play().catch(function () {
                 });
@@ -521,6 +675,7 @@
 
             wrapper.classList.add('o_survey_video_completed');
             disableStartButton();
+            hideStopButton();
             sessionStorage.setItem(storageKey, 'completed');
         });
     }
