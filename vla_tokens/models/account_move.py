@@ -243,18 +243,26 @@ class AccountMove(models.Model):
 
             invoice.write({'vla_tokens_processed': True})
 
+    def write(self, vals):
+        res = super().write(vals)
+        if vals.get('payment_state') in ('paid', 'in_payment'):
+            self._process_vla_tokens_if_needed()
+        return res
+
     def action_post(self):
         res = super().action_post()
         self._process_vla_tokens_if_needed()
         return res
 
-    @api.model
-    def _cron_process_vla_tokens(self):
-        invoices = self.sudo().search([
-            ('move_type', '=', 'out_invoice'),
-            ('state', '=', 'posted'),
-            ('payment_state', 'in', ['paid', 'in_payment']),
-            ('vla_tokens_processed', '=', False),
-        ], limit=200)
-
-        invoices._process_vla_tokens_if_needed()
+    # Cron method disabled: token processing is now handled immediately via the
+    # write() hook above when payment_state transitions to 'paid' or 'in_payment'.
+    # @api.model
+    # def _cron_process_vla_tokens(self):
+    #     invoices = self.sudo().search([
+    #         ('move_type', '=', 'out_invoice'),
+    #         ('state', '=', 'posted'),
+    #         ('payment_state', 'in', ['paid', 'in_payment']),
+    #         ('vla_tokens_processed', '=', False),
+    #     ], limit=200)
+    #
+    #     invoices._process_vla_tokens_if_needed()
