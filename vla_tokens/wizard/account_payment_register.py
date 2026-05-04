@@ -11,29 +11,28 @@ class AccountPaymentRegister(models.TransientModel):
     _inherit = 'account.payment.register'
 
     def action_create_payments(self):
-        # Capture the invoice IDs being paid BEFORE the super call.
-        # active_ids in context = the account.move records that were open
-        # when "Register Payment" was clicked.
-        active_model = self._context.get('active_model', '')
-        active_ids = self._context.get('active_ids', [])
+        # Resolve the invoices BEFORE the super call using self.line_ids.move_id.
+        # This is reliable regardless of what active_model/active_ids are in the
+        # context — Odoo 18 passes account.move.line IDs, not account.move IDs.
+        invoices = self.line_ids.move_id.filtered(
+            lambda m: m.move_type == 'out_invoice' and not m.vla_tokens_processed
+        )
 
         _logger.info(
             "VLA TOKENS [AccountPaymentRegister.action_create_payments] "
-            "active_model=%s | active_ids=%s",
-            active_model, active_ids,
+            "invoices to process after payment: %s (ids=%s)",
+            invoices.mapped('name'), invoices.ids,
         )
 
         res = super().action_create_payments()
 
-        # By the time super() returns, payment posting AND reconciliation are
-        # complete. payment_state on the invoices is now 'paid'/'in_payment'.
-        if active_model == 'account.move' and active_ids:
-            invoices = self.env['account.move'].sudo().browse(active_ids)
+        # By the time super() returns, posting AND reconciliation are complete.
+        # payment_state on the invoices is now 'paid' or 'in_payment'.
+        if invoices:
             _logger.info(
                 "VLA TOKENS [AccountPaymentRegister.action_create_payments] "
-                "post-payment: checking invoice(s) %s — payment_state(s): %s",
-                invoices.mapped('name'),
-                invoices.mapped('payment_state'),
+                "post-payment states: %s",
+                {inv.name: inv.payment_state for inv in invoices},
             )
             invoices._process_vla_tokens_if_needed()
 
