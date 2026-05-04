@@ -347,35 +347,16 @@ class AccountMove(models.Model):
     # Hooks — trigger processing as soon as invoice is paid
     # ---------------------------------------------------------------------------
 
-    def write(self, vals):
-        res = super().write(vals)
-        # payment_state may be written explicitly in some flows (e.g. direct write)
-        if vals.get('payment_state') in ('paid', 'in_payment'):
-            _logger.info(
-                "VLA TOKENS [write hook] payment_state=%s detected on %s — triggering processing.",
-                vals['payment_state'], self.ids,
-            )
-            self._process_vla_tokens_if_needed()
-        return res
-
-    def _write(self, vals):
-        # payment_state is a stored computed field; Odoo recomputes it via _write()
-        # (low-level path that bypasses write()). We hook here to catch it.
-        res = super()._write(vals)
-        if vals.get('payment_state') in ('paid', 'in_payment'):
-            _logger.info(
-                "VLA TOKENS [_write hook] payment_state=%s detected on %s — triggering processing.",
-                vals['payment_state'], self.ids,
-            )
-            self._process_vla_tokens_if_needed()
-        return res
-
     def action_post(self):
         res = super().action_post()
-        # Handles edge case where invoice is already paid at the time of posting
-        # (e.g. free products, or payment registered before posting)
+        # Edge case: invoice already paid at posting time (e.g. payment registered before posting)
         self._process_vla_tokens_if_needed()
         return res
+
+    # NOTE: write() / _write() hooks on payment_state were removed.
+    # In Odoo 18, reconciliation updates payment_state on invoices via direct SQL,
+    # bypassing both write() and _write(). The reliable trigger is in account_payment.py
+    # via account.payment.action_post() → reconciled_invoice_ids.
 
     # Cron method disabled: token processing is now handled immediately via the
     # write() / _write() hooks above when payment_state transitions to 'paid' or 'in_payment'.
