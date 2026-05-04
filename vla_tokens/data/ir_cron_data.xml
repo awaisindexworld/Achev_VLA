@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Cron job disabled: token processing is now handled immediately via the
+         write() hook on account.move when payment_state transitions to
+         'paid' or 'in_payment'. The cron is no longer needed as a fallback. -->
+    <!--
     <record id="ir_cron_process_vla_tokens" model="ir.cron">
-    <field name="name">VLA Tokens: Process Paid Invoices</field>
-    <field name="model_id" ref="account.model_account_move"/>
-    <field name="state">code</field>
-    <field name="code">model._cron_process_vla_tokens()</field>
-    <field name="interval_number">5</field>
-    <field name="interval_type">minutes</field>
-    <field name="active">True</field>
-</record>
+        <field name="name">VLA Tokens: Process Paid Invoices</field>
+        <field name="model_id" ref="account.model_account_move"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_process_vla_tokens()</field>
+        <field name="interval_number">5</field>
+        <field name="interval_type">minutes</field>
+        <field name="active">True</field>
+    </record>
+    -->
 </odoo>
