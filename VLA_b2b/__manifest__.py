@@ -2,7 +2,7 @@
     'name': 'VLA B2B',
     'version': '18.0.1.0.0',
     'summary': 'B2B virtual language assessment flow for courses and surveys',
-    'depends': ['website_slides', 'survey', 'mail', 'website_slides_survey', ],
+    'depends': ['website_slides', 'survey', 'mail', 'website_slides_survey','VLA_APIs' ],
     'data': [
         'security/record_rule.xml',
         'security/ir.model.access.csv',

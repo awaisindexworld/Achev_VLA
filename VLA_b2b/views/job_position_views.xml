@@ -8,10 +8,10 @@
                 <field name="name"/>
                 <field name="state"/>
                 <field name="company_id" readonly="1"/>
-                <field name="reading_min_score"/>
-                <field name="writing_min_score"/>
-                <field name="speaking_min_score"/>
-                <field name="listening_min_score"/>
+                <field name="reading_min_clb"/>
+                <field name="writing_min_clb"/>
+                <field name="speaking_min_clb"/>
+                <field name="listening_min_clb"/>
                 <!--                <field name="active" optional="hide"/>-->
             </list>
         </field>
@@ -53,14 +53,14 @@
                         <field name="name"/>
                         <field name="company_id" readonly="1"/>
                     </group>
-                    <group string="Minimum Score Thresholds">
+                    <group string="Minimum CLB Thresholds">
                         <group>
-                            <field name="reading_min_score"/>
-                            <field name="speaking_min_score"/>
+                            <field name="reading_min_clb"/>
+                            <field name="speaking_min_clb"/>
                         </group>
                         <group>
-                            <field name="writing_min_score"/>
-                            <field name="listening_min_score"/>
+                            <field name="writing_min_clb"/>
+                            <field name="listening_min_clb"/>
                         </group>
                     </group>
                 </sheet>
