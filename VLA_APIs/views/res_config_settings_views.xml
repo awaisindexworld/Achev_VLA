@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_vla_apis" model="ir.ui.view">
+        <field name="name">res.config.settings.form.vla.apis</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app string="VLA API" name="vla_apis" groups="base.group_system">
+                    <block title="AWS Credentials">
+                        <setting string="Access Key" help="AWS Access Key ID for API authentication">
+                            <field name="vla_aws_access_key" placeholder="e.g. AKIAIOSFODNN7EXAMPLE"/>
+                        </setting>
+                        <setting string="Secret Key" help="AWS Secret Access Key">
+                            <field name="vla_aws_secret_key" password="True"/>
+                        </setting>
+                        <setting string="Region" help="AWS region (e.g. ca-central-1)">
+                            <field name="vla_aws_region" placeholder="ca-central-1"/>
+                        </setting>
+                        <setting string="Service" help="AWS service name (e.g. execute-api)">
+                            <field name="vla_aws_service" placeholder="execute-api"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>

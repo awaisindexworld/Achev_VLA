@@ -221,7 +221,8 @@ class SlideChannelPartner(models.Model):
             attendee.speaking_user_input_id = attendee._get_vla_user_input_for_skill('speaking') or empty
             attendee.listening_user_input_id = attendee._get_vla_user_input_for_skill('listening') or empty
 
-    @api.depends('reading_score', 'writing_score', 'speaking_score', 'listening_score', 'job_position_id')
+    @api.depends('reading_score', 'writing_score', 'speaking_score', 'listening_score',
+                 'writing_clb', 'speaking_clb', 'job_position_id')
     def _compute_vla_assessment_status(self):
         for attendee in self:
             if not attendee.channel_id:
@@ -237,9 +238,27 @@ class SlideChannelPartner(models.Model):
                 attendee.assessment_failure_reason = _('No job position snapshot found for this attendee.') if inputs else False
                 continue
 
-            required_skills = ['reading', 'writing', 'speaking', 'listening']
-            missing = [skill for skill in required_skills if not attendee._get_vla_user_input_for_skill(skill)]
-            if missing:
+            all_skills = ['reading', 'writing', 'speaking', 'listening']
+            # Only evaluate skills that actually have a completed survey input
+            assessed = [
+                skill for skill in all_skills
+                if attendee._get_vla_user_input_for_skill(skill)
+                and attendee._get_vla_user_input_for_skill(skill).state == 'done'
+            ]
+
+            if not assessed:
+                attendee.assessment_final_status = 'pending'
+                attendee.assessment_evaluated_at = False
+                attendee.assessment_failure_reason = False
+                continue
+
+            # Writing and speaking are scored via API CLB — wait until CLB is received
+            api_clb_skills = ('writing', 'speaking')
+            waiting_for_clb = any(
+                skill in assessed and not int(attendee[f'{skill}_clb'] or 0)
+                for skill in api_clb_skills
+            )
+            if waiting_for_clb:
                 attendee.assessment_final_status = 'pending'
                 attendee.assessment_evaluated_at = False
                 attendee.assessment_failure_reason = False
@@ -247,12 +266,21 @@ class SlideChannelPartner(models.Model):
 
             job = attendee.job_position_id
             failures = []
-            for skill in required_skills:
-                score = attendee[f'{skill}_score']
+            for skill in assessed:
                 threshold = job[f'{skill}_min_score']
-                if score < threshold:
-                    failures.append(_('%(skill)s score %(score)s is below minimum %(threshold)s',
-                                      skill=skill.title(), score=('%g' % score), threshold=('%g' % threshold)))
+                if skill in api_clb_skills:
+                    clb = int(attendee[f'{skill}_clb'] or 0)
+                    if clb < threshold:
+                        failures.append(_(
+                            '%(skill)s CLB %(clb)s is below minimum %(threshold)s',
+                            skill=skill.title(), clb=('%g' % clb), threshold=('%g' % threshold),
+                        ))
+                else:
+                    score = attendee[f'{skill}_score']
+                    if score < threshold:
+                        failures.append(_('%(skill)s score %(score)s is below minimum %(threshold)s',
+                                          skill=skill.title(), score=('%g' % score), threshold=('%g' % threshold)))
+
             attendee.assessment_final_status = 'fail' if failures else 'pass'
             attendee.assessment_evaluated_at = fields.Datetime.now()
             attendee.assessment_failure_reason = '\n'.join(failures) if failures else False

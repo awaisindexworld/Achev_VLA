@@ -84,12 +84,12 @@
                         <group string="Writing">
                             <field name="writing_score" readonly="1"/>
                             <field name="writing_user_input_id" readonly="1"/>
-                            <field name="writing_clb"/>
+                            <field name="writing_clb" readonly="1"/>
                         </group>
                         <group string="Speaking">
                             <field name="speaking_score" readonly="1"/>
                             <field name="speaking_user_input_id" readonly="1"/>
-                            <field name="speaking_clb"/>
+                            <field name="speaking_clb" readonly="1"/>
                         </group>
                         <group string="Listening">
                             <field name="listening_score" readonly="1"/>

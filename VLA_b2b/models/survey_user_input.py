@@ -67,29 +67,57 @@ class SurveyUserInput(models.Model):
         for user_input in self:
             if user_input.state != 'done' or not user_input.survey_id.assessment_skill_type:
                 continue
+            skill_type = user_input.survey_id.assessment_skill_type
             threshold = 0.0
             if user_input.job_position_id:
-                threshold = user_input.job_position_id[f"{user_input.survey_id.assessment_skill_type}_min_score"]
-            status = 'pass' if user_input.scoring_total >= threshold else 'fail'
-            vals = {
-                'assessment_final_status': status,
-                'evaluated_at': fields.Datetime.now(),
-                'failure_reason': False if status == 'pass' else _('%(skill)s score %(score)s is below minimum %(threshold)s',
-                    skill=user_input.survey_id.assessment_skill_type.title(),
+                threshold = user_input.job_position_id[f"{skill_type}_min_score"]
+
+            if skill_type in ('writing', 'speaking'):
+                # CLB comes from the API, not Odoo survey scoring
+                clb_field = f'{skill_type}_clb'
+                clb = getattr(user_input, clb_field, 0) or 0
+                if not clb:
+                    # CLB not yet received from API — stay pending
+                    status = 'pending'
+                    failure = False
+                    evaluated = False
+                else:
+                    status = 'pass' if clb >= threshold else 'fail'
+                    failure = False if status == 'pass' else _(
+                        '%(skill)s CLB %(clb)s is below minimum %(threshold)s',
+                        skill=skill_type.title(),
+                        clb=('%g' % clb),
+                        threshold=('%g' % threshold),
+                    )
+                    evaluated = fields.Datetime.now()
+            else:
+                status = 'pass' if user_input.scoring_total >= threshold else 'fail'
+                failure = False if status == 'pass' else _(
+                    '%(skill)s score %(score)s is below minimum %(threshold)s',
+                    skill=skill_type.title(),
                     score=('%g' % user_input.scoring_total),
                     threshold=('%g' % threshold),
-                ),
-            }
-            super(SurveyUserInput, user_input).write(vals)
+                )
+                evaluated = fields.Datetime.now()
 
-            # Write the score to the linked slide.channel.partner
+            super(SurveyUserInput, user_input).write({
+                'assessment_final_status': status,
+                'evaluated_at': evaluated,
+                'failure_reason': failure,
+            })
+
+            # Write the score (and CLB for API skills) to the linked slide.channel.partner
             attendee = user_input.slide_channel_partner_id
             if not attendee:
                 user_input._vla_sync_context()
                 attendee = user_input.slide_channel_partner_id
             if attendee:
-                skill = user_input.survey_id.assessment_skill_type
-                attendee.sudo().write({f'{skill}_score': user_input.scoring_total})
+                attendee_vals = {f'{skill_type}_score': user_input.scoring_total}
+                if skill_type in ('writing', 'speaking'):
+                    clb_val = getattr(user_input, f'{skill_type}_clb', 0) or 0
+                    if clb_val:
+                        attendee_vals[f'{skill_type}_clb'] = str(clb_val)
+                attendee.sudo().write(attendee_vals)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -100,7 +128,7 @@ class SurveyUserInput(models.Model):
 
     def write(self, vals):
         res = super().write(vals)
-        trigger_fields = {'state', 'scoring_total', 'survey_id', 'partner_id', 'channel_id', 'job_position_id'}
+        trigger_fields = {'state', 'scoring_total', 'survey_id', 'partner_id', 'channel_id', 'job_position_id', 'writing_clb', 'speaking_clb'}
         if trigger_fields.intersection(vals):
             self._vla_sync_context()
             self._vla_sync_assessment_status()
