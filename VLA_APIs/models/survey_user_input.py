@@ -383,9 +383,17 @@ class SurveyUserInput(models.Model):
                 record.write({'speaking_clb': clb_int, 'speaking_clb_received': True})
                 _logger.info("Speaking CLB saved: %s for user_input %s", clb_int, record.id)
 
-                attendee = getattr(record, 'slide_channel_partner_id', False)
+                # Ensure the attendee link is set before using it
+                if not record.slide_channel_partner_id:
+                    if hasattr(record, '_vla_sync_context'):
+                        record._vla_sync_context()
+
+                attendee = record.slide_channel_partner_id
                 if attendee:
+                    _logger.info("Speaking CLB: updating attendee %s", attendee.id)
                     attendee.sudo().write({'speaking_clb': str(clb_int)})
+                else:
+                    _logger.warning("Speaking CLB: no attendee linked to user_input %s — CLB saved on survey record only", record.id)
 
             except Exception as e:
                 _logger.error("Speaking CLB GET error for record %s: %s", record.id, str(e))

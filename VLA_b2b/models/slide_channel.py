@@ -201,19 +201,45 @@ class SlideChannelPartner(models.Model):
 
     def _get_vla_user_input_for_skill(self, skill):
         self.ensure_one()
-        domain = [
+        model = self.env['survey.user_input'].sudo()
+        skill_domain = [('survey_id.assessment_skill_type', '=', skill)]
+        order = 'write_date desc, id desc'
+
+        # Primary: match via the stored attendee link (most reliable)
+        primary = [('slide_channel_partner_id', '=', self.id)] + skill_domain
+        result = model.search(primary + [('state', '=', 'done')], order=order, limit=1)
+        if result:
+            return result
+        result = model.search(primary, order=order, limit=1)
+        if result:
+            return result
+
+        # Fallback: match by channel + partner (covers records created before the link was set)
+        fallback = [
             ('channel_id', '=', self.channel_id.id),
             ('partner_id', '=', self.partner_id.id),
-            ('survey_id.assessment_skill_type', '=', skill),
-        ]
+        ] + skill_domain
         if self.job_position_id:
-            domain.append(('job_position_id', '=', self.job_position_id.id))
+            fallback.append(('job_position_id', '=', self.job_position_id.id))
+        result = model.search(fallback + [('state', '=', 'done')], order=order, limit=1)
+        if result:
+            return result
+        result = model.search(fallback, order=order, limit=1)
+        if result:
+            return result
 
-        survey_input_model = self.env['survey.user_input'].sudo()
-        done_input = survey_input_model.search(domain + [('state', '=', 'done')], order='write_date desc, id desc', limit=1)
-        if done_input:
-            return done_input
-        return survey_input_model.search(domain, order='write_date desc, id desc', limit=1)
+        # Last resort: partner only — covers surveys not embedded in a course slide
+        # (channel_id is never set on those user_inputs so all channel-based lookups fail)
+        if self.partner_id:
+            last_resort = [('partner_id', '=', self.partner_id.id)] + skill_domain
+            result = model.search(last_resort + [('state', '=', 'done')], order=order, limit=1)
+            if result:
+                return result
+            result = model.search(last_resort, order=order, limit=1)
+            if result:
+                return result
+
+        return model
 
     @api.depends('channel_id', 'partner_id', 'job_position_id')
     def _compute_vla_user_inputs(self):
@@ -227,7 +253,7 @@ class SlideChannelPartner(models.Model):
             attendee.speaking_user_input_id = attendee._get_vla_user_input_for_skill('speaking') or empty
             attendee.listening_user_input_id = attendee._get_vla_user_input_for_skill('listening') or empty
 
-    @api.depends('writing_user_input_id', 'writing_user_input_id.writing_clb', 'speaking_user_input_id.speaking_clb')
+    @api.depends('writing_user_input_id', 'writing_user_input_id.writing_clb', 'speaking_user_input_id', 'speaking_user_input_id.speaking_clb')
     def _compute_api_skill_clbs(self):
         for attendee in self:
             w_ui = attendee.writing_user_input_id
@@ -236,7 +262,8 @@ class SlideChannelPartner(models.Model):
             attendee.speaking_clb = str(s_ui.speaking_clb) if s_ui and s_ui.speaking_clb else '0'
 
     def _inverse_api_skill_clbs(self):
-        # CLB values are sourced from survey.user_input; ignore manual writes
+        # CLB values are sourced from survey.us
+        # er_input; ignore manual writes
         pass
 
     @api.depends('reading_clb', 'writing_clb', 'speaking_clb', 'listening_clb', 'job_position_id')

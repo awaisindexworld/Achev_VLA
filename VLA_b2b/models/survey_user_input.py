@@ -37,16 +37,41 @@ class SurveyUserInput(models.Model):
 
     def _vla_guess_attendee(self):
         self.ensure_one()
-        channel = self.channel_id or self._vla_guess_channel()
-        if not channel or not self.partner_id:
+        if not self.partner_id:
             return self.env['slide.channel.partner']
-        domain = [('channel_id', '=', channel.id), ('partner_id', '=', self.partner_id.id)]
-        attendees = self.env['slide.channel.partner'].sudo().search(domain, order='id desc')
-        if self.job_position_id:
-            matched = attendees.filtered(lambda a: a.job_position_id.id == self.job_position_id.id)
-            if matched:
-                attendees = matched
-        return attendees[:1]
+
+        channel = self.channel_id or self._vla_guess_channel()
+
+        if channel:
+            domain = [('channel_id', '=', channel.id), ('partner_id', '=', self.partner_id.id)]
+            attendees = self.env['slide.channel.partner'].sudo().search(domain, order='id desc')
+            if self.job_position_id:
+                matched = attendees.filtered(lambda a: a.job_position_id.id == self.job_position_id.id)
+                if matched:
+                    attendees = matched
+            if attendees:
+                return attendees[:1]
+
+        # Fallback for surveys not embedded in any course slide (e.g. standalone speaking assessment):
+        # find any attendee record for this partner whose channel has a survey of the same skill type.
+        skill = getattr(self.survey_id, 'assessment_skill_type', None)
+        if skill:
+            attendees = self.env['slide.channel.partner'].sudo().search(
+                [('partner_id', '=', self.partner_id.id)], order='id desc'
+            )
+            if self.job_position_id:
+                matched = attendees.filtered(lambda a: a.job_position_id.id == self.job_position_id.id)
+                if matched:
+                    attendees = matched
+            for attendee in attendees:
+                has_skill = any(
+                    s.survey_id and s.survey_id.assessment_skill_type == skill
+                    for s in attendee.channel_id.slide_ids
+                )
+                if has_skill:
+                    return attendee
+
+        return self.env['slide.channel.partner']
 
     def _vla_sync_context(self):
         for user_input in self:
