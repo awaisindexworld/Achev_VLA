@@ -19,4 +19,18 @@ class SurveyUserInput(models.Model):
                 ('min_percentage', '<=', percentage),
                 ('max_percentage', '>=', percentage),
             ], limit=1)
-            rec.clb_level = config.clb_level if config else 0
+            # clb_level on config is a Selection (string key '0'–'8'); cast to int for storage
+            rec.clb_level = int(config.clb_level) if config else 0
+
+    def _vla_sync_assessment_status(self):
+        super()._vla_sync_assessment_status()
+        for rec in self:
+            if rec.state != 'done':
+                continue
+            skill = rec.survey_id.assessment_skill_type
+            if skill not in ('reading', 'listening'):
+                continue
+            attendee = rec.slide_channel_partner_id
+            if not attendee:
+                continue
+            attendee.sudo().write({f'{skill}_clb': str(rec.clb_level)})

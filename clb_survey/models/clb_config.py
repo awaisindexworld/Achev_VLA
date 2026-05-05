@@ -15,7 +15,11 @@ class ClbLevelConfig(models.Model):
     ], required=True, string='Skill Type')
     min_percentage = fields.Float(required=True, string='Min %', digits=(6, 2))
     max_percentage = fields.Float(required=True, string='Max %', digits=(6, 2))
-    clb_level = fields.Integer(required=True, string='CLB Level')
+    _CLB_LEVELS = [
+        ('0', 'CLB 0'), ('1', 'CLB 1'), ('2', 'CLB 2'), ('3', 'CLB 3'),
+        ('4', 'CLB 4'), ('5', 'CLB 5'), ('6', 'CLB 6'), ('7', 'CLB 7'), ('8', 'CLB 8'),
+    ]
+    clb_level = fields.Selection(_CLB_LEVELS, required=True, string='CLB Level')
 
     @api.constrains('min_percentage', 'max_percentage')
     def _check_min_max(self):
