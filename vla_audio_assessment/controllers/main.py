@@ -30,11 +30,14 @@ class VLASurveyAudioController(http.Controller):
         if not raw:
             return self._json_response({'ok': False, 'error': 'The uploaded audio file is empty.'}, status=400)
 
+        filename = upload.filename or f'survey_q_{question.id}.webm'
+        raw, mimetype, filename = user_input._convert_audio_to_mp3(raw, filename)
+
         attachment = request.env['ir.attachment'].sudo().create({
-            'name': upload.filename or f'survey_q_{question.id}.webm',
+            'name': filename,
             'type': 'binary',
             'datas': base64.b64encode(raw),
-            'mimetype': upload.mimetype or 'audio/webm',
+            'mimetype': mimetype,
             'res_model': 'survey.user_input',
             'res_id': user_input.id,
         })
