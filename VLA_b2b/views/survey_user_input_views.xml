@@ -33,4 +33,26 @@
             </xpath>
         </field>
     </record>
+
+    <record id="view_survey_user_input_form_vla" model="ir.ui.view">
+        <field name="name">survey.user.input.form.vla</field>
+        <field name="model">survey.user_input</field>
+        <field name="inherit_id" ref="survey.survey_user_input_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <field name="assessment_skill_type" invisible="1"/>
+                <group string="Writing Assessment"
+                       invisible="assessment_skill_type != 'writing'">
+                    <field name="writing_job_id" readonly="1"/>
+                    <field name="writing_clb" readonly="1"/>
+                </group>
+                <group string="Speaking Assessment"
+                       invisible="assessment_skill_type != 'speaking'">
+                    <field name="speaking_job_id" readonly="1"/>
+                    <field name="speaking_clb" readonly="1"/>
+                    <field name="speaking_clb_received" readonly="1"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
 </odoo>
