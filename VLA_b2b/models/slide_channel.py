@@ -150,8 +150,14 @@ class SlideChannelPartner(models.Model):
 
     _CLB_SELECTION = [('0', '0'), ('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('5', '5'), ('6', '6'), ('7', '7'), ('8', '8')]
     reading_clb = fields.Selection(_CLB_SELECTION, string='Reading CLB', default='0')
-    writing_clb = fields.Selection(_CLB_SELECTION, string='Writing CLB', default='0')
-    speaking_clb = fields.Selection(_CLB_SELECTION, string='Speaking CLB', default='0')
+    writing_clb = fields.Selection(
+        _CLB_SELECTION, string='Writing CLB',
+        compute='_compute_api_skill_clbs', inverse='_inverse_api_skill_clbs',
+    )
+    speaking_clb = fields.Selection(
+        _CLB_SELECTION, string='Speaking CLB',
+        compute='_compute_api_skill_clbs', inverse='_inverse_api_skill_clbs',
+    )
     listening_clb = fields.Selection(_CLB_SELECTION, string='Listening CLB', default='0')
     assessment_final_status = fields.Selection([
         ('pending', 'Pending'),
@@ -221,8 +227,19 @@ class SlideChannelPartner(models.Model):
             attendee.speaking_user_input_id = attendee._get_vla_user_input_for_skill('speaking') or empty
             attendee.listening_user_input_id = attendee._get_vla_user_input_for_skill('listening') or empty
 
-    @api.depends('reading_score', 'writing_score', 'speaking_score', 'listening_score',
-                 'writing_clb', 'speaking_clb', 'job_position_id')
+    @api.depends('writing_user_input_id', 'writing_user_input_id.writing_clb', 'speaking_user_input_id.speaking_clb')
+    def _compute_api_skill_clbs(self):
+        for attendee in self:
+            w_ui = attendee.writing_user_input_id
+            s_ui = attendee.speaking_user_input_id
+            attendee.writing_clb = str(w_ui.writing_clb) if w_ui and w_ui.writing_clb else '0'
+            attendee.speaking_clb = str(s_ui.speaking_clb) if s_ui and s_ui.speaking_clb else '0'
+
+    def _inverse_api_skill_clbs(self):
+        # CLB values are sourced from survey.user_input; ignore manual writes
+        pass
+
+    @api.depends('reading_clb', 'writing_clb', 'speaking_clb', 'listening_clb', 'job_position_id')
     def _compute_vla_assessment_status(self):
         for attendee in self:
             if not attendee.channel_id:
@@ -252,11 +269,10 @@ class SlideChannelPartner(models.Model):
                 attendee.assessment_failure_reason = False
                 continue
 
-            # Writing and speaking are scored via API CLB — wait until CLB is received
-            api_clb_skills = ('writing', 'speaking')
+            # All skills use CLB — wait until CLB is received for each assessed skill
             waiting_for_clb = any(
-                skill in assessed and not int(attendee[f'{skill}_clb'] or 0)
-                for skill in api_clb_skills
+                not int(attendee[f'{skill}_clb'] or 0)
+                for skill in assessed
             )
             if waiting_for_clb:
                 attendee.assessment_final_status = 'pending'
@@ -267,19 +283,13 @@ class SlideChannelPartner(models.Model):
             job = attendee.job_position_id
             failures = []
             for skill in assessed:
-                threshold = job[f'{skill}_min_score']
-                if skill in api_clb_skills:
-                    clb = int(attendee[f'{skill}_clb'] or 0)
-                    if clb < threshold:
-                        failures.append(_(
-                            '%(skill)s CLB %(clb)s is below minimum %(threshold)s',
-                            skill=skill.title(), clb=('%g' % clb), threshold=('%g' % threshold),
-                        ))
-                else:
-                    score = attendee[f'{skill}_score']
-                    if score < threshold:
-                        failures.append(_('%(skill)s score %(score)s is below minimum %(threshold)s',
-                                          skill=skill.title(), score=('%g' % score), threshold=('%g' % threshold)))
+                clb = int(attendee[f'{skill}_clb'] or 0)
+                threshold = job[f'{skill}_min_clb']
+                if clb < threshold:
+                    failures.append(_(
+                        '%(skill)s CLB %(clb)s is below minimum %(threshold)s',
+                        skill=skill.title(), clb=('%g' % clb), threshold=('%g' % threshold),
+                    ))
 
             attendee.assessment_final_status = 'fail' if failures else 'pass'
             attendee.assessment_evaluated_at = fields.Datetime.now()

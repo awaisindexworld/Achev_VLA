@@ -68,34 +68,28 @@ class SurveyUserInput(models.Model):
             if user_input.state != 'done' or not user_input.survey_id.assessment_skill_type:
                 continue
             skill_type = user_input.survey_id.assessment_skill_type
-            threshold = 0.0
+            threshold = 0
             if user_input.job_position_id:
-                threshold = user_input.job_position_id[f"{skill_type}_min_score"]
+                threshold = user_input.job_position_id[f"{skill_type}_min_clb"]
 
+            # All skills use CLB — writing/speaking CLB is on the survey input (from API),
+            # reading/listening CLB is on the linked attendee record
             if skill_type in ('writing', 'speaking'):
-                # CLB comes from the API, not Odoo survey scoring
-                clb_field = f'{skill_type}_clb'
-                clb = getattr(user_input, clb_field, 0) or 0
-                if not clb:
-                    # CLB not yet received from API — stay pending
-                    status = 'pending'
-                    failure = False
-                    evaluated = False
-                else:
-                    status = 'pass' if clb >= threshold else 'fail'
-                    failure = False if status == 'pass' else _(
-                        '%(skill)s CLB %(clb)s is below minimum %(threshold)s',
-                        skill=skill_type.title(),
-                        clb=('%g' % clb),
-                        threshold=('%g' % threshold),
-                    )
-                    evaluated = fields.Datetime.now()
+                clb = getattr(user_input, f'{skill_type}_clb', 0) or 0
             else:
-                status = 'pass' if user_input.scoring_total >= threshold else 'fail'
+                attendee = user_input.slide_channel_partner_id or user_input._vla_guess_attendee()
+                clb = int(attendee[f'{skill_type}_clb'] or 0) if attendee else 0
+
+            if not clb:
+                status = 'pending'
+                failure = False
+                evaluated = False
+            else:
+                status = 'pass' if clb >= threshold else 'fail'
                 failure = False if status == 'pass' else _(
-                    '%(skill)s score %(score)s is below minimum %(threshold)s',
+                    '%(skill)s CLB %(clb)s is below minimum %(threshold)s',
                     skill=skill_type.title(),
-                    score=('%g' % user_input.scoring_total),
+                    clb=('%g' % clb),
                     threshold=('%g' % threshold),
                 )
                 evaluated = fields.Datetime.now()
@@ -106,18 +100,14 @@ class SurveyUserInput(models.Model):
                 'failure_reason': failure,
             })
 
-            # Write the score (and CLB for API skills) to the linked slide.channel.partner
+            # Write the score to the linked slide.channel.partner
+            # (writing_clb/speaking_clb on the attendee are computed from the user input directly)
             attendee = user_input.slide_channel_partner_id
             if not attendee:
                 user_input._vla_sync_context()
                 attendee = user_input.slide_channel_partner_id
             if attendee:
-                attendee_vals = {f'{skill_type}_score': user_input.scoring_total}
-                if skill_type in ('writing', 'speaking'):
-                    clb_val = getattr(user_input, f'{skill_type}_clb', 0) or 0
-                    if clb_val:
-                        attendee_vals[f'{skill_type}_clb'] = str(clb_val)
-                attendee.sudo().write(attendee_vals)
+                attendee.sudo().write({f'{skill_type}_score': user_input.scoring_total})
 
     @api.model_create_multi
     def create(self, vals_list):

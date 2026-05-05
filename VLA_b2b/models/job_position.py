@@ -21,10 +21,10 @@ class VlaJobPosition(models.Model):
         ('posted', 'Posted'),
         ('closed', 'Closed'),
     ], default='draft', required=True, index=True)
-    reading_min_score = fields.Float(string='Reading Min Score', default=0.0)
-    writing_min_score = fields.Float(string='Writing Min Score', default=0.0)
-    speaking_min_score = fields.Float(string='Speaking Min Score', default=0.0)
-    listening_min_score = fields.Float(string='Listening Min Score', default=0.0)
+    reading_min_clb = fields.Integer(string='Reading Min CLB', default=0)
+    writing_min_clb = fields.Integer(string='Writing Min CLB', default=0)
+    speaking_min_clb = fields.Integer(string='Speaking Min CLB', default=0)
+    listening_min_clb = fields.Integer(string='Listening Min CLB', default=0)
 
     def action_set_draft(self):
         self.write({'state': 'draft'})

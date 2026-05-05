@@ -1,7 +1,7 @@
 {
     'name': 'VLA APIs',
     'version': '1.0',
-    'depends': ['VLA_b2b'],
+    'depends': ['base', 'survey'],
     'data': [
         'data/cron.xml',
         'views/survey_user_input_view.xml',
