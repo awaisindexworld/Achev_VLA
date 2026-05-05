@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Default CLB percentage thresholds.
+    noupdate="1" means these records are loaded once on install and can be
+    freely edited by the administrator without being overwritten on upgrade.
+-->
+<odoo noupdate="1">
+
+    <!-- ── Reading ────────────────────────────────────────────────────── -->
+    <record id="clb_reading_0" model="clb.level.config">
+        <field name="name">Reading CLB 0</field>
+        <field name="skill_type">reading</field>
+        <field name="clb_level">0</field>
+        <field name="min_percentage">0.00</field>
+        <field name="max_percentage">2.49</field>
+    </record>
+    <record id="clb_reading_1" model="clb.level.config">
+        <field name="name">Reading CLB 1</field>
+        <field name="skill_type">reading</field>
+        <field name="clb_level">1</field>
+        <field name="min_percentage">2.50</field>
+        <field name="max_percentage">7.49</field>
+    </record>
+    <record id="clb_reading_2" model="clb.level.config">
+        <field name="name">Reading CLB 2</field>
+        <field name="skill_type">reading</field>
+        <field name="clb_level">2</field>
+        <field name="min_percentage">7.50</field>
+        <field name="max_percentage">14.99</field>
+    </record>
+    <record id="clb_reading_3" model="clb.level.config">
+        <field name="name">Reading CLB 3</field>
+        <field name="skill_type">reading</field>
+        <field name="clb_level">3</field>
+        <field name="min_percentage">15.00</field>
+        <field name="max_percentage">27.49</field>
+    </record>
+    <record id="clb_reading_4" model="clb.level.config">
+        <field name="name">Reading CLB 4</field>
+        <field name="skill_type">reading</field>
+        <field name="clb_level">4</field>
+        <field name="min_percentage">27.50</field>
+        <field name="max_percentage">49.99</field>
+    </record>
+    <record id="clb_reading_5" model="clb.level.config">
+        <field name="name">Reading CLB 5</field>
+        <field name="skill_type">reading</field>
+        <field name="clb_level">5</field>
+        <field name="min_percentage">50.00</field>
+        <field name="max_percentage">74.99</field>
+    </record>
+    <record id="clb_reading_6" model="clb.level.config">
+        <field name="name">Reading CLB 6</field>
+        <field name="skill_type">reading</field>
+        <field name="clb_level">6</field>
+        <field name="min_percentage">75.00</field>
+        <field name="max_percentage">87.49</field>
+    </record>
+    <record id="clb_reading_7" model="clb.level.config">
+        <field name="name">Reading CLB 7</field>
+        <field name="skill_type">reading</field>
+        <field name="clb_level">7</field>
+        <field name="min_percentage">87.50</field>
+        <field name="max_percentage">94.99</field>
+    </record>
+    <record id="clb_reading_8" model="clb.level.config">
+        <field name="name">Reading CLB 8</field>
+        <field name="skill_type">reading</field>
+        <field name="clb_level">8</field>
+        <field name="min_percentage">95.00</field>
+        <field name="max_percentage">100.00</field>
+    </record>
+
+    <!-- ── Listening ──────────────────────────────────────────────────── -->
+    <record id="clb_listening_0" model="clb.level.config">
+        <field name="name">Listening CLB 0</field>
+        <field name="skill_type">listening</field>
+        <field name="clb_level">0</field>
+        <field name="min_percentage">0.00</field>
+        <field name="max_percentage">2.49</field>
+    </record>
+    <record id="clb_listening_1" model="clb.level.config">
+        <field name="name">Listening CLB 1</field>
+        <field name="skill_type">listening</field>
+        <field name="clb_level">1</field>
+        <field name="min_percentage">2.50</field>
+        <field name="max_percentage">7.49</field>
+    </record>
+    <record id="clb_listening_2" model="clb.level.config">
+        <field name="name">Listening CLB 2</field>
+        <field name="skill_type">listening</field>
+        <field name="clb_level">2</field>
+        <field name="min_percentage">7.50</field>
+        <field name="max_percentage">14.99</field>
+    </record>
+    <record id="clb_listening_3" model="clb.level.config">
+        <field name="name">Listening CLB 3</field>
+        <field name="skill_type">listening</field>
+        <field name="clb_level">3</field>
+        <field name="min_percentage">15.00</field>
+        <field name="max_percentage">27.49</field>
+    </record>
+    <record id="clb_listening_4" model="clb.level.config">
+        <field name="name">Listening CLB 4</field>
+        <field name="skill_type">listening</field>
+        <field name="clb_level">4</field>
+        <field name="min_percentage">27.50</field>
+        <field name="max_percentage">49.99</field>
+    </record>
+    <record id="clb_listening_5" model="clb.level.config">
+        <field name="name">Listening CLB 5</field>
+        <field name="skill_type">listening</field>
+        <field name="clb_level">5</field>
+        <field name="min_percentage">50.00</field>
+        <field name="max_percentage">74.99</field>
+    </record>
+    <record id="clb_listening_6" model="clb.level.config">
+        <field name="name">Listening CLB 6</field>
+        <field name="skill_type">listening</field>
+        <field name="clb_level">6</field>
+        <field name="min_percentage">75.00</field>
+        <field name="max_percentage">87.49</field>
+    </record>
+    <record id="clb_listening_7" model="clb.level.config">
+        <field name="name">Listening CLB 7</field>
+        <field name="skill_type">listening</field>
+        <field name="clb_level">7</field>
+        <field name="min_percentage">87.50</field>
+        <field name="max_percentage">94.99</field>
+    </record>
+    <record id="clb_listening_8" model="clb.level.config">
+        <field name="name">Listening CLB 8</field>
+        <field name="skill_type">listening</field>
+        <field name="clb_level">8</field>
+        <field name="min_percentage">95.00</field>
+        <field name="max_percentage">100.00</field>
+    </record>
+
+</odoo>

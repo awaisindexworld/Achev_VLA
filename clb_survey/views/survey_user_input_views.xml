@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_user_input_form_clb" model="ir.ui.view">
+        <field name="name">survey.user_input.clb</field>
+        <field name="model">survey.user_input</field>
+        <field name="inherit_id" ref="survey.survey_user_input_view_form"/>
+        <field name="arch" type="xml">
+            <!-- Load assessment_skill_type so it can drive visibility below -->
+            <xpath expr="//field[@name='scoring_type']" position="after">
+                <field name="assessment_skill_type" invisible="1"/>
+            </xpath>
+            <!-- Insert CLB level after the scoring percentage block, only for reading/listening -->
+            <xpath expr="//div[field[@name='scoring_percentage']]" position="after">
+                <label for="clb_level" string="CLB Level"
+                       invisible="assessment_skill_type not in ['reading', 'listening']"/>
+                <field name="clb_level" nolabel="1"
+                       invisible="assessment_skill_type not in ['reading', 'listening']"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

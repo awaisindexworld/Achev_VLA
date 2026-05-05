@@ -32,12 +32,24 @@ class SurveySurvey(models.Model):
 
     @api.onchange('vla_randomize_by_section')
     def _onchange_vla_randomize_by_section(self):
-        """Keep onchange safe.
+        self.questions_selection = 'random' if self.vla_randomize_by_section else 'all'
 
-        Do not apply fixed section allocation on save.
-        Randomization happens fresh on every survey attempt.
-        """
-        return
+    def write(self, vals):
+        if 'vla_randomize_by_section' in vals and 'questions_selection' not in vals:
+            vals['questions_selection'] = 'random' if vals['vla_randomize_by_section'] else 'all'
+        return super().write(vals)
+
+    @api.model
+    def _get_pages_or_questions(self, user_input):
+        result = super()._get_pages_or_questions(user_input)
+        # For existing surveys that may still have questions_selection='all',
+        # force predefined_question_ids for navigation when our randomization is active.
+        if (self.vla_randomize_by_section
+                and not self.session_state
+                and self.questions_layout == 'page_per_question'
+                and user_input and user_input.predefined_question_ids):
+            result = user_input.predefined_question_ids
+        return result
 
     def _vla_get_section_question_map(self):
         """Return section -> questions mapping.
@@ -210,24 +222,17 @@ class SurveyUserInput(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        user_inputs = super().create(vals_list)
-
-        for user_input in user_inputs:
-            survey = user_input.survey_id
-
-            if not survey.vla_randomize_by_section:
+        for vals in vals_list:
+            survey_id = vals.get('survey_id') or self.env.context.get('default_survey_id')
+            if not survey_id:
                 continue
-
+            survey = self.env['survey.survey'].browse(survey_id)
+            if not survey.vla_randomize_by_section or not survey.vla_random_total_questions:
+                continue
             selected_questions = survey._vla_get_random_questions_for_attempt()
+            if selected_questions:
+                # Inject before super() so Odoo's create() finds it set and skips
+                # its own _prepare_user_input_predefined_questions() assignment.
+                vals['predefined_question_ids'] = [(6, 0, selected_questions.ids)]
 
-            if not selected_questions:
-                continue
-
-            # Store randomized real questions only for this attempt.
-            # Do not include section/page records here.
-            if 'predefined_question_ids' in user_input._fields:
-                user_input.write({
-                    'predefined_question_ids': [(6, 0, selected_questions.ids)]
-                })
-
-        return user_inputs
+        return super().create(vals_list)

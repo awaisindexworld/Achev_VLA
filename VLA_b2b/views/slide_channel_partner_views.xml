@@ -79,7 +79,7 @@
                         <group string="Reading">
                             <field name="reading_score" readonly="1"/>
                             <field name="reading_user_input_id" readonly="1"/>
-                            <field name="reading_clb"/>
+                            <field name="reading_clb" readonly="1"/>
                         </group>
                         <group string="Writing">
                             <field name="writing_score" readonly="1"/>
@@ -94,7 +94,7 @@
                         <group string="Listening">
                             <field name="listening_score" readonly="1"/>
                             <field name="listening_user_input_id" readonly="1"/>
-                            <field name="listening_clb"/>
+                            <field name="listening_clb" readonly="1"/>
                         </group>
                     </group>
                     <notebook>
