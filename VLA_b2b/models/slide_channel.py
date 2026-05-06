@@ -268,14 +268,11 @@ class SlideChannelPartner(models.Model):
         # er_input; ignore manual writes
         pass
 
-    @api.depends('reading_clb', 'writing_clb', 'speaking_clb', 'listening_clb', 'job_position_id')
+    @api.depends('reading_clb', 'writing_clb', 'speaking_clb', 'listening_clb', 'job_position_id',
+                 'speaking_user_input_id.speaking_clb_received')
     def _compute_vla_assessment_status(self):
         for attendee in self:
             if not attendee.channel_id:
-                _logger.info(
-                    "[VLA assessment_final_status=pending] attendee_id=%s partner_id=%s reason=no channel_id on attendee",
-                    attendee.id, attendee.partner_id.id,
-                )
                 attendee.assessment_final_status = 'pending'
                 attendee.assessment_evaluated_at = False
                 attendee.assessment_failure_reason = False
@@ -283,12 +280,6 @@ class SlideChannelPartner(models.Model):
 
             if not attendee.job_position_id:
                 inputs = attendee._get_vla_user_inputs()
-                if not inputs:
-                    _logger.info(
-                        "[VLA assessment_final_status=pending] attendee_id=%s partner_id=%s channel_id=%s "
-                        "reason=no job_position_id AND no VLA user_inputs found",
-                        attendee.id, attendee.partner_id.id, attendee.channel_id.id,
-                    )
                 attendee.assessment_final_status = 'error' if inputs else 'pending'
                 attendee.assessment_evaluated_at = fields.Datetime.now() if inputs else False
                 attendee.assessment_failure_reason = _('No job position snapshot found for this attendee.') if inputs else False
@@ -303,42 +294,19 @@ class SlideChannelPartner(models.Model):
             ]
 
             if not assessed:
-                skill_states = {
-                    skill: (attendee._get_vla_user_input_for_skill(skill).state
-                            if attendee._get_vla_user_input_for_skill(skill) else 'missing')
-                    for skill in all_skills
-                }
-                _logger.info(
-                    "[VLA assessment_final_status=pending] attendee_id=%s partner_id=%s channel_id=%s "
-                    "job_position_id=%s reason=no skill has a completed (state='done') survey.user_input "
-                    "skill_states=%s",
-                    attendee.id, attendee.partner_id.id, attendee.channel_id.id,
-                    attendee.job_position_id.id, skill_states,
-                )
                 attendee.assessment_final_status = 'pending'
                 attendee.assessment_evaluated_at = False
                 attendee.assessment_failure_reason = False
                 continue
 
-            # All skills use CLB — wait until CLB is received for each assessed skill
-            waiting_for_clb = any(
-                not int(attendee[f'{skill}_clb'] or 0)
-                for skill in assessed
-            )
-            if waiting_for_clb:
-                missing_clb = [skill for skill in assessed if not int(attendee[f'{skill}_clb'] or 0)]
-                clb_values = {skill: attendee[f'{skill}_clb'] for skill in assessed}
-                _logger.info(
-                    "[VLA assessment_final_status=pending] attendee_id=%s partner_id=%s channel_id=%s "
-                    "job_position_id=%s reason=waiting for CLB on assessed skills "
-                    "assessed=%s missing_clb=%s clb_values=%s",
-                    attendee.id, attendee.partner_id.id, attendee.channel_id.id,
-                    attendee.job_position_id.id, assessed, missing_clb, clb_values,
-                )
-                attendee.assessment_final_status = 'pending'
-                attendee.assessment_evaluated_at = False
-                attendee.assessment_failure_reason = False
-                continue
+            # Wait only for the speaking CLB to arrive from the API
+            if 'speaking' in assessed:
+                s_ui = attendee.speaking_user_input_id
+                if not (s_ui and s_ui.speaking_clb_received):
+                    attendee.assessment_final_status = 'pending'
+                    attendee.assessment_evaluated_at = False
+                    attendee.assessment_failure_reason = False
+                    continue
 
             job = attendee.job_position_id
             failures = []
