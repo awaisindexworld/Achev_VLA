@@ -1,4 +1,6 @@
-from odoo import models
+import base64
+import os
+from odoo import models, api
 
 
 class SlideChannelPartner(models.Model):
@@ -7,3 +9,20 @@ class SlideChannelPartner(models.Model):
     def action_print_language_assessment_report(self):
         self.ensure_one()
         return self.env.ref("test_reports.action_report_language_assessment").report_action(self)
+
+
+class ReportTestReportsHelper(models.AbstractModel):
+    _name = 'report.test_reports.helper'
+    _description = 'Report Image Helper'
+
+    @api.model
+    def get_image_base64(self, image_filename):
+        img_path = os.path.join(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+            'static', 'src', 'img', image_filename,
+        )
+        with open(img_path, 'rb') as f:
+            encoded = base64.b64encode(f.read()).decode('utf-8')
+        ext = image_filename.rsplit('.', 1)[-1].lower()
+        mime = 'image/png' if ext == 'png' else 'image/jpeg'
+        return f'data:{mime};base64,{encoded}'

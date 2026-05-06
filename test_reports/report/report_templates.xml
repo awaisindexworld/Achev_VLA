@@ -3,7 +3,11 @@
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
 
-                <t t-set="base_url" t-value="(web_base_url or '').rstrip('/')"/>
+                <t t-set="img_logo" t-value="env['report.test_reports.helper'].get_image_base64('achiev_logo.png')"/>
+                <t t-set="img_listening" t-value="env['report.test_reports.helper'].get_image_base64('listening_icon.png')"/>
+                <t t-set="img_reading" t-value="env['report.test_reports.helper'].get_image_base64('reading_icon.png')"/>
+                <t t-set="img_speaking" t-value="env['report.test_reports.helper'].get_image_base64('speaking_icon.png')"/>
+                <t t-set="img_writing" t-value="env['report.test_reports.helper'].get_image_base64('writing_icon.png')"/>
                 <t t-set="report_client_name" t-value="o.partner_id.name or ''"/>
                 <t t-set="report_test_date"
                    t-value="context_timestamp(o.assessment_evaluated_at).strftime('%b-%d-%Y') if o.assessment_evaluated_at else ''"/>
@@ -39,7 +43,7 @@
                                 </td>
 
                                 <td style="width:32%; vertical-align:top; text-align:right; padding:0;">
-                                    <img t-att-src="base_url + '/test_reports/static/src/img/achiev_logo.png'"
+                                    <img t-att-src="img_logo"
                                          style="width:135px; height:auto; display:inline-block; margin-top:4px; border:0; outline:none;"/>
                                 </td>
                             </tr>
@@ -79,7 +83,7 @@
                                         <tr>
                                             <td style="width:112px; vertical-align:middle; padding:0;">
                                                 <div style="width:96px; height:96px; overflow:hidden;">
-                                                    <img t-att-src="base_url + '/test_reports/static/src/img/listening_icon.png'"
+                                                    <img t-att-src="img_listening"
                                                          style="height:96px; width:auto; display:block; border:0; outline:none;"/>
                                                 </div>
                                             </td>
@@ -116,7 +120,7 @@
                                         <tr>
                                             <td style="width:112px; vertical-align:middle; padding:0;">
                                                 <div style="width:96px; height:96px; overflow:hidden;">
-                                                    <img t-att-src="base_url + '/test_reports/static/src/img/reading_icon.png'"
+                                                    <img t-att-src="img_reading"
                                                          style="height:96px; width:auto; display:block; border:0; outline:none;"/>
                                                 </div>
                                             </td>
@@ -153,7 +157,7 @@
                                         <tr>
                                             <td style="width:112px; vertical-align:middle; padding:0;">
                                                 <div style="width:96px; height:96px; overflow:hidden;">
-                                                    <img t-att-src="base_url + '/test_reports/static/src/img/speaking_icon.png'"
+                                                    <img t-att-src="img_speaking"
                                                          style="height:96px; width:auto; display:block; border:0; outline:none;"/>
                                                 </div>
                                             </td>
@@ -190,7 +194,7 @@
                                         <tr>
                                             <td style="width:112px; vertical-align:middle; padding:0;">
                                                 <div style="width:96px; height:96px; overflow:hidden;">
-                                                    <img t-att-src="base_url + '/test_reports/static/src/img/writing_icon.png'"
+                                                    <img t-att-src="img_writing"
                                                          style="height:96px; width:auto; display:block; border:0; outline:none;"/>
                                                 </div>
                                             </td>
@@ -264,7 +268,7 @@
                                 </td>
 
                                 <td style="width:32%; vertical-align:top; text-align:right; padding:0;">
-                                    <img t-att-src="base_url + '/test_reports/static/src/img/achiev_logo.png'"
+                                    <img t-att-src="img_logo"
                                          style="width:135px; height:auto; display:inline-block; margin-top:4px; border:0; outline:none;"/>
                                 </td>
                             </tr>
@@ -301,7 +305,7 @@
                         <table style="width:100%; border-collapse:collapse; margin:0 0 44px 0;">
                             <tr>
                                 <td style="width:64%; vertical-align:middle; padding:0;">
-                                    <img t-att-src="base_url + '/test_reports/static/src/img/reading_icon.png'"
+                                    <img t-att-src="img_reading"
                                          style="height:110px; width:auto; display:block; border:0; outline:none; vertical-align:middle;"/>
                                 </td>
 
@@ -384,7 +388,7 @@
                                 </td>
 
                                 <td style="width:32%; vertical-align:top; text-align:right; padding:0;">
-                                    <img t-att-src="base_url + '/test_reports/static/src/img/achiev_logo.png'"
+                                    <img t-att-src="img_logo"
                                          style="width:135px; height:auto; display:inline-block; margin-top:4px; border:0; outline:none;"/>
                                 </td>
                             </tr>
@@ -421,7 +425,7 @@
                         <table style="width:100%; border-collapse:collapse; margin:0 0 44px 0;">
                             <tr>
                                 <td style="width:64%; vertical-align:middle; padding:0;">
-                                    <img t-att-src="base_url + '/test_reports/static/src/img/listening_icon.png'"
+                                    <img t-att-src="img_listening"
                                          style="height:110px; width:auto; display:block; border:0; outline:none; vertical-align:middle;"/>
                                 </td>
 
@@ -504,7 +508,7 @@
                                 </td>
 
                                 <td style="width:32%; vertical-align:top; text-align:right; padding:0;">
-                                    <img t-att-src="base_url + '/test_reports/static/src/img/achiev_logo.png'"
+                                    <img t-att-src="img_logo"
                                          style="width:135px; height:auto; display:inline-block; margin-top:4px; border:0; outline:none;"/>
                                 </td>
                             </tr>
@@ -541,7 +545,7 @@
                         <table style="width:100%; border-collapse:collapse; margin:0 0 44px 0;">
                             <tr>
                                 <td style="width:64%; vertical-align:middle; padding:0;">
-                                    <img t-att-src="base_url + '/test_reports/static/src/img/speaking_icon.png'"
+                                    <img t-att-src="img_speaking"
                                          style="height:110px; width:auto; display:block; border:0; outline:none; vertical-align:middle;"/>
                                 </td>
 
@@ -624,7 +628,7 @@
                                 </td>
 
                                 <td style="width:32%; vertical-align:top; text-align:right; padding:0;">
-                                    <img t-att-src="base_url + '/test_reports/static/src/img/achiev_logo.png'"
+                                    <img t-att-src="img_logo"
                                          style="width:135px; height:auto; display:inline-block; margin-top:4px; border:0; outline:none;"/>
                                 </td>
                             </tr>
@@ -661,7 +665,7 @@
                         <table style="width:100%; border-collapse:collapse; margin:0 0 44px 0;">
                             <tr>
                                 <td style="width:64%; vertical-align:middle; padding:0;">
-                                    <img t-att-src="base_url + '/test_reports/static/src/img/writing_icon.png'"
+                                    <img t-att-src="img_writing"
                                          style="height:110px; width:auto; display:block; border:0; outline:none; vertical-align:middle;"/>
                                 </td>
 
