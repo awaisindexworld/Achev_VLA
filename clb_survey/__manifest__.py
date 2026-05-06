@@ -7,6 +7,7 @@
         'security/ir.model.access.csv',
         'views/clb_config_views.xml',
         'views/survey_user_input_views.xml',
+        'views/survey_templates.xml',
         'data/clb_level_data.xml',
     ],
     'installable': True,

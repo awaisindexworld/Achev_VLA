@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="survey_fill_form_done_inherit_clb"
+              inherit_id="survey.survey_fill_form_done"
+              name="CLB Survey: hide 'You scored' heading">
+        <xpath expr="//div[hasclass('o_survey_finished')]/h1" position="replace"/>
+        <xpath expr="//t[@t-if='answer.scoring_success']/div[not(@t-if)]" position="replace"/>
+        <xpath expr="//t[@t-else='']/div[not(@t-if)]" position="replace"/>
+    </template>
+</odoo>
