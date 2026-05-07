@@ -17,11 +17,11 @@
         <field name="name">Language Assessment Result</field>
         <field name="model">slide.channel.partner</field>
         <field name="report_type">qweb-pdf</field>
-        <field name="report_name">test_reports.report_language_assessment</field>
-        <field name="report_file">test_reports.report_language_assessment</field>
+        <field name="report_name">vla_assessment_reports.report_language_assessment</field>
+        <field name="report_file">vla_assessment_reports.report_language_assessment</field>
         <field name="binding_model_id" ref="website_slides.model_slide_channel_partner"/>
         <field name="binding_type">report</field>
-        <field name="paperformat_id" ref="test_reports.paperformat_language_assessment"/>
+        <field name="paperformat_id" ref="vla_assessment_reports.paperformat_language_assessment"/>
         <field name="print_report_name">'Language Assessment - %s' % (object.partner_id.name or 'Response')</field>
     </record>
 </odoo>

@@ -3,11 +3,11 @@
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
 
-                <t t-set="img_logo" t-value="env['report.test_reports.helper'].get_image_base64('achiev_logo.png')"/>
-                <t t-set="img_listening" t-value="env['report.test_reports.helper'].get_image_base64('listening_icon.png')"/>
-                <t t-set="img_reading" t-value="env['report.test_reports.helper'].get_image_base64('reading_icon.png')"/>
-                <t t-set="img_speaking" t-value="env['report.test_reports.helper'].get_image_base64('speaking_icon.png')"/>
-                <t t-set="img_writing" t-value="env['report.test_reports.helper'].get_image_base64('writing_icon.png')"/>
+                <t t-set="img_logo" t-value="env['report.vla_assessment_reports.helper'].get_image_base64('achiev_logo.png')"/>
+                <t t-set="img_listening" t-value="env['report.vla_assessment_reports.helper'].get_image_base64('listening_icon.png')"/>
+                <t t-set="img_reading" t-value="env['report.vla_assessment_reports.helper'].get_image_base64('reading_icon.png')"/>
+                <t t-set="img_speaking" t-value="env['report.vla_assessment_reports.helper'].get_image_base64('speaking_icon.png')"/>
+                <t t-set="img_writing" t-value="env['report.vla_assessment_reports.helper'].get_image_base64('writing_icon.png')"/>
                 <t t-set="report_client_name" t-value="o.partner_id.name or ''"/>
                 <t t-set="report_test_date"
                    t-value="context_timestamp(o.assessment_evaluated_at).strftime('%b-%d-%Y') if o.assessment_evaluated_at else ''"/>
@@ -334,12 +334,8 @@
                             </tr>
 
                             <tr>
-                                <td style="width:50%; height:260px; vertical-align:top; border-left:1px solid #111111; border-bottom:1px solid #111111; border-top:0; padding:30px 18px 30px 18px; font-size:14px; line-height:1.65; color:#111111;">
-                                    <t t-out="reading_line.can_do_statement_left or ''"/>
-                                </td>
-
-                                <td style="width:50%; height:260px; vertical-align:top; border-right:1px solid #111111; border-bottom:1px solid #111111; border-top:0; padding:76px 18px 30px 18px; font-size:14px; line-height:2.15; color:#111111;">
-                                    <t t-out="reading_line.can_do_statement_right or ''"/>
+                                <td style="width:100%; min-height:260px; vertical-align:top; border-left:1px solid #111111; border-right:1px solid #111111; border-bottom:1px solid #111111; border-top:0; padding:30px 18px 30px 18px; font-size:14px; line-height:1.65; color:#111111;">
+                                    <t t-out="reading_line.can_do_statement or ''"/>
                                 </td>
                             </tr>
                         </table>
@@ -454,12 +450,8 @@
                             </tr>
 
                             <tr>
-                                <td style="width:50%; height:260px; vertical-align:top; border-left:1px solid #111111; border-bottom:1px solid #111111; border-top:0; padding:30px 18px 30px 18px; font-size:14px; line-height:1.65; color:#111111;">
-                                    <t t-out="listening_line.can_do_statement_left or ''"/>
-                                </td>
-
-                                <td style="width:50%; height:260px; vertical-align:top; border-right:1px solid #111111; border-bottom:1px solid #111111; border-top:0; padding:76px 18px 30px 18px; font-size:14px; line-height:2.15; color:#111111;">
-                                    <t t-out="listening_line.can_do_statement_right or ''"/>
+                                <td style="width:100%; min-height:260px; vertical-align:top; border-left:1px solid #111111; border-right:1px solid #111111; border-bottom:1px solid #111111; border-top:0; padding:30px 18px 30px 18px; font-size:14px; line-height:1.65; color:#111111;">
+                                    <t t-out="listening_line.can_do_statement or ''"/>
                                 </td>
                             </tr>
                         </table>
@@ -574,12 +566,8 @@
                             </tr>
 
                             <tr>
-                                <td style="width:50%; height:260px; vertical-align:top; border-left:1px solid #111111; border-bottom:1px solid #111111; border-top:0; padding:30px 18px 30px 18px; font-size:14px; line-height:1.65; color:#111111;">
-                                    <t t-out="speaking_line.can_do_statement_left or ''"/>
-                                </td>
-
-                                <td style="width:50%; height:260px; vertical-align:top; border-right:1px solid #111111; border-bottom:1px solid #111111; border-top:0; padding:76px 18px 30px 18px; font-size:14px; line-height:2.15; color:#111111;">
-                                    <t t-out="speaking_line.can_do_statement_right or ''"/>
+                                <td style="width:100%; min-height:260px; vertical-align:top; border-left:1px solid #111111; border-right:1px solid #111111; border-bottom:1px solid #111111; border-top:0; padding:30px 18px 30px 18px; font-size:14px; line-height:1.65; color:#111111;">
+                                    <t t-out="speaking_line.can_do_statement or ''"/>
                                 </td>
                             </tr>
                         </table>
@@ -694,12 +682,8 @@
                             </tr>
 
                             <tr>
-                                <td style="width:50%; height:260px; vertical-align:top; border-left:1px solid #111111; border-bottom:1px solid #111111; border-top:0; padding:30px 18px 30px 18px; font-size:14px; line-height:1.65; color:#111111;">
-                                    <t t-out="writing_line.can_do_statement_left or ''"/>
-                                </td>
-
-                                <td style="width:50%; height:260px; vertical-align:top; border-right:1px solid #111111; border-bottom:1px solid #111111; border-top:0; padding:76px 18px 30px 18px; font-size:14px; line-height:2.15; color:#111111;">
-                                    <t t-out="writing_line.can_do_statement_right or ''"/>
+                                <td style="width:100%; min-height:260px; vertical-align:top; border-left:1px solid #111111; border-right:1px solid #111111; border-bottom:1px solid #111111; border-top:0; padding:30px 18px 30px 18px; font-size:14px; line-height:1.65; color:#111111;">
+                                    <t t-out="writing_line.can_do_statement or ''"/>
                                 </td>
                             </tr>
                         </table>

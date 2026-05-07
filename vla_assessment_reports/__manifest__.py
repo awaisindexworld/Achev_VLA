@@ -1,5 +1,5 @@
 {
-    "name": "Test Report",
+    "name": "VLA Assessment Reports",
     "version": "18.0.1.0.0",
     "category": "Contacts",
     "summary": "Language Assessment PDF report for contacts",

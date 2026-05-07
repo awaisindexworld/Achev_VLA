@@ -30,8 +30,7 @@
                                 <list string="Lines">
                                     <field name="sequence" widget="handle"/>
                                     <field name="clb"/>
-                                    <field name="can_do_statement_left" string="Can do statement Left"/>
-                                    <field name="can_do_statement_right" string="Can do statement Right"/>
+                                    <field name="can_do_statement" string="Can do statement"/>
                                     <field name="recommendation"/>
                                 </list>
                                 <form string="Detail Line">
@@ -39,9 +38,8 @@
                                         <group>
                                             <field name="clb"/>
                                         </group>
-                                        <group string="Can do statement" col="2">
-                                            <field name="can_do_statement_left"/>
-                                            <field name="can_do_statement_right"/>
+                                        <group string="Can do statement">
+                                            <field name="can_do_statement" nolabel="1"/>
                                         </group>
                                         <group>
                                             <field name="recommendation" widget="text"/>
@@ -64,8 +62,7 @@
                 <field name="sequence" widget="handle"/>
                 <field name="detail_id"/>
                 <field name="clb"/>
-                <field name="can_do_statement_left" string="Can do statement Left"/>
-                <field name="can_do_statement_right" string="Can do statement Right"/>
+                <field name="can_do_statement" string="Can do statement"/>
                 <field name="recommendation"/>
             </list>
         </field>
@@ -81,9 +78,8 @@
                         <field name="detail_id" invisible="1"/>
                         <field name="clb"/>
                     </group>
-                    <group string="Can do statement" col="2">
-                        <field name="can_do_statement_left"/>
-                        <field name="can_do_statement_right"/>
+                    <group string="Can do statement">
+                        <field name="can_do_statement" nolabel="1"/>
                     </group>
                     <group>
                         <field name="recommendation" widget="text"/>

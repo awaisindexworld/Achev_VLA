@@ -8,11 +8,11 @@ class SlideChannelPartner(models.Model):
 
     def action_print_language_assessment_report(self):
         self.ensure_one()
-        return self.env.ref("test_reports.action_report_language_assessment").report_action(self)
+        return self.env.ref("vla_assessment_reports.action_report_language_assessment").report_action(self)
 
 
-class ReportTestReportsHelper(models.AbstractModel):
-    _name = 'report.test_reports.helper'
+class ReportVlaAssessmentReportsHelper(models.AbstractModel):
+    _name = 'report.vla_assessment_reports.helper'
     _description = 'Report Image Helper'
 
     @api.model
