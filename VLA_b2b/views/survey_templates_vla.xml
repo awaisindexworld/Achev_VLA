@@ -3,11 +3,21 @@
     <template id="survey_fill_form_done_vla" inherit_id="survey.survey_fill_form_done" name="Survey: finished (VLA)">
         <xpath expr="//div[hasclass('o_survey_finished')]" position="replace">
             <div class="o_survey_finished mt32 mb32">
-                <p>
-                    Thank you for completing this skill assessment. You may now close this tab and continue with your assessment.
-                    If you have completed your listening assessment, then all of your skill assessments are now complete,
-                    and an assessment administrator will contact you shortly.
-                </p>
+<!--                <p>-->
+<!--                    Thank you for completing this skill assessment. You may now close this tab and continue with your assessment.-->
+<!--                    If you have completed your listening assessment, then all of your skill assessments are now complete,-->
+<!--                    and an assessment administrator will contact you shortly.-->
+<!--                </p>-->
+                <div class="mt16">
+                    <t t-if="next_slide_url">
+                        <a role="button" class="btn btn-primary btn-lg" t-att-href="next_slide_url">
+                            Continue to Next Section
+                        </a>
+                    </t>
+                    <t t-else="">
+                        <p class="fw-bold" style="font-size:18px;">Thank you for completing your assessment. An assessment administrator will contact you shortly regarding your assessment.</p>
+                    </t>
+                </div>
             </div>
         </xpath>
     </template>
