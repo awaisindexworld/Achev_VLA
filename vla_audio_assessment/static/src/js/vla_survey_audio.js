@@ -1,5 +1,6 @@
 (function () {
     const stateByQuestion = {};
+    const MIN_RECORDING_SECONDS = 1.5;
 
     function formatTimer(totalSeconds) {
         const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
@@ -98,6 +99,36 @@
         state.startedAt = null;
     }
 
+    function resetToReadyState(questionId, elements, state) {
+        // Fully reset state
+        state.chunks = [];
+        state.audioBlob = null;
+        state.mediaRecorder = null;
+
+        // Reset preview
+        if (elements.preview) {
+            if (elements.preview.src) {
+                try { URL.revokeObjectURL(elements.preview.src); } catch (e) {}
+            }
+            elements.preview.pause();
+            elements.preview.removeAttribute('src');
+            elements.preview.load();
+            elements.preview.classList.add('d-none');
+        }
+
+        // Reset hidden answer field so the user cannot proceed without re-recording
+        if (elements.hidden) {
+            elements.hidden.value = '';
+        }
+
+        // Reset buttons / status
+        if (elements.start)  elements.start.disabled  = false;
+        if (elements.stop)   elements.stop.disabled   = true;
+        if (elements.reset)  elements.reset.disabled  = true;
+        if (elements.timer)  elements.timer.textContent = '00:00';
+        if (elements.status) elements.status.textContent = 'Ready to record.';
+    }
+
     async function uploadAudio(questionId, blob, durationSeconds) {
         const form = getForm(questionId);
         const elements = getElements(questionId);
@@ -187,6 +218,18 @@
                 clearTimers(state);
                 stopTracks(state);
 
+                // ── Minimum duration check ────────────────────────────────
+                if (durationSeconds < MIN_RECORDING_SECONDS) {
+                    resetToReadyState(questionId, elements, state);
+                    setMessage(
+                        elements,
+                        'Your response seems to be too short, please try again',
+                        'warning'
+                    );
+                    return;
+                }
+                // ─────────────────────────────────────────────────────────
+
                 if (elements.preview && elements.preview.src) {
                     try {
                         URL.revokeObjectURL(elements.preview.src);
@@ -223,10 +266,24 @@
                     }
                 } catch (error) {
                     console.error('Upload failed:', error);
-                    if (elements.status) {
-                        elements.status.textContent = 'Recording saved locally. Upload failed.';
+
+                    // If the server rejected for being too short, reset so user can retry
+                    const isTooShort = error.message &&
+                        error.message.toLowerCase().includes('too short');
+
+                    if (isTooShort) {
+                        resetToReadyState(questionId, elements, state);
+                        setMessage(
+                            elements,
+                            'Your response seems to be too short, please try again',
+                            'warning'
+                        );
+                    } else {
+                        if (elements.status) {
+                            elements.status.textContent = 'Recording saved locally. Upload failed.';
+                        }
+                        setMessage(elements, error.message || 'Audio upload failed.', 'danger');
                     }
-                    setMessage(elements, error.message || 'Audio upload failed.', 'danger');
                 }
 
                 if (elements.start) {
@@ -239,11 +296,11 @@
 
             const maxDuration = getMaxDuration(questionId);
 
-            if (elements.start) elements.start.disabled = true;
-            if (elements.stop) elements.stop.disabled = false;
-            if (elements.reset) elements.reset.disabled = true;
+            if (elements.start)  elements.start.disabled  = true;
+            if (elements.stop)   elements.stop.disabled   = false;
+            if (elements.reset)  elements.reset.disabled  = true;
             if (elements.status) elements.status.textContent = 'Recording in progress...';
-            if (elements.timer) elements.timer.textContent = '00:00';
+            if (elements.timer)  elements.timer.textContent  = '00:00';
 
             state.timerInterval = setInterval(function () {
                 if (!state.startedAt) return;
@@ -266,7 +323,7 @@
             clearTimers(state);
 
             if (elements.start) elements.start.disabled = false;
-            if (elements.stop) elements.stop.disabled = true;
+            if (elements.stop)  elements.stop.disabled  = true;
 
             setMessage(elements, error.message || 'Microphone access failed.', 'danger');
         }
@@ -299,33 +356,9 @@
 
         stopTracks(state);
         clearTimers(state);
-        state.chunks = [];
-        state.audioBlob = null;
-        state.mediaRecorder = null;
 
         clearMessage(elements);
-
-        if (elements.hidden) {
-            elements.hidden.value = '';
-        }
-
-        if (elements.preview) {
-            if (elements.preview.src) {
-                try {
-                    URL.revokeObjectURL(elements.preview.src);
-                } catch (e) {}
-            }
-            elements.preview.pause();
-            elements.preview.removeAttribute('src');
-            elements.preview.load();
-            elements.preview.classList.add('d-none');
-        }
-
-        if (elements.start) elements.start.disabled = false;
-        if (elements.stop) elements.stop.disabled = true;
-        if (elements.reset) elements.reset.disabled = true;
-        if (elements.timer) elements.timer.textContent = '00:00';
-        if (elements.status) elements.status.textContent = 'Ready to record.';
+        resetToReadyState(questionId, elements, state);
     }
 
     function initExistingBoxes() {

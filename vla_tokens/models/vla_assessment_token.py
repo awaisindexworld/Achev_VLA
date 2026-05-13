@@ -1,8 +1,9 @@
-# -*- coding: utf-8 -*-
-
 import uuid
 
 from odoo import api, fields, models
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class VlaAssessmentToken(models.Model):
@@ -135,12 +136,10 @@ class VlaAssessmentToken(models.Model):
             if not website_url:
                 website_url = '/slides/%s' % token.channel_id.id
 
-            # If Odoo already gives a full absolute URL, use it directly.
             if website_url.startswith('http://') or website_url.startswith('https://'):
                 token.course_url = website_url
                 continue
 
-            # Otherwise make sure it is a relative URL starting with /
             if not website_url.startswith('/'):
                 website_url = '/%s' % website_url
 
@@ -156,3 +155,51 @@ class VlaAssessmentToken(models.Model):
     def action_mark_used(self):
         for token in self.filtered(lambda t: t.state in ('unused', 'started')):
             token.state = 'used'
+
+    def _link_partner_to_company(self, partner):
+        """
+        Automatically link the given partner (the user who just registered or
+        logged in) to the company partner stored on this token.
+
+        Rules:
+        - Only runs when company_partner_id is set (B2B tokens).
+        - Sets partner.parent_id so the user appears under that company in
+          Contacts, exactly as if an admin had done it manually.
+        - Never changes the user's portal/internal group — they remain portal.
+        - Also stores the partner back on the token so it is traceable in the
+          backend (only sets it if not already set, to avoid overwriting a
+          manually-assigned B2C partner).
+        """
+        self.ensure_one()
+
+        if not self.company_partner_id or not partner:
+            return
+
+        # Ensure company_partner_id is actually flagged as a company in Odoo
+        if not self.company_partner_id.is_company:
+            _logger.warning(
+                "VLA token %s: company_partner_id %s is not flagged as a company — "
+                "skipping automatic company assignment",
+                self.token_code, self.company_partner_id.id,
+            )
+            return
+
+        vals = {}
+
+        # Only set parent_id if not already pointing to the right company.
+        # This avoids overwriting an existing company relationship.
+        if partner.parent_id.id != self.company_partner_id.id:
+            vals['parent_id'] = self.company_partner_id.id
+            _logger.info(
+                "VLA token %s: linking partner %s (%s) to company %s (%s)",
+                self.token_code,
+                partner.id, partner.email or partner.name,
+                self.company_partner_id.id, self.company_partner_id.name,
+            )
+
+        if vals:
+            partner.sudo().write(vals)
+
+        # Record who used this token if not already set
+        if not self.partner_id:
+            self.sudo().write({'partner_id': partner.id})

@@ -20,4 +20,30 @@
             </xpath>
         </field>
     </record>
+
+    <record id="view_slide_channel_form_product_invite_vla_b2b" model="ir.ui.view">
+        <field name="name">slide.channel.form.product.invite.vla.b2b</field>
+        <field name="model">slide.channel</field>
+        <field name="inherit_id" ref="website_sale_slides.slide_channel_view_form"/>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="attributes">
+                <attribute name="invisible">enroll != 'payment' and enroll != 'invite'</attribute>
+                <attribute name="required">enroll == 'payment' or enroll == 'invite'</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_slide_channel_form_add_product_invite_vla_b2b" model="ir.ui.view">
+        <field name="name">slide.channel.form.add.product.invite.vla.b2b</field>
+        <field name="model">slide.channel</field>
+        <field name="inherit_id" ref="website_sale_slides.slide_channel_view_form_add_inherit_sale_slides"/>
+        <field name="priority">99</field>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="attributes">
+                <attribute name="invisible">enroll != 'payment' and enroll != 'invite'</attribute>
+                <attribute name="required">enroll == 'payment' or enroll == 'invite'</attribute>
+            </xpath>
+        </field>
+    </record>
 </odoo>

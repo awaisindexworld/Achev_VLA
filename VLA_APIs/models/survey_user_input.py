@@ -335,13 +335,23 @@ class SurveyUserInput(models.Model):
             _logger.error("Speaking API: no jobs successfully submitted for user_input %s", self.id)
 
     def _fetch_speaking_clb(self):
-        """GET speaking results for all jobs. Average CLBs once all jobs are COMPLETED."""
+        """
+        GET speaking results for all jobs. Average CLBs of successful questions only.
+
+        If a question's transcription fails (API returns a failure status or null clb_level),
+        that question is treated as a score of 0 for logging purposes but is EXCLUDED from
+        the average — the final CLB is based only on questions that did not fail.
+        """
+        # Statuses that the API may return to signal a transcription failure
+        FAILED_STATUSES = {'FAILED', 'ERROR', 'FAILURE', 'TRANSCRIPTION_FAILED', 'TRANSCRIPTION_ERROR'}
+
         for record in self:
             if not record.speaking_job_id:
                 continue
             try:
                 job_ids = [j.strip() for j in record.speaking_job_id.split(',') if j.strip()]
-                all_clb_values = []
+                successful_clb_values = []   # CLBs from questions that scored normally
+                failed_question_count = 0    # questions that failed transcription (logged as 0)
                 all_completed = True
 
                 for job_id in job_ids:
@@ -361,24 +371,67 @@ class SurveyUserInput(models.Model):
                         _logger.warning("Speaking CLB: COMPLETED but no results for job %s", job_id)
                         continue
 
-                    clb_values = [
-                        r.get("clb_level") for r in results
-                        if r.get("clb_level") is not None
-                    ]
-                    _logger.info("Speaking CLB: job=%s clb_values=%s", job_id, clb_values)
-                    all_clb_values.extend(clb_values)
+                    for result in results:
+                        clb = result.get("clb_level")
+                        result_status = str(
+                            result.get("status") or
+                            result.get("transcription_status") or
+                            ""
+                        ).upper()
+
+                        # A question fails if its status is explicitly a failure OR clb is missing
+                        is_failed = (
+                            result_status in FAILED_STATUSES or
+                            clb is None
+                        )
+
+                        if is_failed:
+                            failed_question_count += 1
+                            _logger.warning(
+                                "Speaking CLB: question failed transcription in job %s "
+                                "(status=%s, clb_level=%s) — marking as 0, excluding from average",
+                                job_id, result_status or 'n/a', clb,
+                            )
+                            # Do NOT add to successful_clb_values — excluded from average
+                        else:
+                            _logger.info(
+                                "Speaking CLB: question passed in job %s — clb_level=%s",
+                                job_id, clb,
+                            )
+                            successful_clb_values.append(clb)
 
                 if not all_completed:
-                    _logger.info("Speaking CLB: jobs still processing for user_input %s, will retry", record.id)
+                    _logger.info(
+                        "Speaking CLB: jobs still processing for user_input %s, will retry",
+                        record.id,
+                    )
                     continue
 
-                if not all_clb_values:
-                    _logger.warning("Speaking CLB: all jobs completed but no CLB values for user_input %s", record.id)
+                if failed_question_count:
+                    _logger.warning(
+                        "Speaking CLB: %d question(s) failed transcription for user_input %s — "
+                        "scored as 0, excluded from CLB average",
+                        failed_question_count, record.id,
+                    )
+
+                if not successful_clb_values:
+                    _logger.warning(
+                        "Speaking CLB: no successful CLB values for user_input %s "
+                        "(%d question(s) failed) — cannot compute CLB",
+                        record.id, failed_question_count,
+                    )
+                    # Mark as received with 0 so cron does not retry forever
+                    record.write({'speaking_clb': 0, 'speaking_clb_received': True})
                     continue
 
-                clb_int = round(sum(float(c) for c in all_clb_values) / len(all_clb_values))
-                _logger.info("Speaking CLB: averaged %d value(s) across %d job(s) → %s",
-                             len(all_clb_values), len(job_ids), clb_int)
+                clb_int = round(
+                    sum(float(c) for c in successful_clb_values) / len(successful_clb_values)
+                )
+                _logger.info(
+                    "Speaking CLB: averaged %d successful question(s) "
+                    "(%d failed/excluded) → CLB %s (user_input=%s)",
+                    len(successful_clb_values), failed_question_count, clb_int, record.id,
+                )
 
                 record.write({'speaking_clb': clb_int, 'speaking_clb_received': True})
                 _logger.info("Speaking CLB saved: %s for user_input %s", clb_int, record.id)
@@ -393,7 +446,10 @@ class SurveyUserInput(models.Model):
                     _logger.info("Speaking CLB: updating attendee %s", attendee.id)
                     attendee.sudo().write({'speaking_clb': str(clb_int)})
                 else:
-                    _logger.warning("Speaking CLB: no attendee linked to user_input %s — CLB saved on survey record only", record.id)
+                    _logger.warning(
+                        "Speaking CLB: no attendee linked to user_input %s — "
+                        "CLB saved on survey record only", record.id,
+                    )
 
             except Exception as e:
                 _logger.error("Speaking CLB GET error for record %s: %s", record.id, str(e))

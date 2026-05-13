@@ -30,6 +30,7 @@
                                 <list string="Lines">
                                     <field name="sequence" widget="handle"/>
                                     <field name="clb"/>
+                                    <field name="job_position_id" string="Job Position"/>
                                     <field name="can_do_statement" string="Can do statement"/>
                                     <field name="recommendation"/>
                                 </list>
@@ -37,6 +38,9 @@
                                     <sheet>
                                         <group>
                                             <field name="clb"/>
+                                            <field name="job_position_id"
+                                                   string="Job Position"
+                                                   help="Leave empty for the generic/default line. Select a job position to create a customised version for that position."/>
                                         </group>
                                         <group string="Can do statement">
                                             <field name="can_do_statement" nolabel="1"/>
@@ -62,6 +66,7 @@
                 <field name="sequence" widget="handle"/>
                 <field name="detail_id"/>
                 <field name="clb"/>
+                <field name="job_position_id" string="Job Position"/>
                 <field name="can_do_statement" string="Can do statement"/>
                 <field name="recommendation"/>
             </list>
@@ -77,6 +82,9 @@
                     <group>
                         <field name="detail_id" invisible="1"/>
                         <field name="clb"/>
+                        <field name="job_position_id"
+                               string="Job Position"
+                               help="Leave empty for the generic/default line. Select a job position to create a customised version for that position."/>
                     </group>
                     <group string="Can do statement">
                         <field name="can_do_statement" nolabel="1"/>

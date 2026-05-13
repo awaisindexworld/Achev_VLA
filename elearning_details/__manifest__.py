@@ -10,7 +10,7 @@ The can do statement is stored in one field and edited as left/right columns.
     'category': 'Website/eLearning',
     'author': 'OpenAI',
     'license': 'LGPL-3',
-    'depends': ['website_slides'],
+    'depends': ['website_slides', 'VLA_b2b'],
     'data': [
         'security/elearning_detail_security.xml',
         'security/ir.model.access.csv',

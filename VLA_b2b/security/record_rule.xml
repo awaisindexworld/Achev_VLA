@@ -12,14 +12,18 @@
     <record id="slide_channel_partner_company_rule_vla_b2b" model="ir.rule">
         <field name="name">Slide Channel Partner selected company only</field>
         <field name="model_id" ref="website_slides.model_slide_channel_partner"/>
-        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">
+            ['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]
+        </field>
         <field name="global" eval="True"/>
     </record>
 
     <record id="survey_user_input_company_rule_vla_b2b" model="ir.rule">
         <field name="name">Survey User Input selected company only</field>
         <field name="model_id" ref="survey.model_survey_user_input"/>
-        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">
+            ['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]
+        </field>
         <field name="global" eval="True"/>
     </record>
 

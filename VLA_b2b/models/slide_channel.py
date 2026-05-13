@@ -11,7 +11,7 @@ class SlideChannel(models.Model):
     company_id = fields.Many2one(
         'res.company',
         string='Company',
-        required=True,
+        required=False,
         default=lambda self: self.env.company,
         index=True,
     )
@@ -140,7 +140,7 @@ class SlideChannelPartner(models.Model):
     survey_user_input_ids = fields.One2many(
         'survey.user_input', compute='_compute_vla_user_inputs', string='Tests', readonly=True
     )
-    job_position_id = fields.Many2one('vla.job.position', string='Job Position Snapshot', index=True)
+    # job_position_id = fields.Many2one('vla.job.position', string='Job Position Snapshot', index=True)
     reading_score = fields.Float(string='Reading Score')
     writing_score = fields.Float(string='Writing Score')
     speaking_score = fields.Float(string='Speaking Score')

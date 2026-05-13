@@ -45,5 +45,20 @@ class ElearningDetailLine(models.Model):
         required=True,
         default='0',
     )
+    # ── NEW: optional job-position filter ──────────────────────────────────────
+    # When set, this line applies only to attendees with this job position.
+    # When left empty (False), this line is the generic/default for that CLB
+    # level and is used as a fallback when no job-position-specific line exists.
+    job_position_id = fields.Many2one(
+        'vla.job.position',
+        string='Job Position',
+        index=True,
+        ondelete='set null',
+        help=(
+            'Leave empty for a generic line (fallback for all job positions). '
+            'Select a specific job position to override the generic content for that position.'
+        ),
+    )
+    # ───────────────────────────────────────────────────────────────────────────
     can_do_statement = fields.Html(string='Can do statement')
     recommendation = fields.Html(string='Recommendation')

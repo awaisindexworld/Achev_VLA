@@ -3,11 +3,16 @@
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="o">
 
-                <t t-set="img_logo" t-value="env['report.vla_assessment_reports.helper'].get_image_base64('achiev_logo.png')"/>
-                <t t-set="img_listening" t-value="env['report.vla_assessment_reports.helper'].get_image_base64('listening_icon.png')"/>
-                <t t-set="img_reading" t-value="env['report.vla_assessment_reports.helper'].get_image_base64('reading_icon.png')"/>
-                <t t-set="img_speaking" t-value="env['report.vla_assessment_reports.helper'].get_image_base64('speaking_icon.png')"/>
-                <t t-set="img_writing" t-value="env['report.vla_assessment_reports.helper'].get_image_base64('writing_icon.png')"/>
+                <t t-set="img_logo"
+                   t-value="env['report.vla_assessment_reports.helper'].get_image_base64('achiev_logo.png')"/>
+                <t t-set="img_listening"
+                   t-value="env['report.vla_assessment_reports.helper'].get_image_base64('listening_icon.png')"/>
+                <t t-set="img_reading"
+                   t-value="env['report.vla_assessment_reports.helper'].get_image_base64('reading_icon.png')"/>
+                <t t-set="img_speaking"
+                   t-value="env['report.vla_assessment_reports.helper'].get_image_base64('speaking_icon.png')"/>
+                <t t-set="img_writing"
+                   t-value="env['report.vla_assessment_reports.helper'].get_image_base64('writing_icon.png')"/>
                 <t t-set="report_client_name" t-value="o.partner_id.name or ''"/>
                 <t t-set="report_test_date"
                    t-value="context_timestamp(o.assessment_evaluated_at).strftime('%b-%d-%Y') if o.assessment_evaluated_at else ''"/>
@@ -63,7 +68,8 @@
                                 </tr>
                                 <tr>
                                     <td style="padding:0; font-size:15.5px; color:#111111; font-weight:400;">
-                                        Language Skill: Listening <span t-esc="report_listening_clb"/>
+                                        Language Skill: Listening
+                                        <span t-esc="report_listening_clb"/>
                                     </td>
                                     <td style="padding:0; font-size:15.5px; color:#111111; font-weight:400; text-align:left;">
                                         Test Date:
@@ -288,7 +294,8 @@
                                 </tr>
                                 <tr>
                                     <td style="padding:0; font-size:15.5px; color:#111111; font-weight:400;">
-                                        Language Skill: Reading <span t-esc="report_reading_clb"/>
+                                        Language Skill: Reading
+                                        <span t-esc="report_reading_clb"/>
                                     </td>
                                     <td style="padding:0; font-size:15.5px; color:#111111; font-weight:400; text-align:left;">
                                         Test Date:
@@ -298,8 +305,9 @@
                             </table>
                         </div>
 
+
                         <t t-set="reading_line"
-                           t-value="env['elearning.detail.line'].sudo().search([('detail_id.skill_type', '=', 'reading'), ('clb', '=', o.reading_clb or '0')], limit=1)"/>
+                           t-value="env['report.vla_assessment_reports.helper'].get_detail_line(o, 'reading')"/>
 
                         <!-- MAIN SKILL ROW -->
                         <table style="width:100%; border-collapse:collapse; margin:0 0 44px 0;">
@@ -404,7 +412,8 @@
                                 </tr>
                                 <tr>
                                     <td style="padding:0; font-size:15.5px; color:#111111; font-weight:400;">
-                                        Language Skill: Listening <span t-esc="report_listening_clb"/>
+                                        Language Skill: Listening
+                                        <span t-esc="report_listening_clb"/>
                                     </td>
                                     <td style="padding:0; font-size:15.5px; color:#111111; font-weight:400; text-align:left;">
                                         Test Date:
@@ -415,7 +424,7 @@
                         </div>
 
                         <t t-set="listening_line"
-                           t-value="env['elearning.detail.line'].sudo().search([('detail_id.skill_type', '=', 'listening'), ('clb', '=', o.listening_clb or '0')], limit=1)"/>
+                           t-value="env['report.vla_assessment_reports.helper'].get_detail_line(o, 'listening')"/>
 
                         <!-- MAIN SKILL ROW -->
                         <table style="width:100%; border-collapse:collapse; margin:0 0 44px 0;">
@@ -520,7 +529,8 @@
                                 </tr>
                                 <tr>
                                     <td style="padding:0; font-size:15.5px; color:#111111; font-weight:400;">
-                                        Language Skill: Speaking <span t-esc="report_speaking_clb"/>
+                                        Language Skill: Speaking
+                                        <span t-esc="report_speaking_clb"/>
                                     </td>
                                     <td style="padding:0; font-size:15.5px; color:#111111; font-weight:400; text-align:left;">
                                         Test Date:
@@ -531,7 +541,7 @@
                         </div>
 
                         <t t-set="speaking_line"
-                           t-value="env['elearning.detail.line'].sudo().search([('detail_id.skill_type', '=', 'speaking'), ('clb', '=', o.speaking_clb or '0')], limit=1)"/>
+                           t-value="env['report.vla_assessment_reports.helper'].get_detail_line(o, 'speaking')"/>
 
                         <!-- MAIN SKILL ROW -->
                         <table style="width:100%; border-collapse:collapse; margin:0 0 44px 0;">
@@ -636,7 +646,8 @@
                                 </tr>
                                 <tr>
                                     <td style="padding:0; font-size:15.5px; color:#111111; font-weight:400;">
-                                        Language Skill: Writing <span t-esc="report_writing_clb"/>
+                                        Language Skill: Writing
+                                        <span t-esc="report_writing_clb"/>
                                     </td>
                                     <td style="padding:0; font-size:15.5px; color:#111111; font-weight:400; text-align:left;">
                                         Test Date:
@@ -647,8 +658,7 @@
                         </div>
 
                         <t t-set="writing_line"
-                           t-value="env['elearning.detail.line'].sudo().search([('detail_id.skill_type', '=', 'writing'), ('clb', '=', o.writing_clb or '0')], limit=1)"/>
-
+                           t-value="env['report.vla_assessment_reports.helper'].get_detail_line(o, 'writing')"/>
                         <!-- MAIN SKILL ROW -->
                         <table style="width:100%; border-collapse:collapse; margin:0 0 44px 0;">
                             <tr>

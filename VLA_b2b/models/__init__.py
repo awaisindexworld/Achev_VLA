@@ -5,3 +5,4 @@ from . import slide_slide
 from . import slide_channel
 from . import slide_channel_invite
 from . import survey_user_input
+from . import res_users

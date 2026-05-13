@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="survey_fill_form_done_vla" inherit_id="survey.survey_fill_form_done" name="Survey: finished (VLA)">
+        <xpath expr="//div[hasclass('o_survey_finished')]" position="replace">
+            <div class="o_survey_finished mt32 mb32">
+                <p>
+                    Thank you for completing this skill assessment. You may now close this tab and continue with your assessment.
+                    If you have completed your listening assessment, then all of your skill assessments are now complete,
+                    and an assessment administrator will contact you shortly.
+                </p>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="survey_button_retake_vla" inherit_id="survey.survey_button_retake" name="Survey: retake button (VLA)">
+        <xpath expr="//div" position="replace">
+            <div class="d-none"/>
+        </xpath>
+    </template>
+</odoo>

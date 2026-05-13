@@ -1,6 +1,12 @@
 from odoo import _, models
 from odoo.exceptions import UserError
 
+from mutagen.mp3 import MP3
+from io import BytesIO
+import base64
+
+MIN_AUDIO_DURATION_SECONDS = 1.5
+
 
 class SurveyUserInput(models.Model):
     _inherit = 'survey.user_input'
@@ -16,7 +22,12 @@ class SurveyUserInput(models.Model):
         if question.vla_is_audio_response and question.question_type == 'char_box':
             return self._save_line_audio_answer(question, old_answers, answer)
 
-        return super()._save_lines(question, answer, comment=comment, overwrite_existing=overwrite_existing)
+        return super()._save_lines(
+            question,
+            answer,
+            comment=comment,
+            overwrite_existing=overwrite_existing
+        )
 
     def _save_line_audio_answer(self, question, old_answers, answer):
         vals = self._get_line_audio_answer_values(question, answer)
@@ -35,6 +46,7 @@ class SurveyUserInput(models.Model):
             'attachment_id': False,
             'mimetype': False,
         }
+
         if not answer or (isinstance(answer, str) and not answer.strip()):
             vals.update(answer_type=False, skipped=True, value_char_box=False)
             return vals
@@ -50,8 +62,26 @@ class SurveyUserInput(models.Model):
             vals.update(answer_type=False, skipped=True, value_char_box=False)
             return vals
 
+        # ── Duration validation (final backend safety net) ─────────────────
+        try:
+            audio_data = base64.b64decode(attachment.datas)
+            audio = MP3(BytesIO(audio_data))
+
+            if audio.info.length < MIN_AUDIO_DURATION_SECONDS:
+                raise UserError(_(
+                    'Your response seems to be too short, please try again'
+                ))
+
+        except UserError:
+            raise
+
+        except Exception:
+            raise UserError(_('Unable to validate audio recording duration.'))
+        # ───────────────────────────────────────────────────────────────────
+
         vals.update({
             'attachment_id': attachment.id,
             'mimetype': attachment.mimetype,
         })
+
         return vals

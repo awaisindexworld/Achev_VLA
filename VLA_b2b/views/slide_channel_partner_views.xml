@@ -41,10 +41,10 @@
                 <field name="partner_id"/>
                 <field name="company_id" optional="show"/>
                 <field name="job_position_id"/>
-                <field name="reading_score"/>
-                <field name="writing_score"/>
-                <field name="speaking_score"/>
-                <field name="listening_score"/>
+                <field name="reading_clb"/>
+                <field name="writing_clb"/>
+                <field name="speaking_clb"/>
+                <field name="listening_clb"/>
                 <field name="assessment_final_status" widget="badge"
                        decoration-success="assessment_final_status == 'pass'"
                        decoration-danger="assessment_final_status == 'fail'"
@@ -77,22 +77,18 @@
                     </group>
                     <group string="Survey Results" col="4">
                         <group string="Reading">
-                            <field name="reading_score" readonly="1"/>
                             <field name="reading_user_input_id" readonly="1"/>
                             <field name="reading_clb" readonly="1"/>
                         </group>
                         <group string="Writing">
-                            <field name="writing_score" readonly="1"/>
                             <field name="writing_user_input_id" readonly="1"/>
                             <field name="writing_clb" readonly="1"/>
                         </group>
                         <group string="Speaking">
-                            <field name="speaking_score" readonly="1"/>
                             <field name="speaking_user_input_id" readonly="1"/>
                             <field name="speaking_clb" readonly="1"/>
                         </group>
                         <group string="Listening">
-                            <field name="listening_score" readonly="1"/>
                             <field name="listening_user_input_id" readonly="1"/>
                             <field name="listening_clb" readonly="1"/>
                         </group>
@@ -108,7 +104,6 @@
                                     <field name="value_date" optional="show"/>
                                     <field name="value_datetime" optional="show"/>
                                     <field name="answer_is_correct" optional="show"/>
-                                    <field name="answer_score"/>
                                     <field name="skipped"/>
                                 </list>
                             </field>
@@ -123,7 +118,6 @@
                                     <field name="value_date" optional="show"/>
                                     <field name="value_datetime" optional="show"/>
                                     <field name="answer_is_correct" optional="show"/>
-                                    <field name="answer_score"/>
                                     <field name="skipped"/>
                                 </list>
                             </field>
@@ -138,7 +132,6 @@
                                     <field name="value_date" optional="show"/>
                                     <field name="value_datetime" optional="show"/>
                                     <field name="answer_is_correct" optional="show"/>
-                                    <field name="answer_score"/>
                                     <field name="skipped"/>
                                 </list>
                             </field>
@@ -153,7 +146,6 @@
                                     <field name="value_date" optional="show"/>
                                     <field name="value_datetime" optional="show"/>
                                     <field name="answer_is_correct" optional="show"/>
-                                    <field name="answer_score"/>
                                     <field name="skipped"/>
                                 </list>
                             </field>

@@ -9,9 +9,6 @@ class ResPartner(models.Model):
         'vla.job.position',
         string='Current Job Position',
         domain="(company_id and [('company_id', '=', company_id)] or [('company_id', 'in', context.get('allowed_company_ids', []))]) + [('state', '=', 'posted')]",
-
-        # domain="(company_id and [('company_id', '=', company_id)] or []) + [('state', '=', 'posted')]",
-        # check_company=True,
     )
 
     @api.model_create_multi
@@ -21,17 +18,12 @@ class ResPartner(models.Model):
                 vals['company_id'] = self.env.company.id
         return super().create(vals_list)
 
-    #####
-
     def action_send_registration_email(self):
         self.ensure_one()
-
         if not self.email:
             raise UserError(_("This contact does not have an email address."))
-
         template = self.env.ref('VLA_b2b.mail_template_partner_registration_success', raise_if_not_found=False)
         if not template:
             raise UserError(_("Registration email template not found."))
-
         template.send_mail(self.id, force_send=True)
         return True
