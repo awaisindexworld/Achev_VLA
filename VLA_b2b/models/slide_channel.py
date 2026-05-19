@@ -46,25 +46,43 @@ class SlideChannel(models.Model):
         - Responses smart button count
         - Responses action/list view
 
-        This makes sure only responses of currently checked companies are shown.
+        This makes sure only responses are shown where:
+
+        1. Response/company belongs to the currently checked companies.
+        2. Job position company also belongs to the currently checked companies.
+        3. Response company and job position company are the same company.
+
+        Example:
+        - Checked company: ACHEV
+        - Response/course company: ACHEV
+        - Job position company: Element
+
+        Result:
+        - This response will NOT show.
         """
         self.ensure_one()
 
         domain = [
             ('channel_id', '=', self.id),
             ('job_position_id', '!=', False),
+            ('vla_company_match', '=', True),
         ]
 
         selected_company_ids = self._vla_get_selected_company_ids()
         if selected_company_ids:
-            domain.append(('company_id', 'in', selected_company_ids))
+            domain += [
+                ('company_id', 'in', selected_company_ids),
+                ('job_position_id.company_id', 'in', selected_company_ids),
+            ]
 
         return domain
 
     @api.depends(
         'channel_partner_ids',
         'channel_partner_ids.job_position_id',
+        'channel_partner_ids.job_position_id.company_id',
         'channel_partner_ids.company_id',
+        'channel_partner_ids.vla_company_match',
     )
     @api.depends_context('allowed_company_ids')
     def _compute_vla_response_count(self):
@@ -251,6 +269,14 @@ class SlideChannelPartner(models.Model):
         index=True,
         check_company=True,
     )
+
+    vla_company_match = fields.Boolean(
+        string='Response Company Matches Job Company',
+        compute='_compute_vla_company_match',
+        store=True,
+        readonly=True,
+        index=True,
+    )
     #####
 
     survey_user_input_ids = fields.One2many(
@@ -396,6 +422,30 @@ class SlideChannelPartner(models.Model):
             "ALTER TABLE slide_channel_partner "
             "DROP CONSTRAINT IF EXISTS channel_partner_job_uniq"
         )
+
+    @api.depends(
+        'company_id',
+        'job_position_id',
+        'job_position_id.company_id',
+    )
+    def _compute_vla_company_match(self):
+        """
+        True only when the response/course company and the job position company
+        are exactly the same.
+
+        This prevents cases like:
+        - Response/course company = ACHEV
+        - Job position company = Element
+
+        from appearing in the Responses button/list.
+        """
+        for attendee in self:
+            attendee.vla_company_match = bool(
+                attendee.company_id
+                and attendee.job_position_id
+                and attendee.job_position_id.company_id
+                and attendee.company_id.id == attendee.job_position_id.company_id.id
+            )
 
     def _get_vla_user_inputs(self):
         self.ensure_one()
