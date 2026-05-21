@@ -16,7 +16,7 @@ Main flow supported now:
 - Course invites deduct one token per invite recipient from the matching 30/60 minute company wallet.
 - Wallet balances, B2C URLs, and ledger records are visible on the contact form.
 """,
-    'author': 'OpenAI',
+    'author': 'Maria',
     'license': 'LGPL-3',
     'category': 'Sales',
     'depends': [

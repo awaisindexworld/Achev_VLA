@@ -23,6 +23,7 @@ Features:
         'survey',
     ],
     'data': [
+        'security/survey_randomizer_groups.xml',
         'views/survey_survey_views.xml',
     ],
     'license': 'LGPL-3',

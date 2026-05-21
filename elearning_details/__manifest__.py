@@ -8,7 +8,7 @@ Each record contains a name, a skill type, and detail lines opened in popup form
 The can do statement is stored in one field and edited as left/right columns.
 ''',
     'category': 'Website/eLearning',
-    'author': 'OpenAI',
+    'author': 'Maria',
     'license': 'LGPL-3',
     'depends': ['website_slides', 'VLA_b2b'],
     'data': [

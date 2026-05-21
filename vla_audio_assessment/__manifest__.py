@@ -3,7 +3,7 @@
     'version': '18.0.5.0.0',
     'summary': 'Audio recording answers inside Odoo 18 Surveys',
     'category': 'Marketing/Surveys',
-    'author': 'OpenAI',
+    'author': 'Maria',
     'license': 'LGPL-3',
     'depends': ['survey', 'website'],
     'data': [

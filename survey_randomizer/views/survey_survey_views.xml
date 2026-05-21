@@ -7,13 +7,21 @@
         <field name="inherit_id" ref="survey.survey_survey_view_form"/>
         <field name="arch" type="xml">
 
-            <!-- Replace native Question Selection on the Options tab only. -->
+            <!-- Replace native Question Selection on the Options tab only -->
             <xpath expr="//page[@name='options']//field[@name='questions_selection']" position="replace">
+
+                <!-- Keep original field hidden -->
                 <field name="questions_selection" invisible="1"/>
-                <field name="vla_randomize_by_section"/>
+
+                <!-- Only users in this group can see these fields -->
+                <field name="vla_randomize_by_section"
+                       groups="survey_randomizer.group_survey_randomizer_access"/>
+
                 <field name="vla_random_total_questions"
+                       groups="survey_randomizer.group_survey_randomizer_access"
                        invisible="not vla_randomize_by_section"
                        required="vla_randomize_by_section"/>
+
             </xpath>
 
         </field>
