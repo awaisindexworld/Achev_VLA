@@ -40,6 +40,7 @@ Main flow supported now:
         'views/res_partner_views.xml',
         'views/vla_token_wallet_line_views.xml',
         'views/vla_assessment_token_views.xml',
+        'views/sale_invoice_partner_domain_views.xml',
     ],
 
     'assets': {

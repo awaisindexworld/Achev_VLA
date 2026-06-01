@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Sale Order: filter Customer by selected/allowed companies -->
+    <record id="view_order_form_partner_company_domain_vla_tokens" model="ir.ui.view">
+        <field name="name">sale.order.form.partner.company.domain.vla.tokens</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="domain">['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Invoice / Bill: filter Customer/Vendor by selected/allowed companies -->
+    <record id="view_move_form_partner_company_domain_vla_tokens" model="ir.ui.view">
+        <field name="name">account.move.form.partner.company.domain.vla.tokens</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="domain">['|', ('company_id', '=', False), ('company_id', 'in', allowed_company_ids)]</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
