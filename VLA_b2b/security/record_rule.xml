@@ -18,14 +18,14 @@
         <field name="global" eval="True"/>
     </record>
 
-    <record id="survey_user_input_company_rule_vla_b2b" model="ir.rule">
-        <field name="name">Survey User Input selected company only</field>
-        <field name="model_id" ref="survey.model_survey_user_input"/>
-        <field name="domain_force">
-            [('company_id', '=', company_id)]
-        </field>
-        <field name="global" eval="True"/>
-    </record>
+<!--    <record id="survey_user_input_company_rule_vla_b2b" model="ir.rule">-->
+<!--        <field name="name">Survey User Input selected company only</field>-->
+<!--        <field name="model_id" ref="survey.model_survey_user_input"/>-->
+<!--        <field name="domain_force">-->
+<!--            [('company_id', '=', company_id)]-->
+<!--        </field>-->
+<!--        <field name="global" eval="True"/>-->
+<!--    </record>-->
 
     <!-- Contacts -->
     <record id="res_partner_company_visibility_rule_vla_b2b" model="ir.rule">
