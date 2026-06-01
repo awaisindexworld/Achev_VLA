@@ -5,9 +5,15 @@
         <field name="model">slide.channel.invite</field>
         <field name="inherit_id" ref="website_slides.slide_channel_invite_view_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='partner_ids']" position="attributes">
-                <attribute name="domain">[('current_job_position_id','!=',False)]</attribute>
+
+            <xpath expr="//field[@name='partner_ids']" position="before">
+                <field name="eligible_partner_ids" invisible="1"/>
             </xpath>
+
+            <xpath expr="//field[@name='partner_ids']" position="attributes">
+                <attribute name="domain">[('id', 'in', eligible_partner_ids)]</attribute>
+            </xpath>
+
         </field>
     </record>
 </odoo>

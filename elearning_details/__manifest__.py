@@ -1,6 +1,6 @@
 {
     'name': 'eLearning Details',
-    'version': '18.0.1.1.0',
+    'version': '18.0.1.2.0',
     'summary': 'Custom eLearning details records with popup lines',
     'description': '''
 Custom menu under eLearning / Configuration to manage Details records.
